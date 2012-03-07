@@ -1,0 +1,155 @@
+% Copyright (c)  2005-2010 EDF-EADS-PHIMECA.
+% Permission is granted to copy, distribute and/or modify this document
+% under the terms of the GNU Free Documentation License, Version 1.2
+% or any later version published by the Free Software Foundation;
+% with no Invariant Sections, no Front-Cover Texts, and no Back-Cover
+% Texts.  A copy of the license is included in the section entitled "GNU
+% Free Documentation License".
+\renewcommand{\filename}{docUC_LSF_DeterministicVar1.tex}
+\renewcommand{\filetitle}{UC : Introducing some deterministic variables, using a LinearNumericalMathFunction}
+
+% \HeaderNNIILevel
+% \HeaderIILevel
+\HeaderIIILevel
+
+
+\label{linearNumericalMathFunction}
+
+\index{Limit State Function!Reducing the initial limit state function}
+\index{Limit State Function!LinearNumericalMathFunction}
+
+
+The objective of this Use Case is to restrict a model which has been previously declared, to some of its variables.\\
+
+Details on each object may be found in the User Manual  (\href{OpenTURNS_UserManual_TUI.pdf}{see User Manual - Base Objects / NumericalMathFunction}).\\
+
+
+
+We suppose that the following limit state function {\itshape limitStateFunc} has been created in Open TURNS :
+$$
+\begin{array}{l|lcl}
+  limitStateFunc : & \mathbb{R}^n  & \rightarrow & \mathbb{R}^p \\
+  & \vect{X}      & \mapsto     & limitStateFunc(\vect{X})
+\end{array}
+$$
+Suppose now that some of the input variables are deterministic : the random input vector is reduced to a subvector of $\vect{X}$ : $\vect{X}_{prob} \in \mathbb{R}^{n_{prob}}$, with $n_{prob} \leq n$.\\
+Let's note $\vect{X} = (\vect{X}_{prob}, \vect{X}_{det})$.\\
+
+In order to create the new limit state function associated to the random input vector $\vect{X}_{prob}$, it is necessary to compose the initial limit state function $limitStateFunc$ with the linear function $increase$ defined by :
+$$
+\begin{array}{l|lcl}
+  increase : & \mathbb{R}^{n_{prob}}  & \rightarrow & \mathbb{R}^n \\
+  & \vect{X}_{prob}               & \mapsto     & increase(\vect{X}_{prob}) = \mat{A} \vect{X}_{prob} + \vect{B}
+\end{array}
+$$
+where $\mat{A}$ is the matrix in $\mathbb{M}_{n, n_{prob}}(\mathbb{R})$ defined by :
+$$
+\mat{A}= \left(
+  \begin{array}{c}
+    1_{n_{prob}}\\
+    0
+  \end{array}
+\right)
+$$
+and $\vect{B}$ the vector in $\mathbb{R}^{n}$ defined by :
+$$
+\vect{B} = \left(
+  \begin{array}{c}
+    \vect{0}  \\
+    \vect{X}_{det}
+  \end{array}
+\right)
+$$
+
+Then, the new limit state function associated to the random input vector $\vect{X}_{prob}$ is $$
+newLimitStateFunc = limitStateFunc \circ increase
+$$
+defined by :
+$$
+\begin{array}{l|lcl}
+  newLimitStateFunc : & \mathbb{R}^{n_{prob}}  & \rightarrow & \mathbb{R}^p \\
+  & \vect{X}_{prob}                & \mapsto     & newLimitStateFunc(\vect{X}_{prob})
+\end{array}
+$$
+
+The example here is the limit state function {\itshape poutre} defined in Eq.(\ref{equatPoutre}) and the random input vector $(E,F,L,I)$ that is reduced to the subvector $(E,F)$. The other variables $(L,I)$ are fixed to $(10.0, 5.0)$.\\
+
+\requirements{
+  \begin{description}
+  \item[$\bullet$] the initial limit state function : {\itshape poutre}
+  \item[type:] LinearNumericalMathFunction $(\mathbb{R}^4 \rightarrow \mathbb{R})$
+  \end{description}
+}
+{
+  \begin{description}
+  \item[$\bullet$] the {\itshape increase} function
+  \item[type:] NumericalMathFunction $(\mathbb{R}^2 \rightarrow \mathbb{R}^4)$
+  \item[$\bullet$]  the new limit state function : {\itshape poutreReduced = poutre $\circ$ increase}
+  \item[type:] NumericalMathFunction $(\mathbb{R}^2 \rightarrow \mathbb{R})$
+  \end{description}
+}
+
+\textspace\\
+Python script for this UseCase :
+
+\begin{lstlisting}
+  # Dimension of the random input vector
+  stochasticDimension = 2
+
+  # Dimension of the deterministic input vector
+  deterministicDimension = 2
+
+  # Dimension of the input vector of the limit state function 'poutre'
+  inputDim = poutre.getInputNumericalPointDimension()
+
+  # Fixe deterministic values for the two last variables
+  # of the input vecteor (E,F,L,I)
+  # L
+  X2 = 10.0
+  # I
+  X3 = 5.0
+
+  # Create the 'increase' linear function
+  # a LinearNumericalMathFunction expression is :
+  # linear * (X- center) + constant
+  # center = null
+  center = NumericalPoint(stochasticDimension)
+
+  # constant term = (0.0, 0.0, X2, X3)^t
+  constant = NumericalPoint(inputDim)
+  constant[0] =  0.0
+  constant[1] =  0.0
+  constant[2] =  X2
+  constant[3] =  X3
+
+  # Linear term (lines number, columns number)
+  linear = Matrix(inputDim,  stochasticDimension)
+  linear[0,0] = 1.0
+  linear[0,1] = 0.0
+  linear[1,0] = 0.0
+  linear[1,1] = 1.0
+  linear[2,0] = 0.0
+  linear[2,1] = 0.0
+  linear[3,0] = 0.0
+  linear[3,1] = 0.0
+
+  # 'increase' = linear * (X- center) + constant
+  increase = LinearNumericalMathFunction(center, constant, linear, "increase")
+
+  # Create the new limit state function :
+  # 'poutreReduced = poutre o increase'
+  poutreReduced = NumericalMathFunction(poutre, increase)
+
+  # Check if it worked
+  x = NumericalPoint(increase.getInputNumericalPointDimension()
+  x[0] = 50.0
+  x[1] = 1.0
+  print "poutreReduced(x)=", poutreReduced(x)
+  xRef = NumericalPoint(inputDim)
+  xRef[0] = x[0]
+  xRef[1] = x[1]
+  xRef[2] = X2
+  xRef[3] = X3
+  print "ref=", externalCode(xRef)
+\end{lstlisting}
+

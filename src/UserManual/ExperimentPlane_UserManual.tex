@@ -1,0 +1,656 @@
+% Copyright (c)  2005-2010 EDF-EADS-PHIMECA.
+% Permission is granted to copy, distribute and/or modify this document
+% under the terms of the GNU Free Documentation License, Version 1.2
+% or any later version published by the Free Software Foundation;
+% with no Invariant Sections, no Front-Cover Texts, and no Back-Cover
+% Texts.  A copy of the license is included in the section entitled "GNU
+% Free Documentation License".
+
+\newpage \section{Experiment planes}
+
+\subsection{Experiment}
+
+\begin{description}
+
+\item[Usage :] $Experiment(expPlaneImplentation)$
+
+\item[Arguments :]  $expPlaneImplentation$ : an ExperimentImplementation, which is a WeightedExperiment or a StratifiedExperiment.
+
+\item[Value :] an Experiment
+
+\item[Links]  \rule{0pt}{1em}
+  \href{./Version/docref_C11_MinMaxPlanExp.pdf}{see docref\_C11\_MinMaxPlanExp}
+
+\end{description}
+
+Each  $getMethod$  is associated to a $setMethod$.
+
+% =================================================
+
+
+\newpage        \subsection{Stratified Experiment Planes}
+
+
+\subsubsection{StratifiedExperiment}
+
+This class inherits from the ExperimentImplentation class.\\
+
+\begin{description}
+
+\item[Usage :] $StratifiedExperiment(center, levels)$
+
+\item[Arguments :]   \rule{0pt}{1em}
+  \begin{description}
+  \item $center$ : a NumericalPoint, which has different meanings according to the nature of the stratifed experiment : Axial, Composite, Factorial or Box (see corresponding documentation)
+  \item $levels$ :  a NumericalPoint, which has different meanings according to the nature of the stratifed experiment : Axial, Composite, Factorial or Box (see corresponding documentation)
+  \end{description}
+
+\item[Value :] an StratifiedExperiment
+
+\item[Some methods :]  \rule{0pt}{1em}
+
+  \begin{description}
+
+  \item $generate$
+    \begin{description}
+    \item[Usage :] $generate()$
+    \item[Arguments :] none
+    \item[Value :] a NumericalSample, the points which constitute the stratified experiment plane, according to its nature  : Axial, Composite, Factorial or Box (see corresponding documentation)
+    \end{description}
+    \bigskip
+
+  \item $getLevels$
+    \begin{description}
+    \item[Usage :] $getLevels()$
+    \item[Arguments :] none
+    \item[Value :] a NumericalPoint which corresponds to the levels of the stratified experiment, according to its nature : Axial, Composite, Factorial or Box (see corresponding documentation)
+    \end{description}
+    \bigskip
+
+  \item $getCenter$
+    \begin{description}
+    \item[Usage :] $getCenter()$
+    \item[Arguments :] none
+    \item[Value :] a NumericalPoint which corresponds to the cenetr of the stratified experiment, according to its nature : Axial, Composite, Factorial or Box (see corresponding documentation)
+    \end{description}
+    \bigskip
+
+  \item $.str()$
+    \begin{description}
+    \item[Usage :] $str()$
+    \item[Arguments :] no argument
+    \item[Value :] a string which describes the Experiment
+    \end{description}
+
+  \end{description}
+
+\end{description}
+
+% =================================================
+
+\newpage         \subsubsection{Axial}
+
+This class inherits from the StratifiedExperiment class.\\
+
+\begin{description}
+
+\item[Usage :] \rule{0pt}{1em}
+  \begin{description}
+  \item $Axial(center, levels)$
+  \item $Axial(dimension, levels)$
+  \end{description}
+
+\item[Arguments :]  \rule{0pt}{1em}
+  \begin{description}
+  \item $center$ : a NumericalPoint, the center of the experiment plane
+  \item $levels$ :  a NumericalPoint, the discretisation of directions (the same for each one), without any consideration of unit
+  \item $dimension$ :  an integer, the dimension of the space where the experiment plane is created
+  \end{description}
+
+\item[Value :] a Axial
+  \begin{description}
+  \item In the first usage, the experiment plane is centered on $center$.
+  \item In the second usage, the experiment plane is centered on the $center = 0$. It is recommended to use that usage, then to scale the NumericalSample generated in order to take into consideration the unit of each direction, then to translate it onto the center point.
+  \end{description}
+
+\item[Details :]  \rule{0pt}{1em}
+  \begin{description}
+  \item Number of points generated : $1 + 2 * levels.getDimension() * dimension$
+  \item The axial plane generates a NumericalSample where :
+    \begin{description}
+    \item the first point is the vector ($center$),
+    \item the following points are  :  each coordinate one at a time is equal to  +/- levels[i], for each direction
+    \item so on, until the last level.
+    \end{description}
+  \end{description}
+
+\item[Links] \rule{0pt}{1em}
+  % \href{./Version/docref_C11_MinMaxPlanExp.pdf}{see docref\_C11\_MinMaxPlanExp}
+\end{description}
+
+
+
+% =================================================
+
+
+
+\newpage \subsubsection{Factorial}
+
+This class inherits from the StratifiedExperiment class.\\
+
+\begin{description}
+
+\item[Usage :] \rule{0pt}{1em}
+  \begin{description}
+  \item $Factorial(center, level)$
+  \item $Factorial(dimension, level)$
+  \end{description}
+
+
+\item[Arguments :]  \rule{0pt}{1em}
+  \begin{description}
+  \item $center$ : a NumericalPoint, the center of the experiment plane
+  \item $level$ :  a NumericalPoint, the discretisation of directions (the same for each one), without any consideration of unit
+  \item $dimension$ :  an integer, the dimension of the space where the experiment plane is created
+  \end{description}
+
+\item[Value :] a Factorial
+  \begin{description}
+  \item In the first usage, the experiment plane is centered on $center$.
+  \item In the second usage, the experiment plane is centered on the $center = 0$. It is recommended to use that usage, then to scale the NumericalSample generated in order to take into consideration the unit of each direction, then to translate it onto the proper center.
+  \end{description}
+
+\item[Details :]  \rule{0pt}{1em}
+  \begin{description}
+  \item Number of points generated : $1 + levels.getDimension() * 2^{dimension}$
+  \item The factorial plane generates a NumericalSample where  :
+    \begin{description}
+    \item the first point is the vector ($center$),
+    \item the following points are : all coordinates are equal to  +/- levels[i] for each direction
+    \end{description}
+  \end{description}
+
+\item[Links] \rule{0pt}{1em}
+  % \href{./Version/docref_C11_MinMaxPlanExp.pdf}{see docref\_C11\_MinMaxPlanExp}
+\end{description}
+
+% ==========================================
+
+
+\newpage \subsubsection{Composite}
+
+
+This class inherits from the StratifiedExperiment class.
+
+\begin{description}
+
+\item[Usage :] \rule{0pt}{1em}
+  \begin{description}
+  \item $Composite(center, level)$
+  \item $Composite(dimension, level)$
+  \end{description}
+
+\item[Arguments :]  \rule{0pt}{1em}
+  \begin{description}
+  \item $center$ : a NumericalPoint, the center of the experiment plane
+  \item $level$ :  a NumericalPoint, the discretisation of directions (the same for each one), without any consideration of unit
+  \item $dimension$ :  an integer, the dimension of the space where the experiment plane is created
+  \end{description}
+
+\item[Value :] a Composite
+  \begin{description}
+  \item if defined with the first usage, the experiment plane is centered on $center$
+  \item if defined with the second usage, the experiment plane is centered on the $center = 0$. It is recommended to use that usage, then to scale the NumericalSample generated in order to take into consideration the unit of each direction, then to translate it onto the proper center.
+  \end{description}
+
+\item[Details :]  \rule{0pt}{1em}
+  \begin{description}
+  \item A composite plane is the union of an axial and a factorial one
+  \item Number of points generated : $1 + levels.getDimension() * (2 * dimension + 2^{dimension})$
+  \item The composite plane generates a NumericalSample  where :
+    \begin{description}
+    \item In the first usage, the experiment plane is centered on $center$.
+    \end{description}
+  \end{description}
+
+\item[Links] \rule{0pt}{1em}
+  % \href{./Version/docref_C11_MinMaxPlanExp.pdf}{see docref\_C11\_MinMaxPlanExp}
+
+\end{description}
+
+% =================================================
+
+\newpage \subsubsection{Box}
+
+This class inherits from the StratifiedExperiment class.\\
+
+\begin{description}
+
+\item[Usage :] \rule{0pt}{1em}
+  \begin{description}
+  \item $Box(levels)$
+  \end{description}
+
+\item[Arguments :]  \rule{0pt}{1em}
+  \begin{description}
+  \item $levels$ : a NumericalPoint, which specifies the number of intermediate points on each direction which regularly discretize  $[0, 1]$. In direction $i$, the points number is $levels[i] + 2$ : the extreme bounds $0$ and $1$ are always taken.
+  \end{description}
+
+\item[Value :] a Box, which regularly discretizes the unit pavement $[0, 1]^n$ with the specified number of intermediate points for each direction
+
+\item[Details :]  \rule{0pt}{1em}
+  \begin{description}
+  \item Box discretizes the unit pavement $[0, 1]^n$ where $n = levels.getDimension()$.
+  \item Number of points generated : $\displaystyle \prod_{i=1}^{n} (2+levels[i])$.
+  \item The box plane generates a NumericalSample which discretizes the unit pavement $[0, 1]^n$ where $n = levels.getDimension()$ :  each direction $i$ contains the extreme bounds $0$ and $1$ and the $levels[i]$ intermediate points regularly positionned between these extreme bounds.
+  \item It is recommended to use the {\itshape scale, translate} methods of the NumericalSample in order to scale each direction and translate the grid structure onto the proper center.
+  \end{description}
+
+\item[Links] \rule{0pt}{1em}
+  \href{./Version/docref_C11_MinMaxPlanExp.pdf}{see docref\_C11\_MinMaxPlanExp}
+\end{description}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newpage \subsection{WeightedExperiment}
+
+This class inherits from the ExperimentImplementation class.\\
+
+It is used to define the approximation of the the esperance $E_{\mu}$ :
+\begin{equation}\label{approxEsp2}
+E_{\mu} \left[ f(\vect{Z}) \right] \simeq \sum_{i \in I} \omega_i f(\Xi_i)
+\end{equation} 
+where $f$ is a function $L_1(\mu)$.
+
+
+\begin{description}
+
+\item[Usage :] $WeightedExperiment(distribution, size)$
+
+\item[Arguments :]  \rule{0pt}{1em}
+  \begin{description}
+  \item $distribution$ : a Distribution, the distribution $\mu$ of (\ref{approxEsp2}).
+  \item $size$ : an integer, the number of points that will be generated in the experiment.
+  \end{description}
+
+
+\item[Value :] a WeightedExperiment
+
+\item[Some methods :]  \rule{0pt}{1em}
+
+  \begin{description}
+
+  \item $generate$
+    \begin{description}
+    \item[Usage :] $generate()$
+    \item[Arguments :] none
+    \item[Value :] a NumericalSample, the points $(\Xi_i)_{i \in I}$ which constitute the experiment plane with $card I = size$. The sampling method is defined by the nature of the weighted experiment.
+    \end{description}
+    \bigskip
+
+  \item $getDistribution$
+    \begin{description}
+    \item[Usage :] $getDistribution()$
+    \item[Arguments :] none
+    \item[Value :] the Distribution $\mu$ of (\ref{approxEsp2}).
+.
+    \end{description}
+    \bigskip
+
+  \item $getSize$
+    \begin{description}
+    \item[Usage :] $getSize()$
+    \item[Arguments :] none
+    \item[Value :] an integer, the number $card I$ of points of the experiment plane.
+    \end{description}
+    \bigskip
+
+  \item $getWeight$
+    \begin{description}
+    \item[Usage :] $getWeight()$
+    \item[Arguments :] none
+    \item[Value :] a NumericalPoint of dimension 1 and size $cardI$ that contains all the weights : $(\omega_i)_{i \in I}$.
+    \end{description}
+    \bigskip
+
+  \item $.str()$
+    \begin{description}
+    \item[Usage :] $str()$
+    \item[Arguments :] no argument
+    \item[Value :] a string which describes the WeightedExperiment.
+    \end{description}
+
+  \end{description}
+
+
+\item[Links]  \rule{0pt}{1em}
+  % \href{./Version/docref_C11_MinMaxPlanExp.pdf}{see docref\_C11\_MinMaxPlanExp}
+
+\end{description}
+
+
+
+% =================================================
+
+\newpage        \subsection{Random Weighted Experiment Planes}
+
+  \subsubsection{LHSExperiment}
+
+This class inherits from the WeightedExperiment class.\\
+
+\begin{description}
+
+\item[Usage :] \rule{0pt}{1em}
+  \begin{description}
+  \item $LHSExperiment(distribution, size)$
+  \end{description}
+
+\item[Arguments :]  \rule{0pt}{1em}
+  \begin{description}
+  \item $distribution$ : the Distribution $\mu$ of (\ref{approxEsp2}) according to which the points of the experiment plane will be generate with the LHS technique. CARE  : that distribution must have an independent copula to make the method valid;
+  \item $size$ : an integer, the number $car I$ of points that will be generated.
+  \end{description}
+
+\item[Value :] a LHSExperiment. The weights asosciated to the points are all equal to $\displaystyle \frac{1}{cardI}$.
+
+\item[Details :]  The method $generate$ generates a NumericalSample of points  $(\Xi_i)_{i \in I}$ which points are  generated according to $\mu$  with the LHS technique : some cellulars are determined, with the same probabilistic content according to $distribution$, then cellulars are selected verifying the constraint <<one by line and column>>, then points are selected among these selected cellulars. When the method $generate$ is recalled, the NumericalSample generated changes  : the point selection within the cellulars changes but not the cellulars selection. To change the cellular selection, it is necessary to create a new LHS Experiment.
+
+\item[Links] \rule{0pt}{1em}
+  % \href{}
+\end{description}
+
+
+% =================================================
+\newpage         \subsubsection{MonteCarloExperiment}
+
+
+This class inherits from the WeightedExperiment class.\\
+
+\begin{description}
+
+\item[Usage :] \rule{0pt}{1em}
+  \begin{description}
+  \item $MonteCarloExperiment(distribution, size)$
+  \end{description}
+
+\item[Arguments :]  \rule{0pt}{1em}
+  \begin{description}
+  \item $distribution$ : a Distribution, the distribution $\mu$ of (\ref{approxEsp2}) according to which the points of the experiment plane will be generate with the Monte Carlo technique. CARE  : that distribution must have an independent copula to make the method valid;
+  \item $size$ : an integer, the number of points $card I$ that will be generated.
+  \end{description}
+
+\item[Value :] a MonteCarloExperiment. The weights asosciated to the points are all equal to $\displaystyle \frac{1}{cardI}$.
+
+\item[Details :]  The method $generate$ generates a NumericalSample of points  $(\Xi_i)_{i \in I}$  which points are independently generated from $\mu$. When the method $generate$ is recalled, the sample generated changes.
+
+\item[Links] \rule{0pt}{1em}
+  % \href{}
+\end{description}
+
+
+% =================================================
+\newpage         \subsubsection{ImportanceSamplingExperiment}
+
+This class inherits from the WeightedExperiment class.\\
+
+\begin{description}
+
+\item[Usage :] \rule{0pt}{1em}
+  \begin{description}
+  \item $ImportanceSamplingExperiment(distribution, importanceDistribution, size)$
+  \end{description}
+
+\item[Arguments :]  \rule{0pt}{1em}
+  \begin{description}
+  \item $distribution$ : a Distribution, the distribution $\mu$ bution, the distribution $\mu$ of (\ref{approxEsp2}). CARE  : that distribution must have an independent copula to make the method valid.
+  \item $importanceDistribution$ : a Distribution, the distribution $p$ according to which the points of the experiment plane will be generated with the Importance Sampling technique. CARE  : that distribution must have an independent copula to make the method valid.
+  \item $size$ : an integer, the number $card I$ of points that will be generated.
+  \end{description}
+
+\item[Value :] a ImportanceSamplingExperiment. The weights asosciated to the points are all equal to $\displaystyle \frac{1}{cardI}\frac{\mu(\Xi_i)}{p(\Xi_i)}$.
+
+\item[Details :]  The method $generate$ generates a NumericalSample of points  $(\Xi_i)_{i \in I}$ which points are independently generated from $distribution$. When the method $generate$ is recalled, the sample generated changes.
+
+\item[Links] \rule{0pt}{1em}
+  % \href{}
+\end{description}
+
+
+
+
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newpage        \subsection{ Deterministic Weighted Experiments}
+
+\subsubsection{FixedExperiment}
+
+
+This class inherits from the WeightedExperiment class.\\
+
+\begin{description}
+
+\item[Usage :] \rule{0pt}{1em}
+  \begin{description}
+  \item $FixedExperiment(partNumSamp)$
+  \item $FixedExperiment(partNumSamp, weight)$
+  \end{description}
+
+\item[Arguments :]   \rule{0pt}{1em}
+  \begin{description}
+  \item $partNumSamp$ : a NumericalSample, a sample that already exists.
+  \item $weight$ : a NumericalPoint, the weight of each point of $partNumSamp$
+  \end{description}
+ 
+\item[Value :] a FixedExperiment. The weights asosciated to the points are all equal to $\displaystyle \frac{1}{cardI}$ when not specified. Then, the sample $partNumSamp$ is considered as generated from the limit distribution $lim_{card I \rightarrow\infty} \sum_{i \in I} \omega_i \delta_{\vect{X}_i} = \mu$.
+ 
+\item[Details :]  The method $generate$  always gives  the same numerical sample, the $partNumSamp$, even if it is recalled. It enables to take into account a random sample which has been obtained outside the Open TURNS study or at another step of the Open TURNS study.\\
+The method \emph{setDistribution} has no side effect, as the distribution is fixed by the initial sample.
+
+
+\item[Links] \rule{0pt}{1em}
+  % \href{}
+\end{description}
+
+% =================================================
+\newpage \subsubsection{ LowDiscrepancyExperiment}
+
+
+
+This class inherits from the WeightedExperiment class.\\
+
+
+\begin{description}
+
+\item[Usage :] \rule{0pt}{1em}
+  \begin{description}
+  \item $LowDiscrepancyExperiment(sequence, size)$
+  \item $LowDiscrepancyExperiment(sequence, size, measure)$
+  \end{description}
+
+\item[Arguments :]  \rule{0pt}{1em}
+  \begin{description}
+  \item $sequence$ : a LowDiscrepancySequence wich is a sequence of points $(\vect{u}_1, \dots, \vect{u}_N)$ with low discrepancy (see different models of such sequences in Open TURNS).
+  \item $size$ : the integer $N$, the number of points of the sequence.
+  \item $measure$ : the Distribution $\mu$ of (\ref{approxEsp2})  with independent copula and dimension $n$. The low discrepancy sequence $(x_1, \dots, x_N)$ is uniforly distributed over $[0,1]^n$. We use the marginal transformation $\xi_i = F_i ^{-1}(u_i)$ to generate points $(\xi_i)_{i \in I}$ according to the distribution $\mu$. The weights are all equal to $\displaystyle \frac{1}{N}$.
+  \end{description}
+
+\item[Value :] a LowDiscrepancyExperiment.
+
+\item[Details :]  The method $generate$ generates a NumericalSample of points  $(\xi_i)_{i \in I}$ and which points are independently generated from $distribution$. When the method $generate$ is recalled, the sample generated changes.
+
+\item[Links] \rule{0pt}{1em}
+  % \href{}
+\end{description}
+
+
+% =================================================
+\newpage \subsubsection{ GaussProductExperiment}
+
+
+This class inherits from the WeightedExperiment class.\\
+
+
+\begin{description}
+
+\item[Usage :] \rule{0pt}{1em}
+  \begin{description}
+  \item $GaussProductExperiment(measure, marginalDegrees)$
+  \end{description}
+
+\item[Arguments :]  \rule{0pt}{1em}
+  \begin{description}
+  \item $sequence$ : a GaussProductExperiment which contains the Gauss quadrature points and their associated weights in dimension $n$.
+  \item $marginalDegrees$ : a Indices that fixes the number of points $N_i$ for each direction.
+  \item $measure$ : the Distribution  $\mu$ of (\ref{approxEsp2}) of dimension $n$ with independent copula. 
+  \end{description}
+
+\item[Value :] a GaussProductExperiment which contains $card I = \prod_{i=1}^{i=n} N_i$.
+
+\item[Details :]  If the number of points bfor each direction doesn't change, the methode $generate$ always gives the same sample.
+
+\item[Links] \rule{0pt}{1em}
+  % \href{}
+\end{description}
+
+
+
+% =================================================
+\newpage        \subsection{ Low Discrepancy Sequences}
+
+\subsubsection{FaureSequence}
+
+\begin{description}
+
+\item[Usage :] \rule{0pt}{1em}
+  \begin{description}
+  \item $FaureSequence(dimension)$
+  \item $FaureSequence()$
+  \end{description}
+
+\item[Arguments :]  \rule{0pt}{1em}
+  \begin{description}
+  \item $dimension$ : an integer which is the dimension of the points.
+  \end{description}
+
+\item[Value :] a FaureSequence. When not mentioned, $dimension=1$.
+
+\item[Details :]  The method $generate(size)$ generates a NumericalSample composed by the $size$ first points of the sequence.
+
+
+\item[Links] \rule{0pt}{1em}
+  \href{OpenTURNS_ReferenceGuide.pdf}{see Reference Guide - Low Discrepancy Sequences}
+\end{description}
+
+
+
+% =================================================
+
+\newpage  \subsubsection{HaltonSequence}
+
+\begin{description}
+
+\item[Usage :] \rule{0pt}{1em}
+  \begin{description}
+  \item $HaltonSequence(dimension)$
+  \item $HaltonSequence()$
+  \end{description}
+
+\item[Arguments :]  \rule{0pt}{1em}
+  \begin{description}
+  \item $dimension$ : an integer which is the dimension of the points.
+  \end{description}
+
+\item[Value :] a HaltonSequence. When not mentioned, $dimension=1$.
+
+\item[Details :]  The method $generate(size)$ generates a NumericalSample composed by the $size$ first points of the sequence.
+
+
+\item[Links] \rule{0pt}{1em}
+  \href{OpenTURNS_ReferenceGuide.pdf}{see Reference Guide - Low Discrepancy Sequences}
+\end{description}
+
+
+% =================================================
+
+\newpage  \subsubsection{ReverseHaltonSequence}
+
+\begin{description}
+
+\item[Usage :] \rule{0pt}{1em}
+  \begin{description}
+  \item $ReverseHaltonSequence(dimension)$
+  \item $ReverseHaltonSequence()$
+  \end{description}
+
+\item[Arguments :]  \rule{0pt}{1em}
+  \begin{description}
+  \item $dimension$ : an integer which is the dimension of the points.
+  \end{description}
+
+\item[Value :] a ReverseHaltonSequence. When not mentioned, $dimension=1$.
+
+\item[Details :]  The method $generate(size)$ generates a NumericalSample composed by the $size$ first points of the sequence.
+
+
+\item[Links] \rule{0pt}{1em}
+  \href{OpenTURNS_ReferenceGuide.pdf}{see Reference Guide - Low Discrepancy Sequences}
+\end{description}
+
+
+% =================================================
+
+\newpage  \subsubsection{HaselgroveSequence}
+
+\begin{description}
+
+\item[Usage :] \rule{0pt}{1em}
+  \begin{description}
+  \item $HaselgroveSequence(base)$
+  \item $HaselgroveSequence(dimension)$
+  \item $HaselgroveSequence()$
+  \end{description}
+
+\item[Arguments :]  \rule{0pt}{1em}
+  \begin{description}
+  \item $base$ : a NumericalPoint of positive real values linearly independent over the integer ring, i.e no linear combination with integer coefficients of these values can be zero excepted if all the coefficients are zero. The dimension of the sequence is given by the dimension of the base.
+  \item $dimension$ : an integer which is the dimension of the points.
+  \end{description}
+
+\item[Value :] a HaselgroveSequence. When not mentioned, $dimension=1$.
+
+\item[Details :]  The method $generate(size)$ generates a NumericalSample composed by the $size$ first points of the sequence.
+
+
+\item[Links] \rule{0pt}{1em}
+  \href{OpenTURNS_ReferenceGuide.pdf}{see Reference Guide - Low Discrepancy Sequences}
+\end{description}
+
+
+% =================================================
+
+\newpage  \subsubsection{SobolSequence}
+
+\begin{description}
+
+\item[Usage :] \rule{0pt}{1em}
+  \begin{description}
+  \item $SobolSequence(dimension)$
+  \item $SobolSequence()$
+  \end{description}
+
+\item[Arguments :]  \rule{0pt}{1em}
+  \begin{description}
+  \item $dimension$ : an integer which is the dimension of the points.
+  \end{description}
+
+\item[Value :] a SobolSequence. When not mentioned, $dimension=1$.
+
+\item[Details :]  The method $generate(size)$ generates a NumericalSample composed by the $size$ first points of the sequence.
+
+
+\item[Links] \rule{0pt}{1em}
+  \href{OpenTURNS_ReferenceGuide.pdf}{see Reference Guide - Low Discrepancy Sequences}
+\end{description}
+

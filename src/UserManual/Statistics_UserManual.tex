@@ -1,0 +1,1380 @@
+% Copyright (c)  2005-2010 EDF-EADS-PHIMECA.
+% Permission is granted to copy, distribute and/or modify this document
+% under the terms of the GNU Free Documentation License, Version 1.2
+% or any later version published by the Free Software Foundation;
+% with no Invariant Sections, no Front-Cover Texts, and no Back-Cover
+% Texts.  A copy of the license is included in the section entitled "GNU
+% Free Documentation License".
+\newpage\section{Statistics on sample}
+
+
+
+
+% =====================================================
+\subsection{Numerical Sample}
+
+\subsubsection{NumericalComplexCollection}
+
+\begin{description}
+
+\item[Usage :] \rule{0pt}{1em}
+  \begin{description}
+  \item $NumericalComplexCollection(size)$
+  \item $NumericalComplexCollection(pythonList)$
+  \end{description}
+  \bigskip
+
+\item[Arguments :]  \rule{0pt}{1em}
+  \begin{description}
+  \item $size$ : an integer, the size of the NumericalSample
+  \item $pythonList$ : a list python of dimension 2. For example : $[(1.0, 2.0), (3.0, 4.0)]$.
+  \end{description}
+  \bigskip
+
+\item[Value :] a NumericalComplexCollection, containing $size$ NumericalPoint, each one equal to :
+  \rule{0pt}{1em}
+  \begin{description}
+  \item in the first usage : $size$ complex points $(0,0)$,
+  \item in the second usage, the list of the complex points mentioned in $pythonList$.
+  \end{description}
+  \bigskip
+
+\item[Some methods :]  \rule{0pt}{1em}
+
+  \begin{description}
+
+  \item $[\,]$
+    \begin{description}
+    \item[Usage :] $NumericalComplexCollection[i]$
+    \item[Arguments :] $i$ : an integer, constraint : $ 0 \leq i \leq size -1$
+    \item[Value :] the complex point of indice $i$.
+    \end{description}
+
+  \end{description}
+
+\end{description}
+
+% =====================================================
+\newpage \subsubsection{NumericalSample}
+\begin{description}
+
+\item[Usage :] \rule{0pt}{1em}
+  \begin{description}
+  \item $NumericalSample(size,dim)$
+  \item $NumericalSample(size,numericalPoint)$
+  \item $NumericalSample(sequence)$
+  \item $NumericalSample(array)$
+  \end{description}
+  \bigskip
+
+
+\item[Arguments :]  \rule{0pt}{1em}
+  \begin{description}
+  \item $size$ : an integer, the size of the NumericalSample
+  \item $dim$ : an integer, the dimension each NumericalPoint of the NumericalSample
+  \item $numericalPoint$ : a NumericalPoint
+  \item $sequence$ : a tuple / list python of dimension 2. For example : $[(1.0, 2.0), (3.0, 4.0)]$.
+  \item $array$: a {\itshape Numpy array} with dimension (ndim) 2
+  \end{description}
+  \bigskip
+
+\item[Value :] a NumericalSample, containing $size$ NumericalPoint, each one equal to : \rule{0pt}{1em}
+  \begin{description}
+  \item $\vect{0} \in \mathbb{R}^{dim}$ in the first usage
+  \item $numericalPoint$ in the second usage
+  \end{description}
+  \bigskip
+
+\item[Some methods :]  \rule{0pt}{1em}
+
+  \begin{description}
+
+  \item $[\,]$
+    \begin{description}
+    \item[Usage :] $NumericalSample[i]$
+    \item[Arguments :] $i$ : an integer, constraint : $ 0 \leq i \leq size -1$
+    \item[Value :] a NumericalPoint, the $(i+1)-th$ NumericalPoint of the NumericalSample
+    \end{description}
+    \bigskip
+
+  \item $[\,, \,]$
+    \begin{description}
+    \item[Usage :] $NumericalSample[i,j]$
+    \item[Arguments :] $i,j$ : integers, constraint : $ 0 \leq i,j \leq size -1$
+    \item[Value :] a real, the $(j+1)-th$ component of the  $(i+1)-th$ NumericalPoint of the NumericalSample
+    \end{description}
+    \bigskip
+
+
+
+  \item $add$
+    \begin{description}
+    \item[Usage :] $add(x)$
+    \item[Arguments :] $x$ : a NumericalPoint
+    \item[Value :] a NumericalSample, of size $size+1$ where the last NumericalPoint has been added, equal to $x$
+    \end{description}
+    \bigskip
+
+
+  \item $computeCovariance$
+    \begin{description}
+    \item[Usage :] $computeCovariance()$
+    \item[Arguments :] none
+    \item[Value :] a CovarianceMatrix, the covariance matrix of the NumericalSample (a $dim^2$ matrix)
+    \end{description}
+    \bigskip
+
+  \item $computeEmpiricalCDF$
+    \begin{description}
+    \item[Usage :]  \rule{0pt}{1em}
+      \begin{description}
+      \item  $computeEmpiricalCDF(x)$
+      \item  $computeEmpiricalCDF(x, tail)$
+      \end{description}
+    \item[Arguments :] \rule{0pt}{1em}
+      \begin{description}
+      \item $x$ : a NumericalPoint
+      \item $tail$ : a Boolean, which indicates whether we compute the tail CDF (if $tail = True$) or the CDF at point $x$ (if $tail = False$). The CDF at  at point $\vect{x}$ is $\mathcal{P}(X_1 \leq x_1, \hdots, X_n \leq x_n)$ and the tail CDF at point $\vect{x}$ is $\mathcal{P}(X_1 > x_1, \hdots, X_n > x_n)$. If $tail = True$,  $computeEmpiricalCDF$ evaluates the tail CDF. If not specified, $tail = False$.
+      \end{description}
+
+    \item[Value :] a numerical scalar, the Empirical Cumulative Distribution Function value of the NumericalSample at $x$
+    \end{description}
+    \bigskip
+
+
+  \item $computeKendallTau$
+    \begin{description}
+    \item[Usage :] $computeKendallTau()$
+    \item[Arguments :] none
+    \item[Value :] a CorrelationMatrix,  the Kendall rank correlation matrix of the NumericalSample
+    \end{description}
+    \bigskip
+
+
+  \item $computeKurtosisPerComponent$
+    \begin{description}
+    \item[Usage :] $computeKurtosisPerComponent()$
+    \item[Arguments :] none
+    \item[Value :] a NumericalPoint,  the value of the kurtosis of each component of the NumericalSample
+    \end{description}
+    \bigskip
+
+  \item $computeMean$
+    \begin{description}
+    \item[Usage :] $computeMean()$
+    \item[Arguments :] none
+    \item[Value :] a NumericalPoint, the mean value vector of each component of the NumericalSample
+    \end{description}
+    \bigskip
+
+
+  \item $computeMedianPerComponent$
+    \begin{description}
+    \item[Usage :] $computeMedianPerComponent()$
+    \item[Arguments :] none
+    \item[Value :] a NumericalPoint, the median value vector of each component of the NumericalSample
+    \end{description}
+    \bigskip
+
+  \item $computePearsonCorrelation$
+    \begin{description}
+    \item[Usage :] $computePearsonCorrelation()$
+    \item[Arguments :] none
+    \item[Value :] a CorrelationMatrix, the Pearson correlation matrix of the NumericalSample (a $dim^2$ matrix)
+    \end{description}
+    \bigskip
+
+  \item $computeQuantile$
+    \begin{description}
+    \item[Usage :] $computeQuantile(p)$
+    \item[Arguments :] $p$, a real value, constraint $0\leq p \leq 1$, the value of a probability
+    \item[Value :] a NumericalPoint, the empirical quantile value associated to probability $p$, determined from the empirical CDF of the NumericalSample as follows : \begin{itemize}
+   \item $\forall q \in [\frac{1}{2n}, 1-\frac{1}{2n}]$, then Open TURNS approximates the empirical  cumulative density function by interpolating all the middles of the steps and then evaluates  $x_q$ from this continuous approximation. 
+   \item $\forall q \leq \frac{1}{2n}$, then Open TURNS returns $min(X_i)$.
+   \item $\forall q > \frac{1}{2n}$, then Open TURNS returns $max(X_i)$.
+\end{itemize}
+ 
+    \end{description}
+    \bigskip
+
+  \item $computeQuantilePerComponent$
+    \begin{description}
+    \item[Usage :] $computeQuantilePerComponent(p)$
+    \item[Arguments :] $p$, a real value, constraint $0\leq p \leq 1$, the value of a probability
+    \item[Value :] a NumericalPoint,
+      the empirical quantile value associated to probability $p$ for each component, determined from the empirical CDF of each component of the NumericalSample
+    \end{description}
+    \bigskip
+
+  \item $computeSkewnessPerComponent$
+    \begin{description}
+    \item[Usage :] $computeSkewnessPerComponent()$
+    \item[Arguments :] none
+    \item[Value :] a NumericalPoint,  the skewness of each component of the NumericalSample
+    \end{description}
+    \bigskip
+
+  \item $computeSpearmanCorrelation$
+    \begin{description}
+    \item[Usage :] $computeSpearmanCorrelation()$
+    \item[Arguments :] none
+    \item[Value :] a CorrelationMatrix, the Spearman correlation matrix of the NumericalSample (a $dim^2$ matrix)
+    \end{description}
+    \bigskip
+
+  \item $computeStandardDeviation$
+    \begin{description}
+    \item[Usage :] $computeStandardDeviation()$
+    \item[Arguments :] none
+    \item[Value :] a SquareMatrix, the Cholesky factor $\mat{L}$ of the  covariance matrix $\mat{\Lambda}$ : $\mat{L}\mat{L}^t = \mat{\Lambda}$, with $\mat{L}$ triangular inferior
+    \end{description}
+    \bigskip
+
+  \item $computeStandardDeviationPerComponent$
+    \begin{description}
+    \item[Usage :] $computeStandardDeviationPerComponent()$
+    \item[Arguments :] none
+    \item[Value :] a NumericalPoint, the standard Deviation value of each component of the NumericalSample
+    \end{description}
+    \bigskip
+
+  \item $computeVariancePerComponent$
+    \begin{description}
+    \item[Usage :] $computeVariancePerComponent()$
+    \item[Arguments :] none
+    \item[Value :] a NumericalPoint, the variance value of each component of the NumericalSample
+    \end{description}
+    \bigskip
+
+  \item $getDimension$
+    \begin{description}
+    \item[Usage :] $getDimension()$
+    \item[Arguments :] none
+    \item[Value :] an integer, the dimension of each point which constitutes the NumericalSample (it returns $dim$)
+    \end{description}
+    \bigskip
+
+  \item $getMin$
+    \begin{description}
+    \item[Usage :] $getMin()$
+    \item[Arguments :] none
+    \item[Value :] a NumericalPoint,
+      each element of the NumericalPoint corresponds to the minimum of each component of
+      the NumericalSample
+    \end{description}
+    \bigskip
+
+  \item $getMax$
+    \begin{description}
+    \item[Usage :] $getMax()$
+    \item[Arguments :] none
+    \item[Value :] a NumericalPoint, each element of the NumericalPoint corresponds to the maximum of each component of the NumericalSample
+    \end{description}
+    \bigskip
+
+  \item $getMarginal$
+    \begin{description}
+    \item[Usage :] \rule{0pt}{1em}
+      \begin{description}
+      \item  $getMarginal(i)$
+      \item  $getMarginal(indices)$
+      \end{description}
+    \item[Arguments :] \rule{0pt}{1em}
+      \begin{description}
+      \item  $i$ : a UnsignedLong, (integer)
+      \item  $indices$ : a Indices (collection of integers)
+      \end{description}
+    \item[Value :] \rule{0pt}{1em}
+      \begin{description}
+      \item  a NumericalSample : the NumericalSample of same size as the initial NumericalSample, of dimension 1, corresponding to the $i+1$ coordinate of the NumericalPoints which constitute the initial NumericalSample
+      \item  a NumericalSample : the NumericalSample of same size as the initial NumericalSample, of dimension $indices.getSize()$, corresponding to the associated coordinates of the NumericalPoints which constitute the initial NumericalSample. Care : indices start at 0.
+      \end{description}
+    \end{description}
+    \bigskip
+
+  \item $getSize$
+    \begin{description}
+    \item[Usage :] $getSize()$
+    \item[Arguments :] none
+    \item[Value :] an integer, the size of the NumericalSample (which means the number of points which constitute the NumericalSample (it returns $size$)
+    \end{description}
+    \bigskip
+
+  \item $rank$
+    \begin{description}
+    \item[Usage :] $rank()$
+    \item[Arguments :] none
+    \item[Value :] a NumericalSample, where each value has been replaced by the value of its rank (order set component by component)
+    \end{description}
+    \bigskip
+
+  \item $scale$
+    \begin{description}
+    \item[Usage :] $scale(factor)$
+    \item[Arguments :] $factor$ : a NumericalPoint
+    \item[Value :] a NumericalSample, where the components [i] of each NumericalPoint have been multiplied by the corresponding value $factor[i]$
+    \end{description}
+    \bigskip
+
+  \item $sort$
+    \begin{description}
+    \item[Usage :] $sort(i)$
+    \item[Arguments :] $i$ : UnsignedLong (an integer)
+    \item[Value :] a NumericalSample of same size as the initial NumericalSample, of dimension 1, constitued by the $i+1$th component of the NumericalPoints that constitute the initial NumericalSample,  all sorted in ascending order
+    \end{description}
+    \bigskip
+
+  \item $sortAccordingAComponent$
+    \begin{description}
+    \item[Usage :] $sortAccordingAComponent(i)$
+    \item[Arguments :] $i$ : UnsignedLong (an integer)
+    \item[Value :] a NumericalSample of same size and dimension as the initial NumericalSample, where the NumericalPoints have been reordered such that the $(i+1)$ component is sorted in ascending order
+    \end{description}
+    \bigskip
+
+
+  \item $split$
+    \begin{description}
+    \item[Usage :] $split(i)$
+    \item[Arguments :] $i$ : UnsignedLong (an integer)
+    \item[Value :] a NumericalSample. The initial NumericalSample has been modified and restricted to the $i$ first NumericalPoints. The new NumericalSample contains the $size - i$ last NumericalPoints of the initial NumericalPoints if size is the initial size of the sample.
+      For example : initial= (1, 2, 3, 4) and newSplit = initial.split(1). Then initial=(1) and newSplit=(2,3,4).
+    \end{description}
+    \bigskip
+
+
+  \item $str$
+    \begin{description}
+    \item[Usage :] $str()$
+    \item[Arguments :] none
+    \item[Value :] a string giving a brief description of the considered NumericalSample,
+    \end{description}
+    \bigskip
+
+
+  \item $translate$
+    \begin{description}
+    \item[Usage :] $translate(translation)$
+    \item[Arguments :] $translation$ : a NumericalPoint
+    \item[Value :] a NumericalSample, where the components [i] of each NumericalPoint have been added the corresponding value $translation[i]$
+    \end{description}
+
+  \end{description}
+
+\item[Details :] \rule{0pt}{1em}
+  \begin{description}
+  \item when two elements of the sample are equal, the rank of the first element appearing in the sample
+    will be considered as the lower one (for computing Spearman correlation matrix)
+  \end{description}
+
+\end{description}
+
+
+% =====================================================
+\newpage \subsection{Distribution factory}
+\subsubsection{DistributionImplementationFactory}
+
+
+\begin{description}
+\item[Usage :] $DistributionImplementationFactory()$
+
+\item[Arguments :] none
+
+\item[Value :]  a DistributionImplementationFactory is the implementation of the factory of one particular distribution.
+\item[Some methods :]  \rule{0pt}{1em}
+
+  \begin{description}
+
+  \item $build$
+    \begin{description}
+    \item[Usage :] \rule{0pt}{1em}
+      \begin{description}
+      \item  $build(sample)$
+      \item  $build(param)$
+      \item  $build(sample, covarianceMat)$
+      \end{description}
+    \item[Arguments :] \rule{0pt}{1em}
+      \begin{description}
+      \item $sample$ : a  NumericalSample, of dimension $n \geq 1$
+      \item $param$ : a NumericalPointWithDescription, the vector of parameters of the distribution.
+      \item $covarianceMat$ : a CovarianceMatrix
+      \end{description}
+    \item[Value :]  a DistributionImplementation, which is the implementation of the factory of one particular distribution. In the second usage, the covariance matrix $covarianceMat$ is fulfilled with the covariance of the estimator of the parameter vector $\vect{\theta}$. The technique used is bootstrap. In case of asymptotical normal convergence of the estimator, it enables to build confidence intervals.
+    \end{description}
+  \end{description}
+\end{description}
+
+% =====================================================
+\newpage \subsection{Correlation analysis}
+\subsubsection{CorrelationAnalysis}
+
+
+\begin{description}
+\item[Usage :] $CorrelationAnalysis()$
+
+\item[Arguments :] none
+
+\item[Some methods :]  \rule{0pt}{1em}
+
+  \begin{description}
+
+  \item $PCC$
+    \begin{description}
+    \item[Usage :] $PCC(sample1, sample2)$
+    \item[Arguments :] \rule{0pt}{1em}
+      \begin{description}
+      \item $sample1$ : a  NumericalSample, of dimension $n \geq 2$
+      \item $sample2$ : a  NumericalSample, of dimension =1
+      \end{description}
+    \item[Value :]  a NumericalPoint, the PCC (Partial Correlation Coefficient) coefficients evaluated between the $sample2$ and each coordinate of $sample1$
+    \end{description}
+    \bigskip
+
+  \item $PRCC$
+    \begin{description}
+    \item[Usage :] $PRCC(sample1, sample2)$
+    \item[Arguments :] \rule{0pt}{1em}
+      \begin{description}
+      \item $sample1$ : a  NumericalSample, of dimension $n \geq 2$
+      \item $sample2$ : a  NumericalSample, of dimension =1
+      \end{description}
+    \item[Value :]  a NumericalPoint, the PRCC (Partial Rank Correlation Coefficient) coefficients evaluated between the $sample2$ and each coordinate of $sample1$ (based on the rank values)
+    \end{description}
+    \bigskip
+
+  \item $PearsonCorrelation$
+    \begin{description}
+    \item[Usage :] $PearsonCorrelation(sample1, sample2)$
+    \item[Arguments :] \rule{0pt}{1em}
+      \begin{description}
+      \item $sample1$ : a  NumericalSample, of dimension = 1
+      \item $sample2$ : a  NumericalSample, of dimension = 1
+      \end{description}
+    \item[Value :]  a real value, the Pearson Correlation coefficient evaluated between the $sample2$ and $sample1$
+    \end{description}
+    \bigskip
+
+  \item $SRC$
+    \begin{description}
+    \item[Usage :] $SRC(sample1, sample2)$
+    \item[Arguments :] \rule{0pt}{1em}
+      \begin{description}
+      \item $sample1$ : a  NumericalSample, of dimension $n \geq 1$
+      \item $sample2$ : a  NumericalSample, of dimension = 1
+      \end{description}
+    \item[Value :]  a NumericalPoint, the SRC (Standard Regression Coefficient)  coefficients evaluated between the $sample2$ and each coordinate of $sample1$
+    \end{description}
+    \bigskip
+
+  \item $SRRC$
+    \begin{description}
+    \item[Usage :] $PRCC(sample1, sample2)$
+    \item[Arguments :] \rule{0pt}{1em}
+      \begin{description}
+      \item $sample1$ : a  NumericalSample, of dimension $n \geq 1$
+      \item $sample2$ : a  NumericalSample, of dimension = 1
+      \end{description}
+    \item[Value :]  a NumericalPoint, the SRRC (Standard Rank Regression Coefficient)coefficients evaluated between the $sample2$ and each coordinate of $sample1$ (based on the rank values)
+    \end{description}
+    \bigskip
+
+  \item $SpearmanCorrelation$
+    \begin{description}
+    \item[Usage :] $SpearmanCorrelation(sample1, sample2)$
+    \item[Arguments :] \rule{0pt}{1em}
+      \begin{description}
+      \item $sample1$ : a  NumericalSample, of dimension = 1
+      \item $sample2$ : a  NumericalSample, of dimension = 1
+      \end{description}
+    \item[Value :]  a real value, the Spearman Correlation coefficient evaluated between the $sample2$ and $sample1$ (based on the rank values)
+    \end{description}
+    \bigskip
+
+  \end{description}
+  
+\end{description}
+
+
+
+% =====================================================
+\newpage \subsection{Sensitivity Analysis}
+\subsubsection{SensitivityAnalysis}
+
+SensitivityAnalysis allows to compute the Sobol' sensitivity indices.
+
+\begin{description}
+  
+  \item[Usage :] \strut
+    \begin{description}
+      \item $SensitivityAnalysis( inputSample1, inputSample2, function )$
+     \end{description}
+  \bigskip
+  
+  \item[Arguments :]  \strut
+    \begin{description}
+      \item $inputSample1$ : an input NumericalSample, which marginals are independently distributed
+      \item $inputSample2$ : an input NumericalSample of same dimension and size, independent from $inputSample1$
+      \item $function$ : a NumericalMathFunction to be evaluated on the input samples
+    \end{description}
+  \bigskip
+
+\item[Details :] Some indices are computed together when calling the corresponding accessors. The cost is $N(k+2)$ model evaluations for first and total order indices, or $N(2k+2)$ for first, second and total order indices.
+Be sure to retrieve higher order indices first to avoid extra model evaluations, i.e. call $getSecondOrderIndices$ before $getFirstOrderIndices$ if you need second order indices.
+   
+\item[Some methods :]  \strut
+  
+  \begin{description}
+    
+  \item $setBlockSize$
+    \begin{description}
+    \item[Usage :] \strut
+      \begin{description} 
+      \item  $setBlockSize(k)$
+      \end{description}
+    \item[Arguments :] $k$ : an integer, the size of each block the sample is splitted into, this allows to save space while allowing multithreading, when available (wrapper function), set by default to 1
+    \end{description}
+    \bigskip
+
+  \item $getFirstOrderIndices()$
+    \begin{description}
+    \item[Usage :] \strut
+      \begin{description} 
+      \item  $getFirstOrderIndices()$  
+      \item  $getFirstOrderIndices(i)$
+      \end{description}
+    \item[Arguments :] $i$ : an integer, the index of the marginal of the function, equal to 0 by default
+    \item[Value :] a NumericalPoint containing first order Sobol' indices
+    \end{description}
+    \bigskip
+
+  \item $getSecondOrderIndices()$
+    \begin{description}
+    \item[Usage :] \strut
+      \begin{description} 
+      \item  $getSecondOrderIndices()$  
+      \item  $getSecondOrderIndices(i)$
+      \end{description}
+    \item[Arguments :] $i$ : an integer, the index of the marginal of the function, equal to 0 by default
+    \item[Value :] a SymmetricMatrix containing second order Sobol' indices
+    \end{description}
+    \bigskip
+
+  \item $getTotalOrderIndices()$
+    \begin{description}
+    \item[Usage :] \strut
+      \begin{description} 
+      \item  $getTotalOrderIndices()$  
+      \item  $getTotalOrderIndices(k)$
+      \end{description}
+    \item[Arguments :] $i$ : an integer, the index of the marginal of the function, equal to 0 by default
+    \item[Value :] a NumericalPoint containing total order Sobol' indices
+    \end{description}
+    \bigskip
+
+  \end{description}
+
+\end{description}
+
+% =====================================================
+\newpage \subsection{Fitting test}
+\subsubsection{TestResult}
+
+\begin{description}
+\item[Usage :] a TestResult is the result of a fitting test, of type NormalityTest or HypothesisTest.
+
+\item[Some methods :]  \rule{0pt}{1em}
+
+  \begin{description}
+  \item $getBinaryQualityMeasure$
+    \begin{description}
+    \item[Usage :] $getBinaryQualityMeasure()$
+    \item[Arguments :] none
+    \item[Value :]  a boolean value, indicating the succes of the test : 1 for succes and 0 for failure
+    \end{description}
+    \bigskip
+
+  \item $getPValue$
+    \begin{description}
+    \item[Usage :] $getPValue()$
+    \item[Arguments :] none
+    \item[Value :] a real positive value, <1, the p-value of the test
+    \end{description}
+    \bigskip
+
+  \item $getTestType$
+    \begin{description}
+    \item[Usage :] $getTestType()$
+    \item[Arguments :] none
+    \item[Value :] a string describing the type of the test
+    \end{description}
+    \bigskip
+
+
+  \item $getThreshold$
+    \begin{description}
+    \item[Usage :] $getThreshold()$
+    \item[Arguments :] none
+    \item[Value :] a real positive value, $<1$, the p-value threshold
+    \end{description}
+
+  \end{description}
+
+\end{description}
+
+
+
+
+
+% =====================================================
+\newpage    \subsubsection{FittingTest}
+
+
+This class is used through its static methods in order to evaluate the adequation of samples to particular distributions.
+
+\begin{description}
+
+\item[Some methods :]  \rule{0pt}{1em}
+
+  \begin{description}
+
+  \item $BestModelBIC$
+    \begin{description}
+    \item[Usage :] \rule{0pt}{1em}
+      \begin{description}
+      \item  $FittingTest.BestModelBIC(sample, factoryCollection)$
+      \item  $FittingTest.BestModelBIC(sample, distributionCollection)$
+      \end{description}
+    \item[Arguments :] \rule{0pt}{1em}
+      \begin{description}
+      \item $sample$ : a NumericalSample, the sample which will be tested
+      \item $factoryCollection$ : a FactoryCollection, the collection of factories which are the structures which build the distribution from a sample
+      \item $distributionCollection$ : a DistributionCollection, a collection of the distributions which will be tested through the BIC criteria
+      \end{description}
+    \item[Value :]  a Distribution, the best one according to the BIC criteria
+    \end{description}
+    \bigskip
+
+  \item $BestModelChiSquared$
+    \begin{description}
+    \item[Usage :] \rule{0pt}{1em}
+      \begin{description}
+      \item  $FittingTest.BestModelChiSquared(sample, factoryCollection)$
+      \item  $FittingTest.BestModelChiSquared(sample, distributionCollection)$
+      \end{description}
+    \item[Arguments :] \rule{0pt}{1em}
+      \begin{description}
+      \item $sample$ : a NumericalSample, the sample which will be tested
+      \item $factoryCollection$ : a FactoryCollection, a collection of the factories which are the structures which build  distributions from a sample
+      \item $distributionCollection$ : a DistributionCollection, the collection of the distributions which will be tested through the Chi Squared criteria
+      \end{description}
+    \item[Value :]  a Distribution, the best one according to the ChiSquared criteria
+    \end{description}
+    \bigskip
+
+  \item $BestModelKolmogorov$
+    \begin{description}
+    \item[Usage :] \rule{0pt}{1em}
+      \begin{description}
+      \item  $FittingTest.BestModelKolmogorov(sample, factoryCollection)$
+      \item  $FittingTest.BestModelKolmogorov(sample, distributionCollection)$
+      \end{description}
+    \item[Arguments :] \rule{0pt}{1em}
+      \begin{description}
+      \item $sample$ : a NumericalSample, the sample which will be tested
+      \item $factoryCollection$ : a FactoryCollection, a collection of the factories which are the structures which build  distributions from a sample
+      \item $distributionCollection$ : a DistributionCollection, the collection of the distributions which will be tested through the Kolmogorov criteria
+      \end{description}
+    \item[Value :]  a Distribution, the best one according to the Kolmogorov criteria
+    \end{description}
+    \bigskip
+
+
+  \item $BIC$
+    \begin{description}
+    \item[Usage :] \rule{0pt}{1em}
+      \begin{description}
+      \item  $FittingTest.BIC(sample, factory)$
+      \item  $FittingTest.BIC(sample, distribution)$
+      \end{description}
+    \item[Arguments :] \rule{0pt}{1em}
+      \begin{description}
+      \item $sample$ : a NumericalSample, the sample which will be tested
+      \item $factory$ : a Factory, the structure which builds the distribution from the sample which will be tested
+      \item $distribution$ : a Distribution, which will be tested through the BIC criteria
+      \end{description}
+    \item[Value :]  a real value, the BIC value of the distribution tested evaluated on the sample
+    \end{description}
+    \bigskip
+
+  \item $ChiSquared$
+    \begin{description}
+    \item[Usage :] \rule{0pt}{1em}
+      \begin{description}
+      \item  $FittingTest.ChiSquared(sample, factory, level)$
+      \item  $FittingTest.ChiSquared(sample, distribution, level)$
+      \end{description}
+    \item[Arguments :] \rule{0pt}{1em}
+      \begin{description}
+      \item $sample$ : a NumericalSample, the sample which will be tested
+      \item $factory$ : a Factory, the structure which builds the distribution from the sample which will be tested
+      \item $distribution$ : a Distribution, which will be tested through the ChiSquared criteria
+      \item $level$ : a real value, constraint : $0 < level <1$, such as $1-level$ be the first type error of the fitting test (the probability you reject the distribution tested whereas you should not have). If not fulfilled, by default, $level = 0.95$.
+      \end{description}
+    \item[Value :]  a TestResult, the structure which contains the result of the ChiSquared Test : the first usage tests a type of distribution, the second one tests a particular distribution
+    \end{description}
+    \bigskip
+
+  \item $Kolmogorov$
+    \begin{description}
+    \item[Usage :] \rule{0pt}{1em}
+      \begin{description}
+      \item  $FittingTest.Kolmogorov(sample, factory, level)$
+      \item  $FittingTest.Kolmogorov(sample, distribution, level)$
+      \end{description}
+    \item[Arguments :] \rule{0pt}{1em}
+      \begin{description}
+      \item $sample$ : a NumericalSample, the sample which will be tested
+      \item $factory$ : a Factory, the structure which builds the distribution from the sample which will be tested
+      \item $distribution$ : a Distribution, which will be tested through the Kolmogorov criteria
+      \item $level$ : a real value, constraint : $0 < level <1$, such as $1-level$ be the first type error of the fitting test (the probability you reject the distribution tested whereas you should not have). If not fulfilled, by default, $level = 0.95$.
+      \end{description}
+    \item[Value :]  a TestResult, the structure which contains the result of the Kolmogorov Test : the first usage tests a type of distribution, the second one tests a particular distribution
+    \end{description}
+
+  \item $GetLastResult()$ This method gives access to the  TestResult associated to the best suited distribution, among those tested. Thus, its method can be called after the methods  $BestModelKolmogorov()$ and  $BestModelChiSquared()$ have been applied. As the BestModelBIC() method is not based on a statistical test, it does not produce a TestResult object and the $GetLastResult()$ can not be called.
+
+  \end{description}
+
+\end{description}
+
+% =====================================================
+\newpage         \subsubsection{VisualTest} \label{visualtest}
+
+
+This class is used through its static methods in order to graphically evaluate some hypothesis on samples : independence or monotonous relation.
+
+\begin{description}
+
+\item[Some methods :]  \rule{0pt}{1em}
+
+  \begin{description}
+
+  \item $DrawClouds$
+    \begin{description}
+    \item[Usage :] \rule{0pt}{1em}
+      \begin{description}
+      \item  $VisualTest.DrawClouds(sample1, dist)$
+      \item  $VisualTest.DrawClouds(sample1, sample2)$
+      \end{description}
+    \item[Arguments :] \rule{0pt}{1em}
+      \begin{description}
+      \item $sample1$ : a NumericalSample, drawn on the graph
+      \item $sample2$ : a NumericalSample, drawn on the graph
+      \item $dist$ : a Distribution, the distribution which pdf is drawn
+      \end{description}
+    \item[Value :]  a Graph, the structure which contains  : one curve (pdf) and a cloud for the first usage or two clouds in the second usage
+    \end{description}
+    \bigskip
+
+  \item $DrawCobWeb$
+    \begin{description}
+    \item[Usage :] \rule{0pt}{1em}
+      \begin{description}
+      \item  $VisualTest.DrawCobWeb(inputSample,  outputSample, ...$\\
+$ ... minValue, maxValue, color)$
+      \item  $VisualTest.DrawCobWeb(inputSample,  outputSample,  ...$\\
+$ ... minValue, maxValue, color, quantileScaleBoolean)$
+      \end{description}
+    \item[Arguments :] \rule{0pt}{1em}
+      \begin{description}
+      \item $inputSample$ : a NumericalSample of dimension $n$, the sample of the $\vect{X}$ data,
+      \item $outputSample$ : a NumericalSample of dimension 1, the sample of the $Y$ data,
+      \item $minValue$ : a real valued, which must be in $[0,1]$ if $quantileScaleBoolean=True$ or not specified,
+      \item $maxValue$ : a real valued, such that $maxValue W minValue$ and which must be in $[0,1]$ if $quantileScaleBoolean=True$ or not specified,
+      \item $color$ : a String, the color of the specified curves
+      \item $quantileScaleBoolean$ : a Boolean which indicates the scale of the $minValue$ and $maxValue$. If $quantileScaleBoolean=True$, they are expressed in the rank based scale; otherwise, they are expressed in the $Y$-values scale. By default,  $quantileScaleBoolean=True$.
+      \end{description}
+    \item[Value :]  a Graph, the structure which contains the graph : one line for each point and the specific lines colored in $color$.
+    \end{description}
+    \bigskip
+
+
+  \item $DrawEmpiricalCDF$
+    \begin{description}
+    \item[Usage :] $VisualTest.DrawEmpiricalCDF(sample, xMin, xMax)$
+    \item[Arguments :] \rule{0pt}{1em}
+      \begin{description}
+      \item $sample$ : a NumericalSample, drawn on the graph
+      \item $xMin$ : a real value, the lower boundary of the graph
+      \item $xMax$ : a real value, the upper boundary of the graph, must be > $xMin$
+      \end{description}
+    \item[Value :]  a Graph, the structure which contains  : one staircase curve which is  the empirical cdf of the sample
+    \end{description}
+    \bigskip
+
+
+  \item $DrawHenryLine$
+    \begin{description}
+    \item[Usage :] $VisualTest.DrawHenryLine(sample)$
+    \item[Arguments :] $sample$ : a NumericalSample, drawn on the graph
+    \item[Value :]  a Graph, the structure which contains the graph : one line (the first diagonal corresponding to the normal distribution (0,1)) and a cloud corresponding to the sample
+    \end{description}
+    \bigskip
+
+  \item $DrawHistogram$
+    \begin{description}
+    \item[Usage :] \rule{0pt}{1em}
+      \begin{description}
+      \item  $VisualTest.DrawHistogram(sample, barNumber)$
+      \item  $VisualTest.DrawHistogram(sample)$
+      \end{description}
+    \item[Arguments :] \rule{0pt}{1em}
+      \begin{description}
+      \item $sample$ : a NumericalSample which histogramm is drawn
+      \item $barNumber$ : an integer, the number of barplots used to draw the histogram. If not specified, it is automatically determined by Open TURNS according to the Silverman rule
+      \end{description}
+    \item[Value :]  a Graph, the structure which contains the graph : one curve and a cloud for the first usage or 2 clouds for the second one
+    \end{description}
+    \bigskip
+
+  \item $DrawKendallPlot$
+    \begin{description}
+    \item[Usage :] \rule{0pt}{1em}
+      \begin{description}
+      \item  $VisualTest.DrawKendallPlot(data, copula)$
+      \item  $VisualTest.DrawKendallPlot(sample1, sample2)$
+      \end{description}
+    \item[Arguments :] \rule{0pt}{1em}
+      \begin{description}
+      \item $data$ : a bidimensional NumericalSample
+      \item $copula$ : a bidimensional copula that we want to test visually as a possible dependence structure for the data.
+      \item $sample1$ : a bidimensional NumericalSample
+      \item $sample2$ : another bidimensional NumericalSample. We want to test visually if these two samples shares the same copula.
+      \end{description}
+    \item[Value :] a Graph, the structure which contains the graph : the Kendall curve that we compare to the main diagonal. The farther the curve is from the diagonal, the more different are the two dependence structures.
+    \end{description}
+    \bigskip
+
+  \item $DrawLinearModelResidualTest$
+    \begin{description}
+    \item[Usage :] $VisualTest.DrawLinearModelResidualTest(sample1, sample2,  ...$\\
+$ ... linearModel)$
+    \item[Arguments :] \rule{0pt}{1em}
+      \begin{description}
+      \item $sample1$ : a  NumericalSample, $X$, of dimension 1
+      \item $sample2$ : a  NumericalSample, $Y$, of dimension 1, which is scalar described by a linear model from $X$ : $Y=aX+b$, $a$ and $b$ real values
+      \item $linearModel$ : a LinearModel, the regression model
+      \end{description}
+    \item[Value :] a Graph, the structure which contains the cloud of the residual values, couples (residual i, residual i+1)
+    \end{description}
+    \bigskip
+
+  \item $DrawLinearModelVisualTest$
+    \begin{description}
+    \item[Usage :] $VisualTest.DrawLinearModelVisualTest(sample1, sample2,  ...$\\
+$ ... linearModel)$
+    \item[Arguments :] \rule{0pt}{1em}
+      \begin{description}
+      \item $sample1$ : a NumericalSample, $X$, of dimension 1
+      \item $sample2$ : a  NumericalSample, $Y$, of dimension 1, which is described by a linear model from $X$ : $Y=aX+b$, $a$ and $b$ real values
+      \item $linearModel$ : a LinearModel, the regression model
+      \end{description}
+    \item[Value :]  a Graph, the structure which contains the cloud of points $(X_i, Y_i)$ and the linear model line $Y=aX+b$
+    \end{description}
+    \bigskip
+
+  \item $DrawQQplot$
+    \begin{description}
+    \item[Usage :] \rule{0pt}{1em}
+      \begin{description}
+      \item  $VisualTest.DrawQQplot(sample1, sample2)$
+      \item  $VisualTest.DrawQQplot(sample1, sample2, pointNumber)$
+      \item  $VisualTest.DrawQQplot(sample1, distribution)$
+      \item  $VisualTest.DrawQQplot(sample1, distribution, pointNumber)$
+      \end{description}
+    \item[Arguments :] \rule{0pt}{1em}
+      \begin{description}
+      \item $sample1$ : a NumericalSample, used to build on the graph
+      \item $sample2$ : a NumericalSample, used to build the graph
+      \item $distribution$ : a Distribution, the distribution which pdf is drawn
+      \item $pointNumber$ : an integer, the number of points used to build the graph, equal to 20 by default
+      \end{description}
+    \item[Value :]  a Graph, the structure which contains the corresponding empirical fractiles between the two samples in the two first usages, or between the sample and the distribution in the two last usages
+    \end{description}
+
+  \end{description}
+\end{description}
+
+
+
+
+
+% =====================================================
+\newpage     \subsubsection{NormalityTest}
+
+
+This class is used through its static methods in order to evaluate whether the sample follows a normal distribution. These two tests give more importance to extreme values.
+
+\begin{description}
+
+\item[Some methods :]  \rule{0pt}{1em}
+
+  \begin{description}
+
+  \item $AndersonDarlingNormal$
+    \begin{description}
+    \item[Usage :] \rule{0pt}{1em}
+      \begin{description}
+      \item $Normality.AndersonDarlingNormal(sample)$
+      \item $Normality.AndersonDarlingNormal(sample, level)$
+      \end{description}
+    \item[Arguments :] \rule{0pt}{1em}
+      \begin{description}
+      \item $sample$ : a NumericalSample, of dimension 1 : the sample tested
+      \item $level$ : a positive real value, the threshold p-value of the test ( = 1- first type risk), must be $< 1$, equal to 0.95 by default
+      \end{description}
+    \item[Value :]  a TestResult, the structure which contains the result of the test.
+    \item[Details :] the AndersonDarlingNormal Test is used to check whether the sample follows a normal distribution. This test gives more importance to extreme values                         \end{description}
+    \bigskip
+
+  \item $CramerVonMisesNormal$
+    \begin{description}
+    \item[Usage :] \rule{0pt}{1em}
+      \begin{description}
+      \item $Normality.CramerVonMisesNormal(sample)$
+      \item $Normality.CramerVonMisesNormal(sample, level)$
+      \end{description}
+    \item[Arguments :] \rule{0pt}{1em}
+      \begin{description}
+      \item $sample$ : a NumericalSample, of dimension 1 : the sample tested
+      \item $level$ : a positive real value, the threshold p-value of the test ( = 1- first type risk), must be $< 1$, equal to 0.95 by default
+      \end{description}
+    \item[Value :]  a TestResult, the structure which contains the result of the test.
+    \item[Details :] the CramerVonMisesNormal Test is used to check whether the sample follows a normal distribution. This test gives more importance to extreme values
+    \end{description}
+  \end{description}
+
+\end{description}
+
+
+
+
+% =====================================================
+\newpage     \subsubsection{HypothesisTest}
+
+This class is used through its static methods in order to evaluate some hypothesis on samples : independence or monotonous relation.
+
+\begin{description}
+
+\item[Some methods :]  \rule{0pt}{1em}
+
+  \begin{description}
+
+  \item $ChiSquared$
+    \begin{description}
+    \item[Usage :] \rule{0pt}{1em}
+      \begin{description}
+      \item $HypothesisTest.ChiSquared(firstSample, secondSample)$
+      \item $HypothesisTest.ChiSquared(firstSample, secondSample, level)$
+      \end{description}
+    \item[Arguments :] \rule{0pt}{1em}
+      \begin{description}
+      \item $firstSample$ : a NumericalSample, of dimension 1 : the first sample tested
+      \item $secondSample$ : a NumericalSample, of dimension 1 : the second sample tested
+      \item $level$ : a positive real value, the threshold p-value of the test ( = 1- first type risk), must be $< 1$, equal to 0.95 by default
+      \end{description}
+    \item[Value :]  a TestResult, the structure which contains the result of the test
+    \item[Details :] the ChiSquared Test is used to check whether two discrete samples are independent                                     \end{description}
+    \bigskip
+
+  \item $FullPearson$
+    \begin{description}
+    \item[Usage :] \rule{0pt}{1em}
+      \begin{description}
+      \item $HypothesisTest.FullPearson(firstSample, secondSample)$
+      \item $HypothesisTest.FullPearson(firstSample, secondSample, level)$
+      \end{description}
+    \item[Arguments :] \rule{0pt}{1em}
+      \begin{description}
+      \item $firstSample$ : a NumericalSample, of dimension $n\geq 1$ : the first sample tested
+      \item $secondSample$ : a NumericalSample, of dimension 1 :  the second sample tested
+      \item $level$ : a positive real value, the threshold p-value of the test ( = 1- first type risk), must be $< 1$, equal to 0.95 by default
+      \end{description}
+    \item[Value :]  a TestResultCollection, the structure which contains the results of the successive tests.
+    \item[Details :] the FullPearson Test is the independence Pearson test between 2 samples : firstSample of dimension n and secondSample of dimension 1. If firstSample[i] is the numerical sample extracted from firstSample (ith coordinate of each point of the numerical sample), FullPearson performs the Independence Pearson test simultaneously on firstSample[i] and secondSample. For all i, it is supposed that the couple (firstSample[i] and secondSample) is issued from a gaussian  vector.
+    \end{description}
+    \bigskip
+
+  \item $FullRegression$
+    \begin{description}
+    \item[Usage :] \rule{0pt}{1em}
+      \begin{description}
+      \item $HypothesisTest.FullRegression(firstSample, secondSample)$
+      \item $HypothesisTest.FullRegression(firstSample, secondSample, level)$
+      \end{description}
+    \item[Arguments :] \rule{0pt}{1em}
+      \begin{description}
+      \item $firstSample$ : a NumericalSample, of dimension $n\geq 1$ : the first sample tested
+      \item $secondSample$ : a NumericalSample, of dimension 1 :  the second sample tested
+      \item $level$ : a positive real value, the threshold p-value of the test ( = 1- first type risk), must be $< 1$, equal to 0.95 by default.
+      \end{description}
+    \item[Value :]  a TestResultCollection, the structure which contains the results of the successive tests.
+    \item[Details :] the FullRegression Test is used to check the quality of the linear regression model between two samples :  firstSample of dimension n and secondSample of dimension 1. If firstSample[i] is the numerical sample extracted from firstSample (ith coordinate of each point of the numerical sample), FullRegression performs the linear regression test simultaneously on all firstSample[i] and secondSample. The linear regression test tests if the linear regression model between two scalar numerical samples is significant. It is based on the deviation analysis of the regression. The Fisher distribution is used.
+    \end{description}
+    \bigskip
+
+  \item $FullSpearman$
+    \begin{description}
+    \item[Usage :] \rule{0pt}{1em}
+      \begin{description}
+      \item $HypothesisTest.FullSpearman(firstSample, secondSample)$
+      \item $HypothesisTest.FullSpearman(firstSample, secondSample, level)$
+      \end{description}
+    \item[Arguments :] \rule{0pt}{1em}
+      \begin{description}
+      \item $firstSample$ : a NumericalSample, of dimension $n\geq 1$ : the first sample tested
+      \item $secondSample$ : a NumericalSample, of dimension 1 :  the second sample tested
+      \item $level$ : a positive real value, the threshold p-value of the test ( = 1- first type risk), must be $< 1$, equal to 0.95 by default.
+      \end{description}
+    \item[Value :]  a TestResultCollection, the structure which contains the results of the successive tests.
+    \item[Details :] the FullSpearman Test is used to check the hypothesis of monotonous relation between samples : firstSample of dimension n and secondSample of dimension 1. If firstSample[i] is the numerical sample extracted from firstSample (ith coordinate of each point of the numerical sample), FullSpearman performs the Independence Spearman test simultaneously on all firstSample[i] and secondSample.
+    \end{description}
+    \bigskip
+
+  \item $PartialPearson$
+    \begin{description}
+    \item[Usage :] \rule{0pt}{1em}
+      \begin{description}
+      \item $HypothesisTest.PartialPearson(firstSample, secondSample, selection)$
+      \item $HypothesisTest.PartialPearson(firstSample, secondSample, selection, level)$
+      \end{description}
+    \item[Arguments :] \rule{0pt}{1em}
+      \begin{description}
+      \item $firstSample$ : a NumericalSample, of dimension $n\geq 1$ : the first sample tested
+      \item $secondSample$ : a NumericalSample, of dimension 1 :  the second sample tested
+      \item $selection$ : a Indices, array of integers selecting the indices of the coordinates of the first sample which will successively be tested with the second sample through the Pearson Test
+      \item $level$ : a positive real value, the threshold p-value of the test ( = 1- first type risk), must be $< 1$, equal to 0.95 by default.
+      \end{description}
+    \item[Value :]  a TestResultCollection, the structure which contains the results of the successive tests.
+    \item[Details :] the PartialPearson Test is the independence Pearson test between 2 samples : firstSample of dimension n and secondSample of dimension 1. If firstSample[i] is the numerical sample extracted from firstSample (ith coordinate of each point of the numerical sample), PartialPearson performs the Independence Pearson test simultaneously on firstSample[i] and secondSample, for i in the selection. For all i, it is supposed that the couple (firstSample[i] and secondSample) is issued from a gaussian  vector.
+    \end{description}
+    \bigskip
+
+  \item $PartialRegression$
+    \begin{description}
+    \item[Usage :] \rule{0pt}{1em}
+      \begin{description}
+      \item $HypothesisTest.PartialRegression(firstSample, secondSample, ...$\\
+$ ... selection)$
+      \item $HypothesisTest.PartialRegression(firstSample, secondSample,  ...$\\
+$ ... selection, level)$
+      \end{description}
+    \item[Arguments :] \rule{0pt}{1em}
+      \begin{description}
+      \item $firstSample$ : a NumericalSample, of dimension $n\geq 1$ : the first sample tested
+      \item $secondSample$ : a NumericalSample, of dimension 1 :  the second sample tested
+      \item $selection$ : a Indices, array of integers selecting the indices of the coordinates of the first sample which will successively be tested with the second sample through the Regression Test
+      \item $level$ : a positive real value, the threshold p-value of the test ( = 1- first type risk), must be $< 1$, equal to 0.95 by default.
+      \end{description}
+    \item[Value :]  a TestResult, the structure which contains the result of the test.
+    \item[Details :] the PartialRegression Test is used to check the quality of the linear regression model between two samples : firstSample of dimension n and secondSample of dimension 1. If firstSample[i] is the numerical sample extracted from firstSample (ith coordinate of each point of the numerical sample), PartialRegression performs the Regression test simultaneously on all firstSample[i] and secondSample, for i in the selection. The linear regression test tests if the linear regression model between two scalar numerical samples is significant. It is based on the deviation analysis of the linear regression. The Fisher distribution is used.
+    \end{description}
+    \bigskip
+
+  \item $PartialSpearman$
+    \begin{description}
+    \item[Usage :] \rule{0pt}{1em}
+      \begin{description}
+      \item $HypothesisTest.PartialSpearman(firstSample, secondSample, ...$\\
+$ ... selection)$
+      \item $HypothesisTest.PartialSpearman(firstSample, secondSample, ...$\\
+$ ... selection, level)$
+      \end{description}
+    \item[Arguments :] \rule{0pt}{1em}
+      \begin{description}
+      \item $firstSample$ : a NumericalSample, of dimension $n\geq 1$ : the first sample tested
+      \item $secondSample$ : a NumericalSample, of dimension 1 :  the second sample tested
+      \item $selection$ : a Indices, array of integers selecting the indices of the coordinates of the first sample which will successively be tested with the second sample through the Spearman Test
+      \item $level$ : a positive real value, the threshold p-value of the test ( = 1- first type risk), must be $< 1$, equal to 0.95 by default.
+      \end{description}
+    \item[Value :]  a TestResultCollection, the structure which contains the results of the successive tests.
+    \item[Details :] the PartialSpearman Test is used to check the hypothesis of monotonous relation between samples : firstSample of dimension n and secondSample of dimension 1. If firstSample[i] is the numerical sample extracted from firstSample (ith coordinate of each point of the numerical sample), PartialSpearman performs the Independence Spearman test simultaneously on firstSample[i] and secondSample, for i in the selection.
+    \end{description}
+    \bigskip
+
+  \item $Pearson$
+    \begin{description}
+    \item[Usage :] \rule{0pt}{1em}
+      \begin{description}
+      \item $HypothesisTest.Pearson(firstSample, secondSample)$
+      \item $HypothesisTest.Pearson(firstSample, secondSample, level)$
+      \end{description}
+
+    \item[Arguments :] \rule{0pt}{1em}
+      \begin{description}
+      \item $firstSample$ : a NumericalSample, of dimension 1 :  the first sample tested
+      \item $secondSample$ : a NumericalSample, of dimension 1 :  the second sample tested
+      \item $level$ : a positive real value, the threshold p-value of the test ( = 1- first type risk), must be $< 1$, equal to 0.95 by default.
+      \end{description}
+    \item[Value :]  a TestResult, the structure which contains the result of the test.
+    \item[Details :] the Test is used to check whether two  samples which form a gaussian vector are independent (based on the evaluation of the linear correlation coefficient).
+    \end{description}
+    \bigskip
+
+  \item $Smirnov$
+    \begin{description}
+    \item[Usage :] \rule{0pt}{1em}
+      \begin{description}
+      \item $HypothesisTest.Smirnov(firstSample, secondSample)$
+      \item $HypothesisTest.Smirnov(firstSample, secondSample, level)$
+      \end{description}
+    \item[Arguments :] \rule{0pt}{1em}
+      \begin{description}
+      \item $firstSample$ : a NumericalSample, of dimension 1 :  the first sample tested
+      \item $secondSample$ : a NumericalSample, of dimension 1 :  the second sample tested
+      \item $level$ : a positive real value, the threshold p-value of the test ( = 1- first type risk), must be $< 1$, equal to 0.95 by default.
+      \end{description}
+    \item[Value :]  a TestResult, the structure which contains the result of the test.
+    \item[Details :] the Smirnov Test is used to check whether two continuous scalar samples (of sizes not necessarily equal) follow the same distribution. \\
+    \end{description}
+    \bigskip
+
+  \item $Spearman$
+    \begin{description}
+    \item[Usage :] \rule{0pt}{1em}
+      \begin{description}
+      \item $HypothesisTest.Spearman(firstSample, secondSample)$
+      \item $HypothesisTest.Spearman(firstSample, secondSample, level)$
+      \end{description}
+    \item[Arguments :] \rule{0pt}{1em}
+      \begin{description}
+      \item $firstSample$ : a NumericalSample, of dimension 1 :  the first sample tested
+      \item $secondSample$ : a NumericalSample, of dimension 1 :  the second sample tested
+      \item $level$ : a positive real value, the threshold p-value of the test ( = 1- first type risk), must be$ < 1$, equal to 0.95 by default.
+      \end{description}
+    \item[Value :]  a TestResult, the structure which contains the result of the test.
+    \item[Details :] the Spearman Test is used to check whether two scalar samples have a monotonous relation.
+    \end{description}
+
+  \end{description}
+
+\end{description}
+
+
+
+
+
+% =====================================================
+\newpage       \subsubsection{LinearModelTest}
+
+This class is used through its static methods in order to evaluate the quality of the linear regression model between two samples (see \ref{linearModelConstruction}).
+The linear regression model between the scalar variable $Y$ and the n-dimensional one $\vect{X} = (X_i)_{i \leq n}$, as follows :
+$$
+\tilde{Y} = a_0 + \sum_i a_i X_i + \epsilon
+$$
+where $\epsilon$ is the residual, supposed to follow the Normal(0.0, 1.0) distribution.\\
+
+
+In the following, {\itshape firstSample} is a numerical sample from $\vect{X} = (X_i)_{i \leq n}$ and  {\itshape secondSample}  from  $Y$.\\
+
+
+
+\begin{description}
+
+\item[Some methods :]  \rule{0pt}{1em}
+
+  \begin{description}
+
+  \item $LMAdjustedRSquared$
+    \begin{description}
+    \item[Usage :] \rule{0pt}{1em}
+      \begin{description}
+      \item $LinearModelTest.LMAdjustedRSquared(firstSample, ...$\\
+$ ... secondSample)$
+      \item $LinearModelTest.LMAdjustedRSquared(firstSample, ...$\\
+$ ... secondSample, level)$
+      \end{description}
+    \item[Arguments :] \rule{0pt}{1em}
+      \begin{description}
+      \item $firstSample$ : a NumericalSample, of dimension $n$ : the first sample tested
+      \item $secondSample$ : a NumericalSample, of dimension 1 : the second sample tested
+      \item $level$ : a positive real value, the threshold p-value of the test ( = 1- first type risk), must be $< 1$, equal to 0.95 by default
+      \end{description}
+    \item[Value :]  a TestResult, the structure which contains the result of the test
+    \item[Details :]         The LMAdjustedRSquared test tests the quality of the linear regression model. It evaluates the indicator $R^2$ adjusted (regression variance analysis) and compares it to a level,
+    \end{description}
+    \bigskip
+
+
+  \item $LMFisher$
+    \begin{description}
+    \item[Usage :] \rule{0pt}{1em}
+      \begin{description}
+      \item $LinearModelTest.LMAdjustedRSquared(firstSample, ...$\\
+$ ... secondSample)$
+      \item $LinearModelTest.LMAdjustedRSquared(firstSample, ...$\\
+$ ... secondSample, level)$
+      \end{description}
+    \item[Arguments :] \rule{0pt}{1em}
+      \begin{description}
+      \item $firstSample$ : a NumericalSample, of dimension $n$ : the first sample tested
+      \item $secondSample$ : a NumericalSample, of dimension 1 : the second sample tested
+      \item $level$ : a positive real value, the threshold p-value of the test ( = 1- first type risk), must be $< 1$, equal to 0.95 by default
+      \end{description}
+    \item[Value :]  a TestResult, the structure which contains the result of the test
+    \item[Details :]      The LMFisher Test  tests the nullity of the regression linear model coefficients (Fisher distribution used)
+    \end{description}
+    \bigskip
+
+
+
+  \item $LMRSquared$
+    \begin{description}
+    \item[Usage :] \rule{0pt}{1em}
+      \begin{description}
+      \item $LinearModelTest.LMAdjustedRSquared(firstSample, secondSample)$
+      \item $LinearModelTest.LMAdjustedRSquared(firstSample, ...$\\
+$ ... secondSample, level)$
+      \end{description}
+    \item[Arguments :] \rule{0pt}{1em}
+      \begin{description}
+      \item $firstSample$ : a NumericalSample, of dimension $n$ : the first sample tested
+      \item $secondSample$ : a NumericalSample, of dimension 1 : the second sample tested
+      \item $level$ : a positive real value, the threshold p-value of the test ( = 1- first type risk), must be $< 1$, equal to 0.95 by default
+      \end{description}
+    \item[Value :]  a TestResult, the structure which contains the result of the test
+    \item[Details :]   The LMRSquared test tests the quality of the linear regression model. It evaluates the indicator $R^2$  (regression variance analysis) and compares it to a level,
+    \end{description}
+    \bigskip
+
+
+
+
+  \item $LMResidualMean$
+    \begin{description}
+    \item[Usage :] \rule{0pt}{1em}
+      \begin{description}
+      \item $LinearModelTest.LMAdjustedRSquared(firstSample, secondSample)$
+      \item $LinearModelTest.LMAdjustedRSquared(firstSample, secondSample, level)$
+      \end{description}
+    \item[Arguments :] \rule{0pt}{1em}
+      \begin{description}
+      \item $firstSample$ : a NumericalSample, of dimension $n$ : the first sample tested
+      \item $secondSample$ : a NumericalSample, of dimension 1 : the second sample tested
+      \item $level$ : a positive real value, the threshold p-value of the test ( = 1- first type risk), must be $< 1$, equal to 0.95 by default
+      \end{description}
+    \item[Value :]  a TestResult, the structure which contains the result of the test
+    \item[Details :]        The LMResidualMean Test  tests, under the hypothesis of a gaussian sample, if the mean of the residual is equal to zero. It is based on the Student test (equality of mean for two gaussian samples).
+    \end{description}
+
+  \end{description}
+
+\end{description}
+
+
+
+
+
+% =====================================================
+\newpage \subsection{Linear model} \label{linearModelConstruction}
+
+\subsubsection{LinearModelFactory}
+
+This class is used in order to create a linear model from numerical samples.
+The linear regression model between the scalar variable $Y$ and the n-dimensional one $\vect{X} = (X_i)_{i \leq n}$ writes as follows :
+$$
+\tilde{Y} = a_0 + \sum_i a_i X_i + \epsilon
+$$
+where $\epsilon$ is the residual, supposed to follow the Normal(0.0, 1.0) distribution.\\
+Each coefficient $a_i$ is evaluated from both samples {\itshape Ysample} and {\itshape Xsample} and is accompagnied by a confidence interval and a p-value (which tests if they are significantly different from 0.0).\\
+
+In the following, {\itshape firstSample} is a numerical sample from $\vect{X} = (X_i)_{i \leq n}$ and  {\itshape secondSample}  from  $Y$.\\
+
+This class enables to test the quality of the model. It provides only numerical tests. If $\vect{X}$ is scalar, a graphical validation test exists, that draws the residual couples ($\epsilon_i, \epsilon_{i+1}$), where the residual $\epsilon_i$ is evaluated on the samples  ({\itshape Xsample, Ysample}) : $\epsilon_i = Ysample_i - \tilde{Y}_i$ with $\tilde{Y}_i = a_0 + a_1 Xsample_i$. The Open TURNS method is {\itshape DrawLMResidualtest}, provided by the {\itshape VisualTest} class (see \ref{visualtest}).
+
+\begin{description}
+\item[Usage :] $LinearModelFactory()$
+
+\item[Arguments :] none
+
+\item[Some methods :]  \rule{0pt}{1em}
+
+  \begin{description}
+
+  \item $build$
+    \begin{description}
+    \item[Usage :]\rule{0pt}{1em}
+      \begin{description}
+      \item $build(sampleX, sampleY)$
+      \item $build(sampleX, sampleY, level)$
+      \end{description}
+    \item[Arguments :] \rule{0pt}{1em}
+      \begin{description}
+      \item $sampleX$ : a NumericalSample, of dimension $n \geq 1$
+      \item $sampleY$ : a NumericalSample, of dimension 1
+      \item $level$ : the level value of the confidence intervals of each coefficient of the linear model, equal to 0.95 by default
+      \end{description}
+    \item[Value :] a LinearModel, the linear model built from the samples  $(sampleX, sampleY)$ : $Y = a_0 + \sum_i a_i X_i + \varepsilon$, where $\varepsilon$ is the random residual with zero mean.
+    \end{description}
+  \end{description}
+\end{description}
+
+
+% =====================================================
+\newpage   \subsubsection{LinearModel}
+
+
+
+\begin{description}
+\item[Usage :] A LinearModel is created through the method $build$ of a LinearModelFactory.
+\item[Some methods :]  \rule{0pt}{1em}
+
+  \begin{description}
+
+  \item $getConfidenceIntervals$
+    \begin{description}
+    \item[Usage :] $getConfidenceIntervals()$
+    \item[Arguments :] none
+    \item[Value :] a ConfidenceIntervalPersistentCollection, the collection  of the confidence intervals of the linear model coefficients, corresponding to the level precised when the LinearModel class has been created through the method $build$
+
+    \end{description}
+    \bigskip
+
+  \item $getPValues$
+    \begin{description}
+    \item[Usage :] $getPValues()$
+    \item[Arguments :] none
+    \item[Value :] a NumericalScalarPersistentCollection, the collection  of the p-values of the linear model coefficients
+    \end{description}
+    \bigskip
+
+  \item $getPredict$
+    \begin{description}
+    \item[Usage :] $getPredict(sampleX)$
+    \item[Arguments :] $sampleX$ : a NumericalSample, the sample we want to evaluate the response $Y$ on
+    \item[Value :] a NumericalSample, of dimension 1, the response $Y$ evaluated through the linear model on the sample $sampleX$
+    \end{description}
+    \bigskip
+
+  \item $getRegression$
+    \begin{description}
+    \item[Usage :] $getRegression()$
+    \item[Arguments :] none
+    \item[Value :] a NumericalPoint, the coefficients of the linear model : $(a_0, a_1, \cdots, a_n)$
+    \end{description}
+    \bigskip
+
+  \item $getResidual$
+    \begin{description}
+    \item[Usage :] $getResidual(sampleX, sampleY)$
+    \item[Arguments :]  \rule{0pt}{1em}
+      \begin{description}
+      \item $sampleX$ : a NumericalSample, the $sampleX$ on which the linear model has been built
+      \item $sampleY$ : a NumericalSample, the $sampleY$ on which the linear model has been built
+      \end{description}
+    \item[Value :] a NumericalPoint, the residuals
+    \end{description}
+  \end{description}
+\end{description}
+
+

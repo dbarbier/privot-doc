@@ -1,0 +1,72 @@
+% Copyright (c)  2005-2010 EDF-EADS-PHIMECA.
+% Permission is granted to copy, distribute and/or modify this document
+% under the terms of the GNU Free Documentation License, Version 1.2
+% or any later version published by the Free Software Foundation;
+% with no Invariant Sections, no Front-Cover Texts, and no Back-Cover
+% Texts.  A copy of the license is included in the section entitled "GNU
+% Free Documentation License".
+\renewcommand{\filename}{docUC_CentralUncertainty_CorrelationAnalysis.tex}
+\renewcommand{\filetitle}{UC : Correlation analysis on samples : Pearson and Spearman coefficients, PCC, PRCC, SRC, SRRC coefficients}
+
+% \HeaderNNIILevel
+% \HeaderIILevel
+\HeaderIIILevel
+
+\label{correlationAnalysis}
+
+
+\index{Correlation!Pearson correlation coefficient}
+\index{Correlation!Partial Pearson correlation coefficient (PCC)}
+\index{Correlation!Spearman correlation coefficient}
+\index{Correlation!Partial rank correlation coefficient (PRCC)}
+\index{Correlation!Standard regression coefficient (SRC)}
+\index{Correlation!Standard rank regression coefficient (SRRC)}
+
+
+This Use Case  describes the correlation analysis we can perform between the input random  vector, described by a numerical sample, and the output variable of interest described by a numerical sample too.\\
+
+Details on experiment planescorrelation coefficients may be found in the Reference Guide (\href{OpenTURNS_ReferenceGuide.pdf}{see files Reference Guide - Step C' -- Uncertainty Ranking using Pearson's correlation} and files around it).\\
+
+Details on each object may be found in the User Manual  (\href{OpenTURNS_UserManual_TUI.pdf}{see User Manual - Statistics on Sample / Correlation analysis}).\\
+
+
+\requirements{
+  \begin{description}
+  \item[$\bullet$] a first numerical sample : {\itshape inputSample}, may be of dimension $\geq 1$
+  \item[type:] NumericalSample
+  \item[$\bullet$] a second numerical sample : {\itshape outputSample}, must be of dimension =1
+  \item[type:] NumericalSample
+  \end{description}
+}
+{
+  \begin{description}
+  \item[$\bullet$] the different correlation coefficients : {\itshape PCCcoefficient, PRCCcoefficient, SRCcoefficient, SRRCcoefficient, pearsonCorrelation, spearmanCorrelation}
+  \item[type:] NumericalPoint
+  \end{description}
+}
+
+\textspace\\
+Python script for this UseCase :
+
+\begin{lstlisting}
+  # PCC coefficients evaluated between the outputSample and each coordinate of inputSample
+  PCCcoefficient = CorrelationAnalysis.PCC(inputSample, outputSample)
+
+  # PRCC evaluated between the outputSample and each coordinate of inputSample (based on the rank values)
+  PRCCcoefficient = CorrelationAnalysis.PRCC(inputSample, outputSample)
+
+  # SRC evaluated between the outputSample and each coordinate of inputSample
+  SRCcoefficient = CorrelationAnalysis.SRC(inputSample, outputSample)
+
+  # SRRC evaluated between the outputSample and each coordinate of inputSample (based on the rank values)
+  SRRCcoefficient = CorrelationAnalysis.SRRC(inputSample, outputSample)
+
+  # Pearson Correlation Coefficient
+  # CARE :  inputSample must be of dimension 1
+  pearsonCorrelation = CorrelationAnalysis.PearsonCorrelation(inputSample, outputSample)
+
+  # Spearman Correlation Coefficient
+  # CARE :  inputSample must be of dimension 1
+  spearmanCorrelation = CorrelationAnalysis.SpearmanCorrelation(inputSample, outputSample)
+\end{lstlisting}
+

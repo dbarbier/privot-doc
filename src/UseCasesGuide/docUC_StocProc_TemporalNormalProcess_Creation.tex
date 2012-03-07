@@ -1,0 +1,175 @@
+% Copyright (c)  2005-2010 EDF-EADS-PHIMECA.
+% Permission is granted to copy, distribute and/or modify this document
+% under the terms of the GNU Free Documentation License, Version 1.2
+% or any later version published by the Free Software Foundation;
+% with no Invariant Sections, no Front-Cover Texts, and no Back-Cover
+% Texts.  A copy of the license is included in the section entitled "GNU
+% Free Documentation License".
+\renewcommand{\filename}{docUC_StocProc_TemporalNormalProcess_Creation.tex}
+\renewcommand{\filetitle}{UC : Creation of a  stationary  normal process from its covariance function}
+
+% \HeaderNNIILevel
+% \HeaderIILevel
+\HeaderIIILevel
+
+\label{TemporalNormalProcessCreation}
+
+\index{Stochastic Process!Normal Process}
+
+Let $\vect{X}(\omega,t)$ be a stationary normal process with zero mean defined  by  its covariance function  $\tau \mapsto \mat{C}^{stat}(\tau)$.\\
+
+The covariance function $\mat{C}^{stat}$ may be defined from a particular second order model. Open TURNS only proposes the \emph{multivariate exponential model}. Other models will be implemented later. \\
+
+{\bf The multivariate exponential model} : We derive a multivariate extension of the exponential temporal covariance function initially defined for scalar stochastic processes by:
+\begin{equation}
+\label{scalarExponential}
+\forall s\in\mathbb{R},\quad C^{stat}(\tau)=\mathbb{E}[X(s)X(s+\tau)]=a^2e^{-\lambda|\tau|}
+\end{equation}
+where $\lambda>0$ and $a>0$.\\
+
+A first straightforward extension is to consider the multivariate process $\vect{X}$ with independent components $X_1$,\dots,$X_d$, each of which being a scalar process with its own exponential covariance function :
+\begin{equation}
+\label{simpleMultivariateExponential1}
+\forall s\in\mathbb{R},\quad \mat{C}^{stat}(\tau)=\mathbb{E}[\vect{X}(s)\vect{X}^t(s+\tau)]=\mat{\Delta}(\tau)
+\end{equation}
+where
+\begin{equation}
+\label{simpleMultivariateExponential2}
+\mat{\Delta}(\tau)=
+\begin{pmatrix}
+  a_1^2e^{-\lambda_1|\tau|} & & & \\
+                       &\ddots & & \text{\Huge{0}}\\
+  \text{\Huge{0}}      & & & a_d^2e^{-\lambda_d|\tau|}
+\end{pmatrix}
+\end{equation}\\
+
+A full multivariate extension should allow the User to also define a \emph{spatial} correlation $\mat{R}$, i.e. to build a covariance function $\mat{C}^{stat}(\tau)$ such that :
+\begin{equation}
+\label{fullMultivariateExponential1}
+\forall t\in\mathbb{R},\quad\mat{\text{Cor}}(\vect{X}(t))=\mat{R}
+\end{equation}
+and such that the components $X_1$,\dots,$X_d$ of $\vect{X}$ are still scalar processes with covariance function (\ref{scalarExponential}). One way to do that is to define the full multivariate exponential model by :
+\begin{equation}
+\label{fullMultivariateExponential2}
+\forall \tau\in\mathbb{R},\quad \mat{C}^{stat}(\tau)=\sqrt{\mat{\Delta}(\tau)}\,\mat{R}\sqrt{\mat{\Delta}(\tau)}
+\end{equation}
+where
+\begin{equation}
+\label{fullMultivariateExponential3}
+\sqrt{\mat{\Delta}(\tau)}=
+\begin{pmatrix}
+  a_1e^{-\lambda_1|\tau|/2} & & & \\
+                       &\ddots & & \text{\Huge{0}}\\
+  \text{\Huge{0}}      & & & a_de^{-\lambda_d|\tau|/2}
+\end{pmatrix}
+\end{equation}
+ This model is such that:
+\begin{align}
+\left(\mat{C}^{stat}(\tau)\right)_{i,j}&=a_ie^{-\lambda_i|\tau|/2}R_{i,j}a_je^{-\lambda_j|\tau|/2}& i\neq j\\
+\left(\mat{C}^{stat}(\tau)\right)_{i,i}&=a_ie^{-\lambda_i|\tau|/2}R_{i,i}a_ie^{-\lambda_j|\tau|/2}=a_i^2e^{-\lambda_i|\tau|}& i=j
+\end{align}
+
+It is possible to define the exponential model from the spatial covariance matrix $\mat{C}^s$ rather than the correlation matrix $\mat{R}$ : 
+\begin{equation}
+  \forall t\in\mathbb{R},\quad\mat{\mathbb{E}}[\vect{X}(t)\vect{X}^t(t)]=\mat{C}^s
+\end{equation}
+since we have the relation :
+\begin{equation}\label{RClink}
+\mat{C}^s=\mat{A}\,\mat{R}\mat{A}
+\end{equation}
+where
+\begin{equation}
+\mat{A}=
+\begin{pmatrix}
+  a_1 & & & \\
+                       &\ddots & & \text{\Huge{0}}\\
+  \text{\Huge{0}}      & & & a_d
+\end{pmatrix}
+\end{equation}
+ 
+Open TURNS enables to implement the multivariate exponential model thanks to the object {\itshape ExponentialModel} that can be built from different input data : 
+\begin{itemize}
+  \item the model (\ref{simpleMultivariateExponential1})-(\ref{simpleMultivariateExponential2}) is built from the data : 
+    \begin{itemize}
+       \item scale vector $\vect{\lambda}=(\lambda_1,\dots,\lambda_d)$,
+       \item and the amplitude vector $\vect{a}=(a_1,\dots,a_d)$.
+    \end{itemize}
+  \item the model  (\ref{fullMultivariateExponential1})-(\ref{fullMultivariateExponential3}) is  built from the data : 
+   \begin{itemize}
+     \item the scale vector $\vect{\lambda}=(\lambda_1,\dots,\lambda_d)$, 
+     \item the amplitude vector $\vect{a}=(a_1,\dots,a_d)$,
+     \item and the spatial correlation matrix $\mat{R}$. 
+   \end{itemize}
+  \item the model  (\ref{fullMultivariateExponential1})-(\ref{fullMultivariateExponential3}) is  built from the data : 
+    \begin{itemize}
+      \item the scale vector $\vect{\lambda}=(\lambda_1,\dots,\lambda_d)$,
+      \item the covariance matrix $\mat{C}^s$. Then  $\mat{C}^s$ is mapped into the associated correlation matrix $\mat{R}$ through relation (\ref{RClink}) and  the previous constructor is used.\\
+    \end{itemize}
+\end{itemize}
+
+
+
+Details on each object may be found in the User Manual  (\href{OpenTURNS_UserManual_TUI.pdf}{see User Manual - StochasticProcess}).\\
+
+
+
+\requirements{
+  \begin{description}
+  \item[$\bullet$]  $\vect{a}$, $\vect{\lambda}$   : {\itshape amplitude, scale}
+  \item[type:]  NumericalPoint
+  \end{description}
+
+  \begin{description}
+  \item[$\bullet$]  $\mat{R}$,  : {\itshape spatialCorrelation}
+  \item[type:]  CorrelationMatrix
+  \end{description}
+
+  \begin{description}
+  \item[$\bullet$]  $\mat{C}^s$,  : {\itshape spatialCovariance}
+  \item[type:]  CovarianceMatrix
+  \end{description}
+
+
+  \begin{description}
+  \item[$\bullet$] a time grid : {\itshape myTimeGrid}
+  \item[type:]  RegularGrid
+  \end{description}
+
+}
+{
+  \begin{description}
+  \item[$\bullet$] a covariance model : {\itshape myCovarianceModel }
+  \item[type:] StationaryCovarianceModel
+  \end{description}
+
+  \begin{description}
+  \item[$\bullet$] a second order model : {\itshape mySecondOrderModel }
+  \item[type:] SecondOrderModel
+  \end{description}
+
+  \begin{description}
+  \item[$\bullet$] the normal process : {\itshape myNormalProcess}
+  \item[type:]  TemporalNormalProcess 
+  \end{description}
+
+
+}
+
+\textspace\\
+Python script for this UseCase :
+
+\begin{lstlisting}
+  # Create the covariance model
+  # for example : the Exponential model
+
+  # from the amplitude, scale and spatialCovariance
+  myCovarianceModel = ExponentialModel(amplitude, scale, spatialCorrelation)
+  # or from the scale and spatialCovariance
+  myCovarianceModel = ExponentialModel(scale, spatialCovariance)
+
+  # Create the normal process witht the temporal view
+  myNormalProcess = TemporalNormalProcess(myCovarianceModel, myTimeGrid)
+\end{lstlisting}
+
+
+

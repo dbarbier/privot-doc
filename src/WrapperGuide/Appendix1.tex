@@ -1,0 +1,249 @@
+% Copyright (c)  2005-2009  EDF-EADS-PHIMECA.
+% Permission is granted to copy, distribute and/or modify this document
+% under the terms of the GNU Free Documentation License, Version 1.2
+% or any later version published by the Free Software Foundation;
+% with no Invariant Sections, no Front-Cover Texts, and no Back-Cover
+% Texts.  A copy of the license is included in the section entitled "GNU
+% Free Documentation License".
+
+At the time of writing, the \OT\ \index{wrapper}wrapper library contains a set of functions which can be directly used by wrapper developers. These functions are available to perform tasks shared by many wrappers and to save the developers the work needed to create them anew each time. They are regularly updated to follow the platform's evolution; therefore, by using them, the wrappers are systematically up to date regarding the platform's latest features.
+
+We invite the reader to use them as much as possible. If functions are missing or not adapted, the reader wishing to improve the system can contact us through the official \OT\ website ({\bf  http://www.openturns.org}) and inform us of the difficulties encountered. Any request will be welcomed, although it may not be immediately reflected in the source code.
+
+The functions of the library can be divided into several categories:
+\begin{itemize}
+\item display and error functions;
+\item functions manipulating the structure of the data exchanged between the wrapper and the platform;
+\item execution isolation functions.
+\end{itemize}
+
+All of these functions are described in the header file \index{WrapperCommon.h}{\bf WrapperCommon.h}.
+
+\subsection{Display and error functions}
+
+The role of these functions is to help the wrapper development and to give information to the user on whether or not the wrapper is functioning correctly.
+
+Some functions have a so-called "debug" version, which implies that they are called only when the wrapper was compiled with debugging\footnote{This is achieved by defining the C macro {\bf DEBUG} when configuring the wrapper: {\bf ./configure CFLAGS=-DDEBUG}.} options. When the compiler is called in optimized mode without debugging, these functions are eliminated from the code so as to not slow down the execution. All of these functions are prefixed by {\bf dbg\_}. The version without the prefix exists and, if it is called, it will not be eliminated from the code.
+
+\lstset{language=C++, basicstyle=\normalsize}
+\begin{lstlisting}[frame=TRBL]
+  const char * getErrorAsString(enum WrapperErrorCode errorCode)
+\end{lstlisting}
+
+This function translates an error code ({\bf errorCode}) returned by a wrapper function into a message readable by the user. The return value points to a constant static area of the library which it is prohibited to modify, move or deallocate. This value is read-only.
+
+\lstset{language=C++, basicstyle=\normalsize}
+\begin{lstlisting}[frame=TRBL]
+  void dbg_printMessage(const char * functionName, const char * message)
+  void printUserMessage(const char * functionName, const char * message)
+\end{lstlisting}
+
+Both of these functions send the {\bf message} string to the log system of the \OT\ platform, also indicating from which function ({\bf functionName}) the message is coming.
+
+Example:
+\lstset{language=C++, basicstyle=\normalsize}
+\begin{lstlisting}[frame=TRBL]
+  printUserMessage( "func_exec_P", "This is the message");
+\end{lstlisting}
+
+The \index{printMessage}{\bf printMessage} function is filtered by the log system as coming from the wrapper, while the \index{printUserMessage}{\bf printUserMessage} function is filtered as coming from the user. By default and unless the log system was set up otherwise, the first one is not displayed while the second is. Depending on the importance of the information that the wrapper developer wants to send back to the user, they may choose either one of these functions.
+
+All of the following functions are based on the {\bf printMessage} function.
+
+\lstset{language=C++, basicstyle=\normalsize}
+\begin{lstlisting}[frame=TRBL]
+  void dbg_printEntrance(const char * functionName)
+  void dbg_printExit(const char * functionName)
+\end{lstlisting}
+
+\index{printEntrance}\index{printExit}Both of these functions indicate the entrance and exit of the wrapper function {\bf functionName} to the log system.
+
+\lstset{language=C++, basicstyle=\normalsize}
+\begin{lstlisting}[frame=TRBL]
+  void dbg_printState(const char * functionName, void * p_state)
+\end{lstlisting}
+
+\index{printState}This function prints in the log system the value of the {\bf p\_state} pointer as received by the {\bf functionName} function.
+
+\lstset{language=C++, basicstyle=\normalsize}
+\begin{lstlisting}[frame=TRBL]
+  void dbg_printWrapperExchangedData(const char * functionName,
+  const struct WrapperExchangedData * p_exchangedData)
+\end{lstlisting}
+
+\index{printWrapperExchangedData}This function prints in the log system the entire content of the data structure exchanged between the wrapper and the \OT\ platform. This structure contains all the information read in the wrapper's description file ({\bf wrapper.xml}) and information coming directly from the platform or the computer on which the wrapper is running.
+
+\lstset{language=C++, basicstyle=\normalsize}
+\begin{lstlisting}[frame=TRBL]
+  void dbg_printPoint(const char * functionName, const struct point * p_point)
+\end{lstlisting}
+
+\index{printPoint}This function prints in the log system the value of the {\bf p\_point} point as received or returned by the wrapper's {\bf functionName} function.
+
+\lstset{language=C++, basicstyle=\normalsize}
+\begin{lstlisting}[frame=TRBL]
+  void dbg_printSample(const char * functionName, const struct sample * p_sample)
+\end{lstlisting}
+
+\index{printSample}This function prints in the log system the value of the {\bf p\_sample} sample as received or returned by the wrapper's {\bf functionName} function.
+
+\lstset{language=C++, basicstyle=\normalsize}
+\begin{lstlisting}[frame=TRBL]
+  void dbg_printMatrix(const char * functionName, const struct matrix * p_matrix)
+\end{lstlisting}
+
+\index{printMatrix}This function prints in the log system the value of the {\bf p\_matrix} matrix as received by the wrapper's {\bf functionName} function.
+
+\lstset{language=C++, basicstyle=\normalsize}
+\begin{lstlisting}[frame=TRBL]
+  void dbg_printTensor(const char * functionName, const struct tensor * p_tensor)
+\end{lstlisting}
+
+\index{printTensor}This function prints in the log system the value of the {\bf p\_tensor} tensor as received by the wrapper's {\bf functionName} function.
+
+\subsection{Functions manipulating the exchange data structure}
+
+These functions simplify the reading, copying or destruction of the structure used for the exchange of data between the wrapper and the platform. This structure being relatively complex and its handling not necessarily easy for users or developers reluctant to use the C language, those functions are supposed to make things simple. Furthermore, this structure often evolves through the different versions of \OT\ and it is clearly preferable to use those functions, which are updated with the developments, in order to keep the wrapper easily maintainable.
+
+\lstset{language=C++, basicstyle=\normalsize}
+\begin{lstlisting}[frame=TRBL]
+  unsigned long getNumberOfVariables(const struct WrapperExchangedData
+  * p_exchangedData,
+  unsigned long type)
+  unsigned long getNumberOfFiles(const struct WrapperExchangedData
+  * p_exchangedData,
+  unsigned long type)
+\end{lstlisting}
+
+\index{getNumberOfVariables}\index{getNumberOfFiles}These functions scan the exchange data structure in order to determine the number of variables or files declared in the wrapper's description file. Since these variables or files can be of type either {\bf in} or {\bf out}, it is necessary to pass to these functions an argument of type either {\bf WRAPPER\_IN} or {\bf WRAPPER\_OUT}.
+
+\lstset{language=C++, basicstyle=\normalsize}
+\begin{lstlisting}[frame=TRBL]
+  long copyWrapperExchangedData(struct WrapperExchangedData
+  ** p_p_new_exchangedData,
+  const struct WrapperExchangedData
+  * p_exchangedData)
+\end{lstlisting}
+
+\index{copyWrapperExchangedData}This function copies the content of the {\bf p\_exchangedData} structure in the memory location designated by {\bf p\_p\_new\_exchangedData}. All necessary memory allocations are made by the function\footnote{The function performs a deep copy.}, so that when the function exits, the two structures are identical but disjoint. The function returns a non-zero error code in case of an error. In this case, the {\bf p\_p\_new\_exchangedData} structure is unaffected.
+
+The created structures must mandatorily be destroyed, before the final use of the wrapper, by a call to the {\bf freeWrapperExchangedData} function.
+
+\lstset{language=C++, basicstyle=\normalsize}
+\begin{lstlisting}[frame=TRBL]
+  void freeWrapperExchangedData(struct WrapperExchangedData * p_exchangedData)
+\end{lstlisting}
+
+\index{freeWrapperExchangedData}This function frees all the memory allocated to an exchange data structure and destroys this structure. It is prohibited to use this function on the structure sent by \OT\ to the wrapper. It should only be used on structures created by the wrapper for its own needs. This function accepts null pointers.
+
+\lstset{language=C++, basicstyle=\normalsize}
+\begin{lstlisting}[frame=TRBL]
+  const char * getCommand(const struct WrapperExchangedData * p_exchangedData)
+\end{lstlisting}
+
+\index{getCommand}This function returns the command string as stated in the wrapper's description file. It is available starting from version 0.12.2.
+
+\lstset{language=C++, basicstyle=\normalsize}
+\begin{lstlisting}[frame=TRBL]
+  unsigned long getNumberOfCPUs(const struct WrapperExchangedData
+  * p_exchangedData)
+\end{lstlisting}
+
+\index{getNumberOfCPUs}This function returns the number of virtual processors of the computer on which the wrapper is running. This number is determined when the platform is launched. It is available starting from version 0.12.2.
+
+\subsection{Execution isolation functions}
+
+These functions allow to properly manage the parallel execution of external codes by isolating them in individual temporary directories. Each function performs one task among the many required, including creating directories, transferring the execution within them, copying files, substituting variables or initiating execution. These functions are linked as described later in this guide. The reader should refer to the appropriate sections.
+
+\lstset{language=C++, basicstyle=\normalsize}
+\begin{lstlisting}[frame=TRBL]
+  char * createTemporaryDirectory(const char * tempDirPrefix,
+  const struct WrapperExchangedData
+  * p_exchangedData)
+\end{lstlisting}
+
+\index{createTemporaryDirectory}This function begins by creating a unique temporary directory name based on the prefix ({\bf tempDirPrefix}) and information contained in the exchange data structure, including the name of the general temporary directory ({\bf temporary-directory}) listed in the \OT\ configuration file {\bf openturns.conf}. Then it proceeds to create this directory. The directory name is returned by the function through a specially allocated character string. This string must be freed, in due course, with a call to the {\bf deleteTemporaryDirectory} function. In case of failure, the return value is a null pointer.
+
+\lstset{language=C++, basicstyle=\normalsize}
+\begin{lstlisting}[frame=TRBL]
+  void deleteTemporaryDirectory(char * tempDir, long executionStatus)
+\end{lstlisting}
+
+\index{deleteTemporaryDirectory}This function deletes the temporary directory whose path is contained in the {\bf tempDir} string, as well as its entire content if the {\bf executionStatus} parameter is zero. This parameter is most often the one returned by the function that causes the execution of the computational code (see the {\bf runInsulatedCommand} or {\bf system(3)} functions).
+
+The string is systematically destroyed by this function even if the {\bf executionStatus} parameter is non-zero.
+
+\lstset{language=C++, basicstyle=\normalsize}
+\begin{lstlisting}[frame=TRBL]
+  long changeDirectory(const char * path)
+\end{lstlisting}
+
+\index{changeDirectory}This function moves the wrapper's execution in the directory specified in the {\bf path} string. A non-zero return code is returned in case of an error and an explanatory message is sent to the platform's log system.
+
+\ \\
+\fbox{
+  \begin{minipage}{1\textwidth}
+    \begin{center}
+      {\bf The \emph{ChangeDirectory} function not being multithread-safe, it is recommended \\
+        not to use it anymore. It is bound to disappear in a future version of the platform.}
+    \end{center}
+  \end{minipage}
+}
+
+\ \\
+\lstset{language=C++, basicstyle=\normalsize}
+\begin{lstlisting}[frame=TRBL]
+  char * getCurrentWorkingDirectory()
+\end{lstlisting}
+
+\index{getCurrentWorkingDirectory}This function returns the current execution directory path in a specially allocated string. This string must be deallocated in due course using the {\bf free(3)} function.
+
+\lstset{language=C++, basicstyle=\normalsize}
+\begin{lstlisting}[frame=TRBL]
+  long createInputFiles(const char * directory,
+  const struct WrapperExchangedData * p_exchangedData,
+  const struct point * p_point)
+\end{lstlisting}
+
+\index{createInputFiles}This function takes the data files listed in the exchange data structure and copies them in the {\bf directory} folder (which must have been previously created), substituting variables in the ad-hoc files with the values contained in {\bf p\_point}. It returns a non-zero error code in case of an error.
+
+\lstset{language=C++, basicstyle=\normalsize}
+\begin{lstlisting}[frame=TRBL]
+  long readOutputFiles(const char * directory,
+  const struct WrapperExchangedData * p_exchangedData,
+  struct point * p_point)
+\end{lstlisting}
+
+\index{readOutputFiles}This function takes the result files listed in the exchange data structure and reads them in the {\bf directory} folder (which must exist) to find the declared variables. The values of these variables are stored in the {\bf p\_point} structure. It returns a non-zero error code in case of an error.
+
+\lstset{language=C++, basicstyle=\normalsize}
+\begin{lstlisting}[frame=TRBL]
+  char * makeCommandFromTemplate(char * command,
+  const struct WrapperExchangedData
+  * p_exchangedData,
+  const struct point * p_point)
+\end{lstlisting}
+
+\index{makeCommandFromTemplate}This function replaces, in the {\bf command} string, the variables declared in the exchange data structure with their values in the {\bf p\_point} structure. It deallocates {\bf command} and returns a string containing the new modified command. This string must be freed in due course by a call to {\bf free(3)}.
+
+\lstset{language=C++, basicstyle=\normalsize}
+\begin{lstlisting}[frame=TRBL]
+  char * insulateCommand(char * command, const char * temporaryDir)
+\end{lstlisting}
+
+\index{insulateCommand}This function changes the command ({\bf command}) in order to make the directory change to {\bf temporaryDir} multithread-safe. It deallocates {\bf command} and returns a string containing the new modified command. This string must be freed in due course by a call to {\bf free(3)}. The new string thus has the following behavior:
+
+\begin{enumerate}
+\item Change directory to {\bf temporaryDir};
+\item Execute {\bf command};
+\item Return to the original directory.
+\end{enumerate}
+
+\lstset{language=C++, basicstyle=\normalsize}
+\begin{lstlisting}[frame=TRBL]
+  long runInsulatedCommand(const char * directory,
+  const struct WrapperExchangedData * p_exchangedData,
+  const struct point * p_point)
+\end{lstlisting}
+
+\index{runInsulatedCommand}Using the exchange data structure, this function replaces, in the command read in the wrapper's description file, the variables declared in that same file by their values in the {\bf p\_point} structure. It then launches the execution of the substituted command in the {\bf directory} temporary directory. This function is multithread-safe. The returned value is non-zero if an error occurs during the command execution.

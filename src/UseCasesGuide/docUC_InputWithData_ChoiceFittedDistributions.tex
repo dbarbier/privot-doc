@@ -1,0 +1,130 @@
+% Copyright (c)  2005-2010 EDF-EADS-PHIMECA.
+% Permission is granted to copy, distribute and/or modify this document
+% under the terms of the GNU Free Documentation License, Version 1.2
+% or any later version published by the Free Software Foundation;
+% with no Invariant Sections, no Front-Cover Texts, and no Back-Cover
+% Texts.  A copy of the license is included in the section entitled "GNU
+% Free Documentation License".
+\renewcommand{\filename}{docUC_InputWithData_ChoiceFittedDistributions.tex}
+\renewcommand{\filetitle}{UC : Making a choice between multiple fitted distributions :  Kolmogorov ranking, ChiSquared ranking and BIC ranking}
+
+% \HeaderNNIILevel
+% \HeaderIILevel
+\HeaderIIILevel
+
+
+
+\index{Ranking test!Kolmogorov}
+\index{Ranking test!ChiSquared}
+\index{Ranking test!BIC}
+
+The objective of this Use Case is to help to make a choice between several distributions fitted to a numerical sample. This choice can be motivated by :
+\begin{itemize}
+\item the ranking by the Kolmogorov p-values (for continuous distributions),
+\item the ranking by the ChiSquared p-values (for discrete distributions),
+\item the ranking BIC values.
+\end{itemize}
+
+
+Details on the BIC criterion may be found in the Reference Guide (\href{OpenTURNS_ReferenceGuide.pdf}{see file Reference Guide - Step B -- Bayesian Information Criterion (BIC)}).\\
+
+Details on each object may be found in the User Manual  (\href{OpenTURNS_UserManual_TUI.pdf}{see User Manual - Statistics on sample / Fitting Test}).\\
+
+It does not necessarily require to  know the parameters of the different distributions tested. It is possible to precise :
+\begin{itemize}
+\item the distribution type only : in that case, Open TURNS builds a factory for each distribution type. Open TURNS first evaluates  the parameters of the distribution (through the maximum likelihood rule or the moment based one) and then  ranks the distributions according to the criteria selected,
+\item some complete distributions with their parameters : Open TURNS will only evaluate the criteria selectd on each of them and rank them.
+\end{itemize}
+
+
+
+The example is the ranking through successively the three criteria (Kolmogorov, ChiSquared and BIC) of the following models :
+\begin{itemize}
+\item the Beta model (continuous) ,
+\item the Triangular model (continuous) ,
+\item the Poisson model (discrete) ,
+\item the Geometric model (discrete).
+\end{itemize}
+
+\textspace\\
+
+\requirements{
+  \begin{description}
+  \item[$\bullet$] a numerical sample (data) :  {\itshape sample}
+  \item[type:]  NumericalSample
+  \end{description}
+}
+{
+  \begin{description}
+  \item[$\bullet$] a continuous distribution which ranks first by the Kolmogorov test  : {\itshape bestDistributionKolmogorov}
+  \item[type:] Distribution
+  \item[$\bullet$] a continuous distribution which ranks first by the BIC test  : {\itshape bestDistributionBIC}
+  \item[type:] Distribution
+  \item[$\bullet$] a discrete distribution which ranks first by the ChiSquared test  : {\itshape bestDistributionChiSquared}
+  \item[type:] Distribution
+  \end{description}
+}
+
+\textspace\\
+Python script for this UseCase :
+
+\begin{lstlisting}
+  # CASE 1 : We don't specify the parameters of the distributions tested
+
+  # Create a collection of factories for all the models we want to test
+  collectionContinuousFactory = DistributionFactoryCollection( (BetaFactory(), TriangularFactory()) )
+  collectionDiscreteFactory = DistributionFactoryCollection( (PoissonFactory(), GeometricFactory()) )
+
+  # Rank the 2 continuous models by the Kolmogorov p-values :
+  bestDistributionKolmogorov = FittingTest.BestModelKolmogorov(sample, collectionContinuousFactory)
+
+  # Get all information on that distribution
+  print "best continuous distribution by Kolmogorov = ", bestDistributionKolmogorov
+
+  # Get the test result associated to the best distribution
+  print "test result for the best distribution = ", FittingTest.GetLastResult()
+
+  # Rank the 2 continuous models bythe BIC values :
+  bestDistributionBIC = FittingTest.BestModelBic(sample, collectionContinuousFactory)
+
+  # Get all information on that distribution
+  print "best continuous distribution by BIC = ", bestDistributionBIC
+
+  # Care : No test result associated with the BIC criterion
+  # Thus do not use the GetLastresult() method
+
+  # Rank the 2 discrete models by the ChiSquared p-values :
+  bestDistributionChiSquared = FittingTest.BestModelChiSquared(sample, collectionDiscreteFactory)
+
+  # Get all information on that distribution
+  print "best continuous distribution by  = ", bestDistributionChiSquared
+
+  # Get the test result associated to the best distribution
+  print "test result for the best distribution = ", FittingTest.GetLastResult()
+
+
+  # CASE 2 : We specify the parameters of the distributions tested
+
+  # Create a collection of distributions we want to test
+  collectionContinuousDistribution = DistributionCollection( (Beta(1., 2., 3., 4.), Triangular(1., 2., 4.)) )
+  collectionDiscreteDistribution = DistributionCollection( (Poisson(2), Geometric(0.2)) )
+
+  # Rank the 2 continuous models by the Kolmogorov p-values :
+  bestDistributionKolmogorov = FittingTest.BestModelKolmogorov(sample, collectionContinuousDistribution)
+
+  # Get all information on that distribution
+  print "best continuous distribution by Kolmogorov = ", bestDistributionKolmogorov
+
+  # Rank the 2 continuous models bythe BIC values :
+  bestDistributionBIC = FittingTest.BestModelBic(sample, collectionContinuousDistribution)
+
+  # Get all information on that distribution
+  print "best continuous distribution by BIC = ", bestDistributionBIC
+
+  # Rank the 2 discrete models by the ChiSquared p-values :
+  bestDistributionChiSquared = FittingTest.BestModelChiSquared(sample, collectionDiscreteDistribution)
+
+  # Get all information on that distribution
+  print "best continuous distribution by  = ", bestDistributionChiSquared
+\end{lstlisting}
+

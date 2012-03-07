@@ -1,0 +1,98 @@
+% Copyright (c)  2005-2010 EDF-EADS-PHIMECA.
+% Permission is granted to copy, distribute and/or modify this document
+% under the terms of the GNU Free Documentation License, Version 1.2
+% or any later version published by the Free Software Foundation;
+% with no Invariant Sections, no Front-Cover Texts, and no Back-Cover
+% Texts.  A copy of the license is included in the section entitled "GNU
+% Free Documentation License".
+
+This chapter details the technical elements required by the Open TURNS platform, namely the system requirements, the tools and the development environment of the project.
+
+\section{Target platforms}
+
+The Open TURNS platform is meant to carry out uncertainty treatment studies in a scientific environment. Most of the scientific codes being available on Unix platforms, Open TURNS is naturally designed to run on this family of systems. Unix being a standard with multiple implementations, available on different architectures, this gives a wide choice of target platforms.
+
+Linux is currently the most attractive Unix system for the Open TURNS project, it was chosen as the main target system for the project's development as well as for the delivery of the different versions.
+
+The partners involved in the project have each chosen different Linux distributions, for technical and historical reasons. Therefore, it was decided to support several distributions, a choice that should not be seen as final or minimal. The distributions considered here include for example the list given in Table \ref{linux}
+
+\begin{center}
+  \begin{table}[h]
+    \caption{\label{linux}Examples of Linux distributions supported by the project's partners}
+    \begin{center}
+      \begin{tabular}{|l|l|}
+        \hline
+        \textbf{Linux distribution} & \textbf{Version} \\
+        \hline \hline
+        Debian & Sarge \\
+        Mandriva & 2005 \\
+        \hline
+      \end{tabular}
+    \end{center}
+  \end{table}
+\end{center}
+
+However, there are also uncertainty treatment studies carried out in the proprietary Windows environment. While this system is not identified as a target for the project, developments should be carried out so as to facilitate the port to Windows.
+
+\label{namespace}\section{Namespace}
+
+All the classes of the OpenTURNS library are accessible within a single namespace named OT and aliased as OpenTURNS. It allows to insulate these classes from classes from another project that could share the same name.
+
+\section{Internationalization}
+
+The Open TURNS platform is meant to be widely distributed within the scientific community revolving around probability and statistics, which is essentially an international community. Therefore, the platform should be designed so as to be adjustable to the users, particularly those who do not speak English\footnote{English has been chosen as the native language for the Open TURNS platform.}.
+
+This involves not using any messages directly in the source code of the platform, but rather to create a resource catalogue that can be loaded, according to the locale setting of the user, when the application is launched.
+
+Another consequence of internationalization is the need for the Unicode extended character set (see \cite{UNICODE}) to be used for all strings.
+
+\section{Accessibility}
+
+The Open TURNS platform shall be accessible to disabled users. This has implications on the ergonomy and the design of the User Interface, particularly the GUI which should offer keyboard shortcuts for any available function as well as keyboard-based (rather than mouse-based) mechanisms to handle and select objects.
+
+\section{Tools}
+
+\subsection{Tool evolution policy}
+
+The tools chosen for the development of the platform are listed in Table \ref{tools}
+
+\begin{center}
+  \begin{table}[h]
+    \caption{\label{tools}Software development tools}
+    \begin{center}
+      \begin{tabular}{|l|l|l|}
+        \hline
+        \textbf{Category} & \textbf{Name} & \textbf{Version} \\
+        \hline \hline
+        Configuration & Autoconf & Current version. 2.59 or later \\
+        Compilation & Automake & Current version. 1.9 or later \\
+        Library support & Libtool & Current version. 1.5.6 or later \\
+        C++ compiler & Gcc & 3.3.5 or later \\
+        Python language support & Python & 2.3.5 or later \\
+        C++/Python wrapper & SWIG & 1.3.24 or later \\
+        Graphic library & Qt & 3.3.3 or later \\
+        Statistics library & R & 2.0.1 or later \\
+        % Graphic frameworlk & Salom\'e / Suit & 3.0 or later \\
+        Version control & Subversion & 1.1 or later \\
+        & flex & 2.5.33 or later \\
+        & python-imaging (PIL) & 1.1.6 or later \\
+        & xerces-c & 2.7 \\
+        & boost & 1.30 or later \\
+        & BLAS & 3.0 or later \\
+        & LAPACK & 3.0 or later \\
+        \hline
+      \end{tabular}
+    \end{center}
+  \end{table}
+\end{center}
+
+The versions given here are only meant as indications and other versions may be used. However, in case of compatibility issues arising from the use of other packages than those suggested here, support may not be the responsibility of the project.
+
+\subsection{Programming conventions}
+
+The present document does not deal with the the programming conventions. These are described in a separate document cited in the bibliography under the reference \cite{OTprog}.
+
+\subsection{Version control}
+
+The present document does not deal with the version control policy, which is described in a separated document cited in the bibliography under the reference \cite{OTpgcl}
+

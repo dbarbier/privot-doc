@@ -1,0 +1,64 @@
+% Copyright (c)  2005-2010 EDF-EADS-PHIMECA.
+% Permission is granted to copy, distribute and/or modify this document
+% under the terms of the GNU Free Documentation License, Version 1.2
+% or any later version published by the Free Software Foundation;
+% with no Invariant Sections, no Front-Cover Texts, and no Back-Cover
+% Texts.  A copy of the license is included in the section entitled "GNU
+% Free Documentation License".
+\renewcommand{\filename}{docUC_ThresholdExceedance_StandardEventManipulation.tex}
+\renewcommand{\filetitle}{UC : Manipulation of a StandardEvent}
+
+% \HeaderNNIILevel
+% \HeaderIILevel
+\HeaderIIILevel
+
+\index{Event!Standard space}
+
+This section gives elements to manipulate an {\itshape StandardEvent} in Open TURNS .\\
+
+
+
+Details on isoproabilitic transformations  may be found in the Reference Guide (\href{OpenTURNS_ReferenceGuide.pdf}{see files Reference Guide - Step C -- Isoprobabilistic transformation preliminary to FORM-SORM methods}).\\
+
+
+Details on each object may be found in the User Manual  (\href{OpenTURNS_UserManual_TUI.pdf}{see User Manual - Threshold exceedance probability evaluation with reliability algorithm / Reliability Algorithms}).\\
+
+The example here is an output variable {\itshape output} defined from the limit state function {\itshape f} and the input random  vector {\itshape input}. The event considered is :
+$$
+myEvent = \{ output=f(input) \leq -1.5 \}.
+$$
+
+\requirements{
+  \begin{description}
+  \item[$\bullet$] an event expressed in the physical space : {\itshape myEvent}
+  \item[type:] Event
+  \item[$\bullet$] the associated event in the standard space : {\itshape myStandardEvent}
+  \item[type:] StandardEvent
+  \end{description}
+}
+{
+  \begin{description}
+  \item[$\bullet$] none
+  \end{description}
+}
+
+\textspace\\
+Python  script for this UseCase :
+
+\begin{lstlisting}
+  # myEvent : E = (output=f(input), operator : <, threshold : -1,5)
+
+  # Realization of 'input' as antecedent of 'output'
+  print "myStandardEvent (as a RandomVector) antecedent realization =" , RandomVector(myStandardEvent).getImplementation().getAntecedent().getRealization()
+
+  # Realization of 'myEvent' as a Bernoulli
+  print "myStandardEvent realization=" , myStandardEvent.getRealization()
+
+  # Sample of 10 realizations of 'myEvent  as a Bernoulli
+  print "myStandardEvent sample=" , myStandardEvent.getNumericalSample(10)
+
+  # Realization of 'input' as antecedent of 'myEvent'
+  print "myStandardEvent antecedent realization=" , myStandardEvent.getImplementation().getAntecedent().getRealization()
+\end{lstlisting}
+
+

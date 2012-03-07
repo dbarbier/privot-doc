@@ -1,0 +1,126 @@
+% Copyright (c)  2005-2010 EDF-EADS-PHIMECA.
+% Permission is granted to copy, distribute and/or modify this document
+% under the terms of the GNU Free Documentation License, Version 1.2
+% or any later version published by the Free Software Foundation;
+% with no Invariant Sections, no Front-Cover Texts, and no Back-Cover
+% Texts.  A copy of the license is included in the section entitled "GNU
+% Free Documentation License".
+\renewcommand{\filename}{docUC_InputWithData_MaxLikelihood.tex}
+\renewcommand{\filetitle}{UC : Maximum likelihood of a given probability density function }
+
+% \HeaderNNIILevel
+% \HeaderIILevel
+\HeaderIIILevel
+
+
+
+\index{Fitting Distribution! Maximum likelihood}
+
+
+The objective of this Use Case is to explicitate how to implement the evaluation of the parameters of a fitted distribution thanks to the Maximum Likelihood Principle.\\
+
+
+Details on the Maximum Likelihood  Principle may be found in the Reference Guide (\href{OpenTURNS_ReferenceGuide.pdf}{see files Reference Guide - Step B -- Maximum Likelihood  Principle}).\\
+
+Let us denote $(\vect{x}_1, \dots, \vect{x}_n)$ the sample, $p_{\vect{\theta}}$ the particular distribution of probability density function we want to fit to the sample, and  $\vect{\theta} \in \Theta \in \mathbb{R}^p$ its the parameter vector.\\
+
+The likelihood of the sample according to  $p_{\vect{\theta}}$ is :
+$$
+likelihood(\vect{x}_1, \dots, \vect{x}_n,\vect{\theta}) = \prod_i p_{\vect{\theta}}(\vect{x}_i)
+$$
+It may be implemented :
+\begin{itemize}
+\item either as a python function thanks to the class OpenTURNSPythonFunction, as explained in the UC.\ref{OpenTURNSPythonFunction},
+\item or thanks to the NumericalMathFunction class, as explained in the UC.\ref{NumericalMathFunction}.
+\end{itemize}
+
+The maximum likelihood estimation $\vect{\theta}_{MLE}$ is solution of the equation :
+$$
+\max_{\vect{\theta} \in \Theta} likelihood\, (\vect{x}_1, \dots, \vect{x}_n,\vect{\theta})
+$$
+or
+$$
+\max_{\vect{\theta} \in \Theta}  \log likelihood\, (\vect{x}_1, \dots, \vect{x}_n,\vect{\theta})
+$$
+
+
+The following UC illustrates the example of a Normal distribution, where $(\mu, \sigma) \in \mathbb{R} \times \mathcal{R}^+$ are defined through the maximum likelihood principle, where the log of the likelihood funciton  is implemented thanks to the OpenTURNSPythonFunction class.\\
+
+Note that to avoid underflow problems with the log of the likelihood function, it is necessary to bound the probability density function to a min value $eps$, here equal to $1.0e-16$. The example illustrates how to proceed.\\
+
+
+\requirements{
+  \begin{description}
+  \item[$\bullet$] a sample of data : {\itshape sample}
+  \item[type:]  a NumericalSample
+  \end{description}
+}
+{
+  \begin{description}
+  \item[$\bullet$] the log likelihood function in the openturns library : {\itshape myLogLikelihoodOT}
+  \item[type:] a NumericalMathFunction
+  \item[$\bullet$] the  MLE of $(\mu, \sigma)$ : {\itshape optimizer}
+  \item[type:] a NumericalPoint
+  \end{description}
+}
+
+\textspace\\
+Python script for this UseCase :
+
+\begin{lstlisting}
+  # Compute the log-likelihood instead of the likelihood to avoid underflow
+  # and truncate it to avoid computing log(0)...
+
+  class LogLikelihoodFunction(OpenTURNSPythonFunction):
+
+  def __init__(self, sample):
+  OpenTURNSPythonFunction.__init__(self, 2, 1)
+  self.sample_ = sample
+
+  def f(self, X):
+  normal=Normal(X[0], X[1])
+  logLikelihood = 0.0
+  # The PDF is assumed to be constant, equal to eps for values smaller than eps
+  eps = 1.0e-16
+  for i in range(self.sample_.getSize()) :
+  pdf = normal.computePDF(self.sample_[i])
+  if (pdf > eps):
+  logLikelihood = logLikelihood + log(pdf)
+  else:
+  logLikelihood = logLikelihood + log(eps)
+  return [logLikelihood]
+
+
+  # Create the Python function associated to the sample
+  # We suppose we have a numerical sample of data : sample
+  myLogLikelihoodPython = LogLikelihoodFunction(sample)
+
+  # Create the NumericalMathFunction of the library openturns
+  myLogLikelihoodOT = NumericalMathFunction(myLogLikelihoodPython)
+
+  # Create the research interval of (mu, sigma)
+  lowerBound = NumericalPoint( (-1., 1.0e-4) )
+  upperBound = NumericalPoint( (3., 2.) )
+  finiteLowerBound = BoolCollection( (0, 1) )
+  finiteUpperBound = BoolCollection( (0, 0) )
+  bounds = Interval(lowerBound, upperBound, finiteLowerBound, finiteUpperBound)
+
+  # Create the starting point of the research
+  # For mu : the first point
+  # For sigma : a value evaluated from the two first data
+  startingPoint = NumericalPoint(2)
+  startingPoint[0] = sample[0][0]
+  startingPoint[1] = sqrt((sample[1][0] - sample[0][0])*(sample[1][0] - sample[0][0]))
+
+  # Create the TNC algorithm
+  myAlgoTNC = TNC(TNCSpecificParameters(), myLogLikelihoodOT, bounds, startingPoint, TNC.MAXIMIZATION)
+
+  # Run the algorithm and extract results
+  myAlgoTNC.run()
+  resMLE = BoundConstrainedAlgorithm(myAlgoTNC).getResult()
+  MLEparameters = resMLE.getOptimizer()
+  print "MLE of (mu, sigma) = (", MLEparameters[0], ", ", MLEparameters[1], ")"
+\end{lstlisting}
+
+
+

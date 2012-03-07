@@ -1,0 +1,130 @@
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{OpenTURNS_ReferenceGuide}
+
+\RequirePackage[latin1]{inputenc}
+\RequirePackage[T1]{fontenc}
+\RequirePackage[pdftex]{color}
+\RequirePackage[pdftex]{graphics}
+\RequirePackage{amsmath}
+\RequirePackage{amsfonts}
+\RequirePackage{amssymb}
+\RequirePackage{framed}
+\RequirePackage{fancyhdr}
+\RequirePackage{graphicx}
+\RequirePackage{Math_Notations}
+\RequirePackage[pdftex, bookmarks, colorlinks=true, urlcolor=green, linkcolor=red, filecolor=blue, citecolor=magenta]{hyperref}
+
+\setlength{\textwidth}{18.5cm}
+\setlength{\textheight}{23cm}
+\setlength{\hoffset}{-1.04cm}
+\setlength{\voffset}{-1.54cm}
+\setlength{\oddsidemargin}{0cm}
+\setlength{\evensidemargin}{0cm}
+\setlength{\topmargin}{0cm}
+\setlength{\headheight}{1cm}
+\setlength{\headsep}{0.5cm}
+\setlength{\marginparsep}{0cm}
+\setlength{\marginparwidth}{0cm}
+\setlength{\footskip}{1cm}
+\setlength{\parindent}{0cm}
+
+%\newcommand{\Tr}[1]{{ {#1}^t}}
+%\newcommand{\det}{{ \mathrm{det} }}
+\DeclareMathOperator*{\supp}{supp}
+\DeclareMathOperator*{\diag}{diag}
+\newcommand{\etapemethodo}{?}
+\newcommand{\nomfichier}{?}
+\newcommand{\titrefiche}{?}
+\newcommand{\entreprise}{EDF - EADS - PhiMeca}
+\pagestyle{fancy}
+\fancyhf{} \rhead{\bfseries \thepage} \lhead{\bfseries \nouppercase Open TURNS -- Reference Guide}
+\rfoot{\bfseries \copyright 2005-2011 \entreprise} \lfoot{}
+
+% Les liens hypertextes
+\newcommand{\otrefext}[2]{
+  {
+    \!\!\!\![\href{#1.pdf}{\underline{#2}}]\!\!\!\!
+  }
+}
+\newcommand{\otref}[2]
+{
+  {
+    \!\!\!\![\hyperlink{#1}{\underline{#2}}]\!\!\!\!
+  }
+}
+
+
+% Cadre demi largeur à droite
+\newcommand{\HalfBlock}[1]{
+  {
+    \hspace*{0.5\textwidth}%
+    \fbox{
+      \parbox{0.475\textwidth}{
+        #1\strut
+      } % parbox
+
+    } % fbox
+  } % protection
+} % halfbloc
+
+% Cadre pleine largeur
+\newcommand{\Block}[1]{
+  {
+\begin{framed}
+  #1\strut
+\end{framed}
+  } % protection
+} % Block
+
+% En-tête des fiches
+\newcommand{\Header}{
+  {
+    \subsubsection{
+      {\large Step \etapemethodo \hspace{2mm} -- \titrefiche } 
+      } \hypertarget{\nomfichier}{} \label{\nomfichier}
+  } % protection
+} % Header
+% Description mathématique
+\newcommand{\MathematicalDescription}[2]{
+  {
+    \Block{
+      \textbf{\large Mathematical description}\\[1em]
+        #1\strut\\[1em]
+      \textbf{\textit{\large Other notations}}\\[1em]
+        #2\strut
+    } % Block
+  } % protection
+} % MathematicalDescription
+% Syntaxe de la commande
+\newcommand{\Syntax}[2]{
+  {
+    \Block{
+      \textbf{\large Syntax}\\[1em]
+        \texttt{
+          #1\strut
+        }\\[1em] % texttt
+        #2\strut
+    } % Block
+  } % protection
+} % Syntax
+% Méthodologie OpenTURNS
+\newcommand{\Methodology}[2]{
+  {
+    \Block{
+      \textbf{\large Link with OpenTURNS methodology}\\[1em]
+        #1\strut\\[1em]
+      \textbf{\textit{\large References and theoretical basics}}\\[1em]
+        #2\strut
+    } % Block
+  } % protection
+} % Syntax
+% Exemples
+\newcommand{\Example}[1]{
+  {
+    \Block{
+      \textbf{\large Examples}\\[1em]
+        #1\strut
+    } % Block
+  } % protection
+} % Exemple
+

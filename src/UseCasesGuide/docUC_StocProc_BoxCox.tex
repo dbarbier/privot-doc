@@ -1,0 +1,231 @@
+% Copyright (c)  2005-2010 EDF-EADS-PHIMECA.
+% Permission is granted to copy, distribute and/or modify this document
+% under the terms of the GNU Free Documentation License, Version 1.2
+% or any later version published by the Free Software Foundation;
+% with no Invariant Sections, no Front-Cover Texts, and no Back-Cover
+% Texts.  A copy of the license is included in the section entitled "GNU
+% Free Documentation License".
+\renewcommand{\filename}{docUC_StocProc_BoxCox.tex}
+\renewcommand{\filetitle}{UC : Box Cox method : identification and transformation}
+
+% \HeaderNNIILevel
+% \HeaderIILevel
+\HeaderIIILevel
+
+\label{BoxCox}
+
+\index{Stochastic Process! Box Cox}
+
+The objective of this Use Case  is to apply the Box Cox transformation on a positive times series $\vect{Y}_t$ in order to stabilize its variance (if it exists) which might significatively increase with the time. In other words, the Box Cox transformation maps the times series $\vect{Y}_t$ into $h(\vect{Y}_t)$ such that  $\mathbb{V}\left(h(\vect{Y}_t)\right)$ is constant  with respect to the time.\\
+
+
+We illustrate some usual Box Cox transformations $h$, using the Taylor development of $h$ at the mean point of the time series $\vect{Y}_t$. To symplify notations, we consider the scalar case. In the mutlivariate case, we perform as described below on each scalar component. Then,  we have $h : \mathbb{R} \longrightarrow \mathbb{R}$.\\
+The first order Taylor development of $h$ around $\mathbb{E}(Y_t)$ writes for each instant $t$ : 
+\begin{eqnarray*}
+ h(Y_t) & = & h(\mathbb{E}(Y_t)) + (Y_t - \mathbb{E}(Y_t))h'(\mathbb{E}(Y_t)) 
+\end{eqnarray*}
+
+from which we evaluate the variance at each instant $t$ as:
+\begin{eqnarray*}
+ \mathbb{V}ar(h(Y_t)) & = & h'(\mathbb{E}(Y_t))^2  \mathbb{V}ar(Y_t) 
+\end{eqnarray*}
+
+For $\mathbb{V}ar(h(Y_t))$ to be constant with respect to the time at the first order, we need :
+
+\begin{eqnarray}\label{eqh}
+ h'(\mathbb{E}(Y_t)) = k \left( \mathbb{V}ar(Y_t) \right)^{-1/2}
+\end{eqnarray}
+
+At this step, we make some hypotheses on the relation between $\mathbb{E}(Y_t)$ and $\mathbb{V}ar(h(Y_t))$ : 
+\begin{itemize}
+  \item If we suppose that  $\mathbb{V}ar(h(Y_t)) \propto \mathbb{E}(Y_t)$,  then (\ref{eqh}) leads to the function $h(y) \propto \sqrt{y}$ and we take $h(y) = \sqrt{y}, y>0$;
+  \item If we suppose that $\mathbb{V}ar(h(Y_t)) \propto (\mathbb{E}(Y_t))^2$ , then  (\ref{eqh}) leads to the function $h(y) \propto \log{y}$ and we take $h(y) = \log{y}, y>0$.
+\end{itemize}
+
+More generally, the Box-Cox transformation $h_\lambda$ is parametered by a scalar $\lambda$ :
+\begin{eqnarray}
+ \label{BoxCoxModel}
+ h_\lambda(y) & = &
+\left\{
+\begin{array}{ll}
+\frac{y^\lambda-1}{\lambda} & \lambda \neq 0 \\
+\log(y) 			   & \lambda = 0
+\end{array}
+\right.
+\end{eqnarray}
+
+The inverse Box Cox transformation is defined as :
+\begin{eqnarray}
+ \label{InverseBoxCoxModel}
+ h^{-1}_\lambda(y) & = &
+\left\{
+\begin{array}{ll}
+\displaystyle (\lambda y + 1)^{\frac{1}{\lambda}} & \lambda \neq 0 \\
+\displaystyle \exp(y) 			   & \lambda = 0
+\end{array}
+\right.
+\end{eqnarray}
+
+The parameter $\lambda$ has to be fixed with respect to the data. We explicite below a method to fix the best $\lambda$ parameter with respect to some given data. \\
+The estimation of $\lambda$ given below is optimized in the case when $h_\lambda(Y_t) \sim \mathcal{N}(\beta , \sigma^2 )$ at each time $t$. If it is not the case, that estimation can be considered as a proposition, with no garantee.\\
+The parameters $(\beta,\sigma,\lambda)$ are then estimated by the maximum likelihood estimators. We note $\Phi_{\beta, \sigma}$ and $\phi_{\beta, \sigma}$ respectively the cumulative distribution function and the density probability function of the $\mathcal{N}(\beta , \sigma^2)$ distribution.\\
+For all instants $t$, we have : 
+\begin{eqnarray}\label{cdfYt}
+  \forall v \geq 0, \, \mathbb{P}( Y_t \leq v ) & = & \mathbb{P}( h_\lambda(Y_t) \leq h_\lambda(v) ) \\
+		& = & \Phi_{\beta, \sigma} \left(h_\lambda(v)\right)
+\end{eqnarray}
+from which we derive the  density probability function $p$ of $Y_t$ for all instants $t$ :
+\begin{eqnarray}\label{pdfYt}
+ p(v) & = & h_\lambda'(v)\phi_{\beta, \sigma}(v) = v^{\lambda - 1}\phi_{\beta, \sigma}(v)
+\end{eqnarray}
+Using (\ref{pdfYt}), the likelihood of times series $(Y_t)_t$ with respect to the model (\ref{cdfYt})  writes :
+
+\begin{eqnarray}\label{LKH}
+\label{eq:MLE}
+L(\beta,\sigma,\lambda)
+& = &
+\underbrace
+{ \frac{1}{(2\pi)^{n/2}}
+ \times
+ \frac{1}{(\sigma^2)^{n/2}}
+ \times
+ \exp\left[
+ -\frac{1}{2\sigma^2}
+ \sum_{k=1}^{n}
+ \left(
+ h_\lambda(Y_k)-\beta
+ \right)^2
+ \right]
+}_{\Psi(\beta, \sigma)}
+\times 
+\prod_{k=1}^{n} Y_k^{\lambda - 1}
+\end{eqnarray}
+
+We notice that for each fixed $\lambda$, the likelihood equation is proportional to the likelihood equation which estimates  $(\beta, \sigma^2)$.
+Thus, the maximum likelihood estimator for $(\beta(\lambda), \sigma^2(\lambda))$ for a given $\lambda$  are :
+\begin{eqnarray}\label{eqBetaSigma}
+ \hat{\beta}(\lambda) & = & \sum_{k=1}^{n} h_{\lambda}(Y_k) \\
+ \hat{\sigma}^2(\lambda)  & = &  \frac{1}{n} \sum_{k=1}^{n} (h_{\lambda}(Y_k) - \beta(\lambda))^2
+\end{eqnarray}
+Substituting (\ref{eqBetaSigma}) into (\ref{LKH}) and taking the $\log-$likelihood, we obtain :
+\begin{eqnarray}
+  			\ell(\lambda) = \log L( \hat{\beta}(\lambda), \hat{\sigma}(\lambda),\lambda ) & = & C - 
+				\frac{n}{2}
+			 	\log\left[\hat{\sigma}^2(\lambda)\right]
+		  		\;+\;
+				\left(\lambda - 1 \right) \sum_{i=1}^n \log(y_i)\,,%\qquad mbox{where $C$ is a constant.}
+\end{eqnarray}
+The parameter $\hat{\lambda}$ is the one maximising $\ell(\lambda)$.\\
+
+
+OpenTURNS proceeds as follows, on multidimensionnal times series $(\vect{Y}_t)_t$. It creates a factory of Box Cox transformation  thanks to the  object \emph{BoxCoxFactory}. Note that if the time series  $(\vect{Y}_t)_t$ has some negative values, it is possible to translate the time series in order to get only positive values. The translation factor $\vect{\alpha}$ has to be mentionned at the creation of the object {\itshape BoxCoxFactory}.\\
+Then, Open TURNS estimates the Box Cox transformation $h_{\vect{\lambda}}$ from  the time series $(\vect{Y}_t)_t$  thanks to the method \emph{build} of the object \emph{BoxCoxFactory}, which produces an object of type \emph{BoxCoxTransform}. This last object enables to :
+\begin{itemize}
+  \item  transform the time series  $(\vect{y}_{t_1}, \dots,\vect{y}_{t_N})$ of dimension $p$ into a time series $(\vect{z}_{t_1}, \dots,\vect{z}_{t_N})$  with stabilized variance, such that for each instant $t_i$ we apply the function : 
+\begin{equation}
+\begin{array}{lcl}\label{Eval}
+  \mathbb{R}^{p+1} & \mapsto & \mathbb{R}^{p} \\
+  (t_i,\vect{y}_{t_i}) & \mapsto & h_{\vect{\lambda}}(\vect{y}_{t_i})
+\end{array}
+\end{equation}
+or 
+\begin{equation}
+\begin{array}{lcl}\label{Eval}
+  \mathbb{R}^{p+1} & \mapsto & \mathbb{R}^{p} \\
+  (t_i,\vect{y}_{t_i})  & \mapsto & h_{\vect{\lambda}}(\vect{y}_{t_i} + \vect{\alpha})
+\end{array}
+\end{equation}
+thanks to the operand  \emph{()};
+  \item create the inverse Box Cox transformation  in order to apply the inverse transformation to a time series $(\vect{z}_{t_1}, \dots,\vect{z}_{t_N})$ and refind the initial time series $(\vect{y}_{t_1}, \dots,\vect{y}_{t_N})$ such that :
+\begin{equation}
+\begin{array}{lcl}\label{Inverse}
+  \mathbb{R}^{p+1} & \mapsto & \mathbb{R}^{p} \\
+  (t_i,\vect{z}_{t_i}) & \mapsto & h^{-1}_{\vect{\lambda}}(\vect{z}_{t_i} )
+\end{array}
+\end{equation}
+or 
+\begin{equation}
+\begin{array}{lcl}\label{Eval}
+  \mathbb{R}^{p+1} & \mapsto & \mathbb{R}^{p} \\
+  (t_i,\vect{z}_{t_i}) & \mapsto & h^{-1}_{\vect{\lambda}}(\vect{z}_{t_i} ) - \vect{\alpha}
+\end{array}
+\end{equation}
+thanks to the method \emph{getInverse()} which produces an object of type \emph{InverseBoxCoxTransform} that can be evaluated on a time series thanks to the operand  \emph{()}. 
+\end{itemize}
+
+
+
+Details on each object may be found in the User Manual  (\href{OpenTURNS_UserManual_TUI.pdf}{see User Manual - Stochastic process}).\\
+
+ 
+\requirements{
+
+  \begin{description}
+  \item[$\bullet$] some time series : {\itshape myTimeSeries, Xt}
+  \item[type:]  TimeSeries 
+  \end{description}
+
+  \begin{description}
+  \item[$\bullet$] a lambda factor : {\itshape myLambda}
+  \item[type:]  NumericalPoint 
+  \end{description}
+
+}
+{
+
+
+  \begin{description}
+  \item[$\bullet$] a Box Cox factory : {\itshape myBoxCoxFactory }
+  \item[type:]  BoxCoxFactory
+  \end{description}
+
+  \begin{description}
+  \item[$\bullet$] a Box Cox transformation and its inverse: {\itshape myModelTranform, myInverseModelTransform}
+  \item[type:]  BoxCoxTransform, InverseBoxCoxTransform
+  \end{description}
+
+
+  \begin{description}
+  \item[$\bullet$] $\vect{\lambda}$ : {\itshape estimatedLambda}
+  \item[type:]  NumericalPoint
+  \end{description}
+
+
+  \begin{description}
+  \item[$\bullet$] some time series {\itshape myFinalTimeSeries, ts}
+  \item[type:]  TimeSeries 
+  \end{description}
+}
+
+\textspace\\
+Python script for this Use Case :
+
+\begin{lstlisting}
+  # Initiate a BoxCoxFactory 
+  myBoxCoxFactory = BoxCoxFactory()
+
+  # If values of time series are expected to be negative, we translate the values by the vector alpha
+  myBoxCoxFactory = BoxCoxFactory(alpha)
+
+  # We estimate the lambda parameter from the time series Yt
+  # In dimension upper than one, the estimate is done marginal by marginal
+  myModelTransform = myBoxCoxFactory.build(myTimeSeries) 
+
+  # Get the estimated lambda
+  estimatedLambda = myModelTransform.getLambda()
+ 
+  # It is possible to impose the lambda factor myLambda
+  myModelTransform = BoxCoxTransform(myLambda)
+
+  # Apply the transform method to  myTimeSeries
+  # myFinalTimeSeries = h(myTimeSeries) or h(myTimeSeries + alpha)
+  myFinalTimeSeries = myModelTransform(myTimeSeries)
+
+  # Get the inverse of the Box Cox transformation
+  myInverseModelTransform = myModelTransform.getInverse()
+  
+  # Apply it to the time series Xt
+  # ts = h^-1(Xt) or h^-1(Xt) - alpha
+  ts = myInverseModelTransform(Xt)
+\end{lstlisting}
+

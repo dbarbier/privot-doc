@@ -1,0 +1,70 @@
+% Copyright (c)  2005-2010 EDF-EADS-PHIMECA.
+% Permission is granted to copy, distribute and/or modify this document
+% under the terms of the GNU Free Documentation License, Version 1.2
+% or any later version published by the Free Software Foundation;
+% with no Invariant Sections, no Front-Cover Texts, and no Back-Cover
+% Texts.  A copy of the license is included in the section entitled "GNU
+% Free Documentation License".
+
+
+\newpage\section{FFT}
+
+The objective of this class is to implement the Fourier transformations (direct and inverse) using external tools such as KissFFT.
+We describe here the methods of this class.
+
+\begin{description}
+
+\item[Usage :] \rule{0pt}{1em}
+  \begin{description}
+  \item $FFT()$
+  \item
+  \end{description}
+
+\item[Value :] FFT
+  \begin{description}
+  \item This instantiates the Fast Fourier Transform (FFT) class
+  \end{description}
+
+\item[Some methods :]  \rule{0pt}{1em}
+  \begin{description}
+  \item $getName$
+    \begin{description}
+    \item[Usage :] $getName()$
+    \item[Arguments :] none
+    \item[Value :] a string, the name of the FFT
+    \end{description}
+    \bigskip
+
+  \item $inverseTransform$
+    \begin{description}
+    \item[Usage :] $inverseTransform(collection)$
+    \item[Arguments :] NumericalComplexCollection 
+    \item[Value :] a NumericalComplexCollection. This computes the Fourier inverse transformation of the values contained in collection. 
+    \end{description}
+    \bigskip
+
+  \item $setName$
+    \begin{description}
+    \item[Usage :] $setName(name)$
+    \item[Arguments :] name : a string
+    \item[Value :] the FFT is named $name$
+    \end{description}
+    \bigskip
+
+  \item $transform$
+    \begin{description}
+    \item[Usage :] $transform(collection)$
+    \item[Arguments :] NumericalComplexCollection 
+    \item[Value :] a NumericalComplexCollection. This computes the Fourier transformation of the values contained in collection. Notice also that the collection might be a NumericalScalarCollection
+    \end{description}
+    \bigskip
+  \end{description}
+\end{description}
+
+
+% ==========================================================================
+
+\newpage\subsubsection{KissFFT}
+The KissFFT class inherits from the FFT class. The methods are the same as the FFT class (there is no additional method).
+This class interacts with the \emph{kissfft} implemented and return results as OpenTurns objects (NumericalComplexCollection).
+

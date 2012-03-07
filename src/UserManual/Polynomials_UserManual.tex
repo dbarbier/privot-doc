@@ -1,0 +1,211 @@
+% Copyright (c)  2005-2010 EDF-EADS-PHIMECA.
+% Permission is granted to copy, distribute and/or modify this document
+% under the terms of the GNU Free Documentation License, Version 1.2
+% or any later version published by the Free Software Foundation;
+% with no Invariant Sections, no Front-Cover Texts, and no Back-Cover
+% Texts.  A copy of the license is included in the section entitled "GNU
+% Free Documentation License".
+
+
+
+\newpage \section{Polynomials}
+
+
+
+% ===================================================================
+
+\subsection{UniVariatePolynomial}
+
+\begin{description}
+
+\item[Usage :] $UniVariatePolynomial(coefficients)$
+
+\item[Arguments :]  $coefficients$ : a NumericalPoint, the list of the coefficients of each term $x^k$ (no sparse repesentation)
+
+\item[Value :] a UniVariatePolynomial
+
+\item[Some methods :]  \rule{0pt}{1em}
+
+  \begin{description}
+
+  \item $*$
+    \begin{description}
+    \item[Usage :]  \rule{0pt}{1em}
+      \begin{description}
+      \item $Pol1*Pol2$
+      \item $lambda*Pol1$
+      \end{description}
+    \item[Arguments :] \rule{0pt}{1em}
+      \begin{description}
+      \item $(Pol1, Pol2)$ : two UniVariatePolynomial,
+      \item $lambda$ : a NumericalScalar
+      \end{description}
+    \item[Value :] \rule{0pt}{1em}
+      \begin{description}
+      \item usage 1 : a UniVariatePolynomial, the result of the multiplication  $Pol1*Pol2$
+      \item usage 2 : a UniVariatePolynomial, the result of the multiplication  $lambda*Pol1$
+      \end{description}
+    \end{description}
+    \bigskip
+
+  \item $+$
+    \begin{description}
+    \item[Usage :]  $Pol1+Pol2$
+    \item[Arguments :] $(Pol1, Pol2)$ : two UniVariatePolynomial
+    \item[Value :] a UniVariatePolynomial, the result of the addition  $Pol1+Pol2$
+    \end{description}
+    \bigskip
+
+  \item $-$
+    \begin{description}
+    \item[Usage :]  $Pol1-Pol2$
+    \item[Arguments :] $(Pol1, Pol2)$ : two UniVariatePolynomial
+    \item[Value :] a UniVariatePolynomial, the result of the substraction  $Pol1-Pol2$
+    \end{description}
+    \bigskip
+
+  \item $derivate$
+    \begin{description}
+    \item[Usage :] $derivate()$
+    \item[Arguments :] none
+    \item[Value :] a UniVariatePolynomial, the derivated univariate polynomials
+    \end{description}
+    \bigskip
+
+  \item $derivative$
+    \begin{description}
+    \item[Usage :] $derivative(point)$
+    \item[Arguments :] $point$ : a NumericalScalar
+    \item[Value :] a NumericalScalar, the value of the derivated polynomials at point $point$
+    \end{description}
+    \bigskip
+
+  \item $draw$
+    \begin{description}
+    \item[Usage :] $draw(min, max, pointNumber)$
+    \item[Arguments :] \rule{0pt}{1em}
+      \begin{description}
+      \item $min, max$ : a NumericalScalar
+      \item $pointNumber$ : an integer, the number of points used for the grah
+      \end{description}
+    \item[Value :] a Graph, the polynomials curve on the range $[min, max]$.
+    \end{description}
+
+  \item $getCoefficients$
+    \begin{description}
+    \item[Usage :] $getCoefficients()$
+    \item[Arguments :] none
+    \item[Value :] a Coefficients, the coefficients of each $x^k$ for $k \leq$ to the degree of the univariate polynomials (no sparse repesentation)
+    \end{description}
+    \bigskip
+
+  \item $getDegree$
+    \begin{description}
+    \item[Usage :] $getDegree()$
+    \item[Arguments :] none
+    \item[Value :] an integer, the degree of the univariate polynomials
+    \end{description}
+    \bigskip
+
+  \item $getRoots$
+    \begin{description}
+    \item[Usage :] $getRoots()$
+    \item[Arguments :] none
+    \item[Value :] a NumericalComplexCollection, the collection of complex roots of the univariate polynomials
+    \end{description}
+    \bigskip
+
+  \item $incrementDegree$
+    \begin{description}
+    \item[Usage :] $incrementDegree(deg)$
+    \item[Arguments :] $deg$ : an integer
+    \item[Value :] a UniVariatePolynomial obtained by multiplying the polynomial by $x^{deg}$
+    \end{description}
+
+  \end{description}
+
+\end{description}
+
+
+
+
+% ===================================================================
+
+\newpage \subsection{PolynomialCollection}
+
+\begin{description}
+
+\item[Usage :] $PolynomialCollection(size, univariatePol)$
+
+\item[Arguments :]  \rule{0pt}{1em}
+  \begin{description}
+  \item $size$ : an integer
+  \item $univariatePol$ : a UniVariatePolynomial
+  \end{description}
+
+\item[Value :] a PolynomialCollection, which contains $size$ polynomials each equal to  $univariatePol$
+
+\item[Some methods :]  \rule{0pt}{1em}
+
+\item $add$
+  \begin{description}
+  \item[Usage :]  $add(univariatePol)$
+  \item[Arguments :] $univariatePol$ : a UniVariatePolynomial,
+  \item[Value :] a PolynomialCollection which size has been increased of 1 and to which the polynomials $univariatePol$ has been added
+  \end{description}
+  \bigskip
+
+\item $at$
+  \begin{description}
+  \item[Usage :]  $at(i)$
+  \item[Arguments :] $i$ : an integer
+  \item[Value :] a UniVariatePolynomial, the polynomials at position $i$ in the collection
+  \end{description}
+  \bigskip
+
+\item $resize$
+  \begin{description}
+  \item[Usage :]  $resize(newSize)$
+  \item[Arguments :] $i$ : an integer
+  \item[Value :] a PolynomialCollection which size has been modified into $newSize$ as follows : if $inewSize \leq getSize()$ then, the collection is truncated to the first $newSize$ polynomials. Otherwise, the collection is increased until the size $newSize$ : the added polynomials are the nul ones.
+  \end{description}
+
+
+\end{description}
+
+
+
+% ===================================================================
+
+\newpage \subsection{ProductPolynomialEvaluationImplementation}
+
+\begin{description}
+
+\item[Usage :] $ProductPolynomialEvaluationImplementation(polCollection)$
+
+\item[Arguments :]  $polCollection$ : a PolynomialCollection, a collection of UniVariatePolynomial
+
+\item[Value :] a ProductPolynomialEvaluationImplementation, the product of the polynomials of $polCollection$. The result polynomials is of input dimension $n$ where $n$ is the number of polynomials in  $polCollection$.
+
+\item[Some methods :]  \rule{0pt}{1em}
+
+\item $Operator()$
+  \begin{description}
+  \item[Usage :]  $Operator(point)$
+  \item[Arguments :] $point$ : a NumericalPoint, which dimension is $n$ where $n$ is the number of polynomials in  $polCollection$
+  \item[Value :] a NumericalPoint of dimension 1,
+  \end{description}
+  \bigskip
+
+\item $+$
+  \begin{description}
+  \item[Usage :]  $Pol1+Pol2$
+  \item[Arguments :] $(Pol1, Pol2)$ : two UniVariatePolynomial
+  \item[Value :] a UniVariatePolynomial, the result of the addition  $Pol1+Pol2$
+  \end{description}
+
+
+\item[Details :]  The exact gradient and hessian evaluations have been implemented for the products of polynomials.
+
+\end{description}
+

@@ -1,0 +1,114 @@
+% Copyright (c)  2005-2010 EDF-EADS-PHIMECA.
+% Permission is granted to copy, distribute and/or modify this document
+% under the terms of the GNU Free Documentation License, Version 1.2
+% or any later version published by the Free Software Foundation;
+% with no Invariant Sections, no Front-Cover Texts, and no Back-Cover
+% Texts.  A copy of the license is included in the section entitled "GNU
+% Free Documentation License".
+\renewcommand{\filename}{docUC_EventProcess.tex}
+\renewcommand{\filetitle}{UC : Creation and manipulation of a process event}
+
+% \HeaderNNIILevel
+% \HeaderIILevel
+\HeaderIIILevel
+
+\label{EventProcess}
+
+\index{Stochastic Process!Event based on process}
+
+
+This section gives elements to create and manipulate events based on the realizations of a stochastic process.\\
+
+
+
+
+The objective is to define the event $\mathcal{E}$ which is realized when there exists one time stamp at which the process of dimension $n$ enters into a particular domain $\mathcal{A} \in \mathbb{R}^n$.\\
+The domain $\mathcal{A}$ is defined as a cartesian product of type :
+$$
+\mathcal{A} = \prod_{i=1}^n [a_i,b_i]
+$$
+Open TURNS defines $\mathcal{A}$ by its both extreme points : $\vect{a}$ and $\vect{b}$.\\
+Then $\mathcal{E}$  writes : 
+\begin{equation}\label{eventProcStoch}
+  \mathcal{E} = \{ \exists t \, | \, \vect{X}(\omega,t)  \in \mathcal{A} \}
+\end{equation}
+
+Details on stochastic process may be found in the Reference Guide (\href{OpenTURNS_ReferenceGuide.pdf}{see Stochastic process}).\\
+Details on each object may be found in the User Manual  (\href{OpenTURNS_UserManual_TUI.pdf}{see User Manual - EventProcess}).\\
+
+Once created, the event based on some process realizations can be manipulated in order to evaluate the probability :
+\begin{equation}\label{eventprob}
+p =  Prob(\mathcal{E}) = Prob(\{\exists t \, | \, \vect{X}(\omega,t)  \in \mathcal{A}\})
+\end{equation}
+ thanks to Monte Carlo sampling within two steps : 
+\begin{itemize}
+  \item the process is realized $N$ times  : $(\vect{X}(w_1), \dots, \vect{X}(w_N))$ and each realization  is checked according to $\mathcal{E}$, thanks to the method {\itshape getNumericalSample} applied to the event, which produces the scalar numerical sample : $(1_{ \mathcal{E}}(\vect{X}(w_1), \dots, 1_{ \mathcal{E}}(\vect{X}(w_N)) $,
+  \item the probability (\ref{eventprob})  is then estimated through the Monte Carlo estimator thanks to the method {\itshape computeMean} applied to the previous numerical sample :
+\begin{equation}\label{pEstim}
+p_N = \displaystyle \frac{1}{N} \sum_{i=1}^N 1_{ \mathcal{E}}(\vect{X}(w_i))
+\end{equation}
+\end{itemize}
+
+
+It is also possible to evaluate the probability (\ref{eventprob})  using the Monte Carlo algorithm defined in Open TURNS (see UC \ref{MonteCarloProcess}).\\
+
+
+\requirements{
+
+  \begin{description}
+  \item[$\bullet$] the bounds of a domain : {\itshape lowerBound, upperBound}
+  \item[type:] NumericalPoint
+  \end{description}
+
+  \begin{description}
+  \item[$\bullet$] the process : {\itshape myProcess}
+  \item[type:] Process
+  \end{description}
+}
+{
+  \begin{description}
+  \item[$\bullet$] the Event : {\itshape myEvent}
+  \item[type:] EventProcess
+  \end{description}
+
+}
+
+\textspace\\
+Python script for this UseCase :
+
+\begin{lstlisting}
+  # Create the domain A : for example [1,2] * [1,2]
+  # Lower bound vector :  (1,1)
+  lowerBound = NumericalPoint([1.0,1.0]
+  # Upper bound vector :  (2,2)
+  upperBound = NumericalPoint([2.0,2.0]
+  # create the domain A 
+  myDomain = Interval(lowerBound, upperBound)
+
+  # Create an event from a Process and a Domain
+  myEvent = EventProcess(myProcess, myDomain)
+
+  # Get N realizations of the Event
+  mySample = myEvent.getNumericalSample(N)
+ 
+  # Get the estimator of the probability
+  p = mySample.computeMean()
+
+\end{lstlisting}
+
+\textspace\\
+
+The following  example consists in the analysis of the  bidimensionnal white noise process $ \vect{\epsilon}(\omega,t)$  defined in (\ref{whiteNoiseDef}) distributed according to the bidimensionnal standard normal distribution (with zero mean, unit variance  and independent marginals). We consider the domain  $\mathcal{A} =  [1,2] \times [1,2]$. Then the event $\mathcal{E}$ writes : 
+$$
+\mathcal{E} = \{ \exists t \, | \, \epsilon(\omega,t)  \in \mathcal{A} \}
+$$
+For all time stamps $t$, the probability $p_1$ that the process enters into the domain $\mathcal{A}$ at time $t$ writes, using the independence property of the marginals :
+$$
+p_1 = Prob(\{\epsilon(\omega,t)  \in \mathcal{A}\}) = (\Phi(2) - \Phi(1))^2
+$$
+with $\Phi$ the cumulative distribution function of the scalar standard $Normal$ distribution.\\
+As the proces is discretized on a time grid of size $n$ and using the independance property of the white noise between two different time stamps and the fact that the white noise follows the same distribution at each time $t$, the final probability $p$  writes :
+\begin{equation}\label{pexact}
+p = Prob(\mathcal{E}) = 1 - (1 - p_1)^{n}
+\end{equation}
+With $N=10^4$ realizations, using the Monte Carlo estimator (\ref{pEstim}), we obtain $p_N = 0.1627$, to be compared to the exact value (\ref{pexact}) : $p=0.17008$ for a time grid of size $n=10$.

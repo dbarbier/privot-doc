@@ -1,0 +1,122 @@
+% Copyright (c)  2005-2010 EDF-EADS-PHIMECA.
+% Permission is granted to copy, distribute and/or modify this document
+% under the terms of the GNU Free Documentation License, Version 1.2
+% or any later version published by the Free Software Foundation;
+% with no Invariant Sections, no Front-Cover Texts, and no Back-Cover
+% Texts.  A copy of the license is included in the section entitled "GNU
+% Free Documentation License".
+\renewcommand{\filename}{docUC_InputWithData_PearsonSpearmanTests.tex}
+\renewcommand{\filetitle}{UC : Particular manipulations of the Pearson and Spearman tests, when the first sample is of dimension superior to 1.}
+
+% \HeaderNNIILevel
+% \HeaderIILevel
+\HeaderIIILevel
+
+
+\index{Independence Test!ChiSquared test}
+\index{Independence Test!Pearson test}
+\index{Independence Test!Spearman test}
+
+The objective of this Use Case is to decide whether two samples follow a monotonous or linear relation in the case where the first sample is of dimension $>1$.\\
+The Pearson and Spearman tests are evaluated successively between some (or all) coordinates of the first sample and the second one, which must be of dimension 1.\\
+
+
+
+
+Details on the Pearson and Spearman tests  may be found in the Reference Guide (\href{OpenTURNS_ReferenceGuide.pdf}{see files Reference Guide - Step B -- Pearson correlation test, Step B -- Spearman correlation test}).\\
+
+Details on each object may be found in the User Manual  (\href{OpenTURNS_UserManual_TUI.pdf}{see User Manual - Statistics on sample /  Hypothesis Test}).\\
+
+
+
+
+\requirements{
+  \begin{description}
+  \item[$\bullet$] one continuous scalar numerical sample of dimension n : {\itshape continuousSample1}
+  \item[type:]  NumericalSample
+  \item[$\bullet$] one continuous scalar numerical sample of dimension 1 : {\itshape continuousSample2}
+  \item[type:]  NumericalSample
+  \end{description}
+}
+{
+  \begin{description}
+  \item[$\bullet$] tests results : {\itshape resultPartialPearson, resultFullPearson, resultPartialSpearman, resultFullSpearman}
+  \item[type:] TestResultCollection
+  \end{description}
+}
+
+\textspace\\
+Python script for this UseCase :
+
+\begin{lstlisting}
+
+  # Partial Pearson Test : test if two scalar samples which form a gaussian vector are independent (based on the evaluation of the linear correlation coefficient)
+  # H0 : independent samples (linear correlation coefficient = 0)
+  # Test = True <=> independent samples (linear correlation coefficient = 0)
+  # p-value threshold : probability of the H0 reject zone : 1-0.90
+  # p-value : probability (test variable decision > test variable decision evaluated on the samples)
+  # Test = True <=> p-value > p-value threshold
+
+  # selection of coordinates of continuousSample1 to be tested to continuousSample2
+  # for example, coordinates 1, 2, 3, 4, 5, (suppose n>5)
+  selection = range(5)
+
+  # Perform the Partial Pearson Test
+  resultPartialPearson = HypothesisTest.PartialPearson(continuousSample1, continuousSample2, selection, 0.90)
+
+  # Print the global result of the Pearson Test
+  print "Test global result : ", resultPartialPearson
+
+  # Print result of the Pearson Test for each coordinate tested
+  for i in range(5) :
+  print "Test Succes for Coordinate =  ", selection[i], "? ", (resultPartialPearson[i].getBinaryQualityMeasure()==1)
+
+  # Get the p-value of the Pearson Test
+  print "p-value of the Pearson Test = ", resultPartialPearson[i].getPValue()
+
+  # Get the p-value threshold of the  Test
+  print "p-value threshold for Coordinate =  ", selection[i], " = ", resultPartialPearson[i].getThreshold()
+
+  # Full Pearson Test : it performs the partial Pearson test on the whole coordinates of the first sample
+
+  # Perform the Full Pearson Test
+  resultFullPearson = HypothesisTest.FullPearson(continuousSample1, continuousSample2, 0.90)
+
+  # Same manipulations than those effected on resultPartialPearson to get the results
+
+  # Partial Spearman Test : test if two scalar samples have a monotonous relation
+  # H0 : no monotonous relation between both samples
+  # Test = True <=> no monotonous relation
+  # p-value threshold : probability of the H0 reject zone : 1-0.90
+  # p-value : probability (test variable decision > test variable decision evaluated on the samples)
+  # Test = True <=> p-value > p-value threshold
+
+  # selection of coordinates of continuousSample1 to be tested to continuousSample2
+  # for example, coordinates 1, 2, 3, 4, 5, (suppose n>5)
+  selection = range(5)
+
+  # Perform the Partial Spearman Test
+  resultPartialSpearman = HypothesisTest.PartialSpearman(continuousSample1, continuousSample2, selection, 0.90)
+
+  # Print the global result of the Spearman Test
+  print "Test global result : ", resultPartialSpearman
+
+  # Print result of the Spearman Test for each coordinate tested
+  for i in range(5) :
+  print "Test Succes for Coordinate =  ", selection[i], "? ", (resultPartialSpearman[i].getBinaryQualityMeasure()==1)
+
+  # Get the p-value of the Spearman Test
+  print "p-value of the Spearman Test = ", resultPartialSpearman[i].getPValue()
+
+  # Get the p-value threshold of the  Test
+  print "p-value threshold for Coordinate =  ", selection[i], " = ", resultPartialSpearman[i].getThreshold()
+
+  # Full Spearman Test : it performs the partial Pearson test on the whole coordinates of the first sample
+
+  # Perform the Full Spearman Test
+  resultFullSpearman = HypothesisTest.FullSpearman(continuousSample1, continuousSample2, 0.90)
+
+  # Same manipulations than those effected on resultPartialSpearman to get the results
+\end{lstlisting}
+
+

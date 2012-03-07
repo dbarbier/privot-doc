@@ -1,0 +1,129 @@
+% Copyright (c)  2005-2010 EDF-EADS-PHIMECA.
+% Permission is granted to copy, distribute and/or modify this document
+% under the terms of the GNU Free Documentation License, Version 1.2
+% or any later version published by the Free Software Foundation;
+% with no Invariant Sections, no Front-Cover Texts, and no Back-Cover
+% Texts.  A copy of the license is included in the section entitled "GNU
+% Free Documentation License".
+\renewcommand{\filename}{docUC_LSF_SomeParticularFunctions.tex}
+\renewcommand{\filetitle}{UC : Some particular functions : linear combination, agregation, composition}
+
+% \HeaderNNIILevel
+% \HeaderIILevel
+\HeaderIIILevel
+
+
+\label{NumericalMathFunction}
+
+
+
+
+
+
+\index{Limit State Function!Composition}
+\index{Limit State Function!Linear combination}
+\index{Limit State Function!Agregated funtion}
+\index{Limit State Function!Gradient}
+\index{Limit State Function!Hessian}
+
+The objective of this Use Case is to create some particular functions :
+\begin{itemize}
+\item the scalar linear combination $linComb$ of vectorial functions $vectFctColl = (f_1, \hdots, f_N)$ where 
+  $$
+   \forall 1 \leq i \leq N, \,     f_i : \mathbb{R}^n \longrightarrow \mathbb{R}^{p}
+  $$
+  with specific scalar weights $scalWeight = (c_1, \hdots, c_N)\in \mathbb{R}^N $ :
+   $$
+    \begin{array}{l|lcl}
+    linComb : & \mathbb{R}^n & \longrightarrow & \mathbb{R}^{p} \\
+              &  \vect{X} & \longrightarrow & \displaystyle \sum_i c_if_i (\vect{X})
+    \end{array}
+    $$
+
+
+\item the vectorial linear combination $vectLinComb$ of a set of  functions $scalFctColl = (f_1, \hdots, f_N)$ where 
+  $$
+  \forall 1 \leq i \leq N, \,     f_i : \mathbb{R}^n \longrightarrow \mathbb{R}
+  $$
+  with specific vectorial weights $vectWeight = (\vect {c}_1, \hdots, \vect{c}_N)$  where 
+    $$
+    \forall 1 \leq i \leq N, \,   \vect{c}_i \in \mathbb{R}^p
+    $$
+   $$
+    \begin{array}{l|lcl}
+    vectLinComb : & \mathbb{R}^n & \longrightarrow & \mathbb{R}^{p} \\
+              &  \vect{X} & \longrightarrow & \displaystyle \sum_i \vect{c}_if_i (\vect{X})
+    \end{array}
+    $$
+
+\item the agregated function $h$ of a set of functions $(f_1, \hdots, f_N)$ where 
+    $$
+    f_i : \mathbb{R}^n \longrightarrow \mathbb{R}^{p_i}
+    $$
+   $$
+    \begin{array}{l|lcl}
+    agregFct : & \mathbb{R}^n & \longrightarrow & \mathbb{R}^{p} \\
+              &  \vect{X} & \longrightarrow & (f_1(\vect{X}), \hdots, f_N(\vect{X}))^t
+    \end{array}
+    $$
+    with
+    $$
+    p = \displaystyle \sum_i p_i
+    $$
+
+\item the indicator function $l$ of an event defined by a fucntion $f$, a comparison operator and a threshold $s$. For example, if the comparison operator is $>$, then
+  $$
+  l = 1_{\{f > s\}}
+  $$
+\end{itemize}
+
+
+Open TURNS automatically evaluates the analytical expressions of the gradient and the hessian, except if the analytical expression of the function is not differentiable everywhere. In that case, Open TURNS implements a finite difference method :
+\begin{itemize}
+\item the gradient evaluation method is the centered finite difference method, with the differential increment $h=1e-5$ for each direction,
+\item the hessian evaluation method is the centered finite difference method, with the differential increment $h=1e-4$ for each direction.
+\end{itemize}
+
+Details on each object may be found in the User Manual  (\href{OpenTURNS_UserManual_TUI.pdf}{see User Manual - Base Objects / NumericalMathFunction}).\\
+
+
+
+\requirements{
+  \begin{description}
+  \item[$\bullet$] some collections of scalar and vectorial functions : {\itshape scalFctColl, vectFctColl}
+  \item[type:] some NumericalMathFunctionCollection
+  \item[$\bullet$] a list of  scalar weights : {\itshape scalWeight}
+  \item[type:] a NumericalPoint
+  \item[$\bullet$] a list of  vectorial weights : {\itshape vectWeight}
+  \item[type:] a NumericalSample
+  \item[$\bullet$] a function : {\itshape function}
+  \item[type:] a NumericalMathFunction
+  \item[$\bullet$] a  comparison operator : {\itshape comparisonOperator}
+  \item[type:] a comparisonOperator
+  \item[$\bullet$] a  threshold : {\itshape threshold}
+  \item[type:] a NumericalScalar
+  \end{description}
+}
+{
+  \begin{description}
+  \item[$\bullet$] some particular funtions : {\itshape linComb, vectLinComb, agregFct, indFactor}
+  \item[type:] some NumericalMathFunction
+  \end{description}
+}
+
+\textspace\\
+Python script for this UseCase :
+
+\begin{lstlisting}
+  # Create the scalar linear combination of vectorial functions
+  linComb = NumericalMathFunction(vectFctColl, scalWeight)
+
+  # Create the vectorial linear combination of scalar functions
+  vectLinComb = NumericalMathFunction(scalFctColl, vectWeight)
+
+  # Create the agregated function
+  agregFct = NumericalMathFunction(vectFctColl)
+
+  # Create the indicator function
+  agregFunction = NumericalMathFunction(function, comparisonOperator, threshold)
+\end{lstlisting}

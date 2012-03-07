@@ -1,0 +1,97 @@
+% Copyright (c)  2005-2010 EDF-EADS-PHIMECA.
+% Permission is granted to copy, distribute and/or modify this document
+% under the terms of the GNU Free Documentation License, Version 1.2
+% or any later version published by the Free Software Foundation;
+% with no Invariant Sections, no Front-Cover Texts, and no Back-Cover
+% Texts.  A copy of the license is included in the section entitled "GNU
+% Free Documentation License".
+\renewcommand{\filename}{docUC_TimeSeries.tex}
+\renewcommand{\filetitle}{UC : Manipulation of a time series}
+
+% \HeaderNNIILevel
+ \HeaderIILevel
+%\HeaderIIILevel
+
+\label{UCtimeSeries}
+
+\index{Stochastic Process!Time Series}
+
+
+We recall that $\underline{X}(\omega,t)$ is a stochastic process, where $\omega \in \Omega$ is an event, $t \in \mathbb{R}$ is the time and $\underline{X}(\omega,t) \in \mathbb{R}^d$ is the observed values of the process at each time $t$.\\
+
+A realization of $\underline{X}(\omega,t)$ is the data $(t_i, \underline{X}(\omega_0,t_i))_{0 \leq i \leq n-1}$ for a given $\omega_0 \in \Omega$. If we don't mention $\omega$ any more, then a time series is the data  $(t_i, \underline{X}_i)_{0 \leq i \leq n-1}$. \\
+A time series is stocked in the \emph{TimeSeries} object that contains the time grid $(t_0, \hdots, t_{n-1})$ and the associated values $(\underline{X}_0, \hdots, \underline{X}_{n-1})$.\\
+
+Given a time series, it is possible to evaluate  its temporal mean $\vect{g}(\omega)$, depending on the alea $\omega \in \Omega$. Open TURNS evaluates it by discretizing the time on the time grid as follows :
+$$
+\displaystyle \vect{g}(\omega) =  \frac{1}{t_{n-1} - t_0} \int_{t_0}^{t_{n-1}} \underline{X}(\omega,t) \, dt \simeq  \frac{1}{n} \sum_{i=0}^{n-1} \underline{X}_i
+$$
+The temporal mean of a time series is a random vector of dimension $d$. In OpenTURNS, it is computed with the method \emph{computeTemporalMean()}.\\
+
+The objective here is to create and manipulate a time series.\\
+
+Details on each object may be found in the User Manual  (\href{OpenTURNS_UserManual_TUI.pdf}{see User Manual - Objects}).\\
+
+\requirements{
+  \begin{description}
+  \item[$\bullet$] a time grid  $(t_0, \hdots, t_{n-1})$ : {\itshape $myTimeGrid$}
+  \item[type:]  RegularGrid
+  \end{description}
+
+
+  \begin{description}
+  \item[$\bullet$] the values $(\underline{X}_0, \hdots, \underline{X}_{n-1})$ : {\itshape $myValues$}
+  \item[type:]  NumericalSample
+  \end{description}
+
+}
+{
+  \begin{description}
+  \item[$\bullet$] the time series $(t_i, \underline{X}(t_i))_{i=0 ..n-1}$ : {\itshape myTimeSeries}
+  \item[type:]  TimeSeries
+  \end{description}
+}
+
+\textspace\\
+Python script for this UseCase :
+
+\begin{lstlisting}
+
+  # Create the time grid 
+  # Care! The number of steps of the time grid n must be equal to size - 1, where size is the size of myValues 
+  myTimeSeries = TimeSeries(myTimeGrid, myValues)
+  
+  # Get the number of points of the time grid
+  size = myTimeSeries.getSize()
+
+  # Get the dimension of the values observed at each time
+  dimension = myTimeSeries.getDimension()
+
+  # Get the value Xi at index i
+  # Care! Numeretation begins at i=0
+  # Returned result is a NumericalPoint of dimension d
+  myValue = myTimeSeries.getValueAtIndex(i)
+
+  # Get the value of the observed time series at time myTime 
+  myValue = myTimeSeries.getValueAtNearestTime(myTime)
+
+  # Get a value using []
+  # i must be an index between 0 and size of myValues 
+  myValue = myTimeSeries[i]
+
+  # Get a the value at index i and dimension d
+  myValue = myTimeSeries[i, d]
+
+  # Get all the values (X1, .., Xn) of the time series
+  allValues = myTimeSeries.getNumericalSample()
+
+  # Compute the temporal Mean
+  # It corresponds to the mean of the values of the time series
+  myTemporalMean = myTimeSeries.computeTemporalMean()
+   
+  # Draw the marginal  of index i of the time series
+  # Care! Numerotation begins at i=0
+  myMarginalTimeSerie = myTimeSeries.drawMarginal(j)
+  Show(myMarginalTimeSerie)
+
+\end{lstlisting}

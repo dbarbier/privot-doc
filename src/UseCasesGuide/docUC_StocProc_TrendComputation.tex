@@ -1,0 +1,160 @@
+% Copyright (c)  2005-2010 EDF-EADS-PHIMECA.
+% Permission is granted to copy, distribute and/or modify this document
+% under the terms of the GNU Free Documentation License, Version 1.2
+% or any later version published by the Free Software Foundation;
+% with no Invariant Sections, no Front-Cover Texts, and no Back-Cover
+% Texts.  A copy of the license is included in the section entitled "GNU
+% Free Documentation License".
+\renewcommand{\filename}{docUC_StocProc_TrendComputation.tex}
+\renewcommand{\filetitle}{UC : Trend computation : identification and removal}
+
+% \HeaderNNIILevel
+% \HeaderIILevel
+\HeaderIIILevel
+
+\label{TrendComputation}
+
+\index{Stochastic Process! Trend computation}
+
+In general, in the context of stochastic modelling, we assume that a time series $(\vect{Y}_t)_t$ of dimension $p$ is composed with a time function (or trend function) $f : \mathbb{R} \longrightarrow \mathbb{R}^p$ and an unpredictable stochastic part $\vect{X}_t$ which is stationnary : 
+\begin{eqnarray}
+\label{tsDecomposition}
+\vect{Y}_t = \vect{f}(t) + \vect{X}_t
+\end{eqnarray}
+
+
+The objective here is to identify the trend function $f$ and to remove this last one from the observed time series in order to analyse the stationary time series $(\vect{X}_t)_t$. \\
+Among various method, one consists in fixing a basis of function $\mathcal{B}$ and estimating $f$ using a least square method : we consider the functional basis $\mathcal{B}$ :
+\begin{eqnarray*}
+\mathcal{B} = (f_1, f_2, \ldots, f_k)\ with \ f_j : \mathbb{R} \longrightarrow \mathbb{R}^p \ \forall j \ \in \left\{1,2,\ldots,k\right\}
+\end{eqnarray*}
+on which the trend function $\vect{f}$ is decomposed :
+\begin{eqnarray*}
+\vect{f}(t) = \sum_{j=1}^{k} \alpha_j \vect{f}_j(t)
+\end{eqnarray*}
+The coefficients $\alpha_j \in \mathbb{R}$ have to be computed, tanks to the  least square method for example. However, in the context of stochastic modelling, we get few data ($N$ values) and the basis $\mathcal{B}$ size $P$ is important, such as $N \approx P$. In this case, the least square system is ill-posed and it is not possible to get the coefficients.\\
+A more complex algorithm may be used which combines cross validation techniques and advanced regression strategies, in order to provide the estimation of the  coefficients associated to the best model among the  basis functions (sparse model). For example, we can use the \emph{least angle regression (LAR)  method} for the choice of sparse models.  Then, some fitting algorithms like the \emph{leave one out}, coupled to the regression strategy, assess the error on the prediction and enable the selection of the best sparse model.\\
+
+OpenTURNS proceeds as follows. It creates a factory of trend  thanks to the  object \emph{TrendFactory},  from :
+\begin{itemize}
+  \item a regression strategy that generates a basis using the Least Angle Regression (LAR) method thanks to the object \emph{LAR},
+  \item and a fitting algorithm that estimates the empirical error on each sub-basis using the leave one out strategy, thanks to the object \emph{CorrectedLeaveOneOut} or the \emph{KFold} algorithm thanks to the object \emph{KFold}.
+\end{itemize}
+Then, Open TURNS estimates the trend transformation from the time series $(\vect{Y}_t)_t$ and a function basis $\mathcal{B}$ thanks to the method \emph{build} of the object \emph{TrendFactory}, which produces an object oy type \emph{TrendTransform}. This last object enables to :
+\begin{itemize}
+  \item  add the trend to a time series $(\vect{x}_{t_1}, \dots,\vect{x}_{t_N})$ to create the time series $(\vect{y}_{t_1}, \dots,\vect{y}_{t_N})$ such that for each instant $t_i$ we apply the function :
+\begin{equation}
+\begin{array}{lcl}\label{Eval}
+  \mathbb{R}^{p+1} & \mapsto & \mathbb{R}^{p} \\
+  (t_i,\vect{x}_{t_i}) & \mapsto & \vect{y}_{t_i} = \vect{x}_{t_i} + \vect{f}(t_i)
+\end{array}
+\end{equation}
+thanks to the operand  \emph{()}. For example, it is useful to add the trend to a realization of the stationnary part $\vect{X}_t$ in order to get a realization of the process $\vect{Y}_t$;
+  \item get the function that evaluates the trend :
+\begin{equation}
+\begin{array}{lcl}\label{Function}
+  \mathbb{R} & \mapsto & \mathbb{R}^{p} \\
+  t & \mapsto & \vect{f}(t) = \sum_{j=1}^{k} \alpha_j \vect{f}_j(t)
+\end{array}
+\end{equation}
+thanks to the method \emph{getFunction()};
+  \item create the inverse trend transformation in order to remove the trend from a time series $(\vect{y}_{t_1}, \dots,\vect{y}_{t_N})$ to create the time series $(\vect{x}_{t_1}, \dots,\vect{x}_{t_N})$ such that for each instant $t_i$ we apply the function :
+
+\begin{equation}
+\begin{array}{lcl}\label{Inverse}
+  \mathbb{R}^{p+1} & \mapsto & \mathbb{R}^{p} \\
+  (t_i,\vect{y}_{t_i}) & \mapsto & \vect{x}_{t_i} = \vect{y}_{t_i} - \vect{f}(t_i)
+\end{array}
+\end{equation}
+thanks to the method \emph{getInverse()} which produces an object of type \emph{InverseTrendTransform} that can be evaluated on a time series thanks to the operand  \emph{()}. It is useful in order to get the stationnary residual process $\vect{X}_t$ from a process $(\vect{Y}_t)_t$ and then analyse it with proper methods (ARMA decomposition for example).
+\end{itemize}
+
+
+Details on each object may be found in the User Manual  (\href{OpenTURNS_UserManual_TUI.pdf}{see User Manual - Objects}).\\
+
+ 
+\requirements{
+
+  \begin{description}
+  \item[$\bullet$] a basis sequence {\itshape myBasisSequenceFactory}
+  \item[type:]  BasisSequenceFactory
+  \end{description}
+
+  \begin{description}
+  \item[$\bullet$] a fitting algorithm {\itshape myFittingAlgorithm}
+  \item[type:]  FittingAlgorithm
+  \end{description}
+
+  \begin{description}
+  \item[$\bullet$] a basis of function {\itshape myFunctionBasis}
+  \item[type:]  NumericalMathFunctionCollection
+  \end{description}
+
+  \begin{description}
+  \item[$\bullet$] a time series {\itshape myTimeSeries}
+  \item[type:]  TimeSeries
+  \end{description}
+
+}
+{
+
+  \begin{description}
+  \item[$\bullet$] a trend factory : {\itshape myTrendFactory}
+  \item[type:]  TrendFactory
+  \end{description}
+
+  \begin{description}
+  \item[$\bullet$] a trend transformation  and its inverse (to perform (\ref{Inverse})) : {\itshape myTrendTranform, myInverseTrendTransform}
+  \item[type:]  TrendTransform, InverseTrendTransform
+  \end{description}
+
+  \begin{description}
+  \item[$\bullet$] the trend function $f$ {\itshape myFunction\_f}
+  \item[type:]  NumericalMathFunction 
+  \end{description}
+
+}
+
+\textspace\\
+Python script for this Use Case :
+
+\begin{lstlisting}
+
+  # Define the regression stategy using the LAR method
+  myBasisSequenceFactory = LAR()
+
+  # Define the fitting algorithm using the Corrected Leave One Out or KFold algorithmes
+  myFittingAlgorithm = CorrectedLeaveOneOut()
+  #  myFittingAlgorithm = KFold()
+
+  # Define the trend function factory algorithm 
+  myTrendFactory = TrendFactory(myBasisSequenceFactory, myFittingAlgorithm)
+
+  # Check the definition of the created factory
+  print 'regression stategy : ', myFactory.getBasisSequenceFactory()
+  print 'fitting strategy : ', myFactory.getFittingAlgorithm()
+ 
+  # Create the trend transformation  of type TrendTransform
+  myTrendTransform =  myTrendFactory.build(myTimeSeries, myFunctionBasis)
+
+  # Add the trend to a time series Xt
+  # myFinalTimeSeries = f(t) + Xt
+  myFinalTimeSeries = myTrendTranform(Xt)
+
+  # Get the inverse trend transformation
+  myInverseTrendTransform = myTrendTranform.getInverse() 
+  
+  # Get the residual time series from Yt 
+  # myResidualTimeSeries = Yt - f(t)
+  myResidualTimeSeries = myInverseTrendTransform(Yt)
+  # or directly
+  myResidualTimeSeries = myTrendTranform.getInverse()(Yt)
+
+  # Get the trend function f(t)
+  myFunction_f = myTrendTranform.getFunction()
+
+  # Evaluate the trend function f at instant t
+  trend_t = myFunction_f(t)
+
+\end{lstlisting}
+

@@ -1,0 +1,113 @@
+% Copyright (c)  2005-2010 EDF-EADS-PHIMECA.
+% Permission is granted to copy, distribute and/or modify this document
+% under the terms of the GNU Free Documentation License, Version 1.2
+% or any later version published by the Free Software Foundation;
+% with no Invariant Sections, no Front-Cover Texts, and no Back-Cover
+% Texts.  A copy of the license is included in the section entitled "GNU
+% Free Documentation License".
+\renewcommand{\filename}{docUC_LSF_DeterministicVar2.tex}
+\renewcommand{\filetitle}{UC : Introducing some deterministic variables, optimizing memory and CPU time}
+
+% \HeaderNNIILevel
+% \HeaderIILevel
+\HeaderIIILevel
+
+
+
+\index{Limit State Function!Reducing the initial limit state function}
+\index{Random Vector!Output random vector}
+
+The objective of this Use Case is to restrict a model which has been previously declared, to some of its variables, through an optimized way.\\
+
+Details on each object may be found in the User Manual  (\href{OpenTURNS_UserManual_TUI.pdf}{see User Manual - Base Objects / NumericalMathFunction}).\\
+
+Let's have the same context than in the UC\ref{linearNumericalMathFunction}. The idea here is to avoid the introduction of the potentially huge matrix $\mat{A}$ and the gradient matrix and hessian tensor  of the functions $increase$ and $poutre$. For that last problem, it is sufficient to define the gradient matrix and hessian tensor to the final function $poutreReduced$ from a finite difference technique.\\
+
+The function {\itshape increase} is defined as follows :
+$$
+\begin{array}{l|lcl}
+  increase : & \mathbb{R}^{n_{prob}}  & \rightarrow & \mathbb{R}^n \\
+  &  \vect{X}_{prob} =
+  \begin{array}{|l}
+    "inputProb1" \\
+    \cdots       \\
+    "inputProbNprob"
+  \end{array}
+  & \mapsto     & increase(\vect{X}_{prob}) =
+  \begin{array}{|l}
+    "inputProb1" \\
+    \cdots       \\
+    "inputProbNprob" \\
+    valDet1 \\
+    \cdots       \\
+    valDetNdet
+  \end{array}
+\end{array}
+$$
+where all the $(valDet1, ..., valDetNdet)$ are the $n_{det}$ values of the determinist components of $\vect{X}$.\\
+
+The same example is re-written in the folloing Use Case.
+
+\requirements{
+  \begin{description}
+  \item[$\bullet$] the initial limit state function : {\itshape poutre}
+  \item[type:] LinearNumericalMathFunction $(\mathbb{R}^4 \rightarrow \mathbb{R})$
+  \end{description}
+}
+{
+  \begin{description}
+  \item[$\bullet$] the {\itshape increase} function
+  \item[type:] NumericalMathFunction $(\mathbb{R}^2 \rightarrow \mathbb{R}^4)$
+  \item[$\bullet$]  the new limit state function : {\itshape poutreReduced = poutre $\circ$ increase}
+  \item[type:] NumericalMathFunction $(\mathbb{R}^2 \rightarrow \mathbb{R})$
+  \end{description}
+}
+
+\textspace\\
+Python script for this UseCase :
+
+\begin{lstlisting}
+  # Dimension of the random input vector
+  stochasticDimension = 2
+
+  # Dimension of the deterministic input vector
+  deterministicDimension = 2
+
+  # Dimension of the input vector of the limit state function 'poutre'
+  inputDim = poutre.getInputNumericalPointDimension()
+
+  # Fixe deterministic values for the two last variables
+  # of the input vecteor (E,F,L,I)
+  # L
+  X2 = 10.0
+  # I
+  X3 = 5.0
+
+  # Create the analyticalfunction 'increase'
+  increase = NumericalMathFunction( ("E", "F"), ("E", "F", "L", "I"), ("E", "F", str(X2), str(X3)))
+
+  # Create the new limit state function :
+  # 'poutreReduced = poutre o increase'
+  poutreReduced = NumericalMathFunction(poutre, increase)
+
+  # Give directly to the 'poutreReduced' function a gradient evaluation method
+  # thanks to the finite difference technique
+  # For example, gradient technique : non centered finite difference method
+  myGradient = NonCenteredFiniteDifferenceGradient(NumericalPoint(2, 1.0e-7), poutreReduced.getEvaluationImplementation())
+  print "myGradient = ", myGradient
+
+  # Substitute the gradient
+  poutreReduced.setGradientImplementation(myGradient)
+
+  # Give directly to the 'poutreReduced' function a hessian evaluation method
+  # thanks to the finite difference technique
+  # type : non centered finite difference method
+  myHessian = CenteredFiniteDifferenceHessian(NumericalPoint(2, 1.0e-7), poutreReduced.getEvaluationImplementation())
+  print "myHessian = ", myHessian
+
+  # Substitute the hessian
+  poutreReduced.setHessianImplementation(myHessian)
+\end{lstlisting}
+
+
+

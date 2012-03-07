@@ -1,0 +1,1452 @@
+% Copyright (c)  2005-2010 EDF-EADS-PHIMECA.
+% Permission is granted to copy, distribute and/or modify this document
+% under the terms of the GNU Free Documentation License, Version 1.2
+% or any later version published by the Free Software Foundation;
+% with no Invariant Sections, no Front-Cover Texts, and no Back-Cover
+% Texts.  A copy of the license is included in the section entitled "GNU
+% Free Documentation License".
+\newpage\section{Base Objects}
+
+In this section a description of general objects is given. These objects are used in the different following sections.
+
+% =================================================================
+
+
+
+\subsection{BoolCollection}
+
+\begin{description}
+
+\item[Usage :] \rule{0pt}{1em}
+  \begin{description}
+  \item $BoolCollection(size)$
+  \item $BoolCollection(size,value)$
+  \end{description}
+
+\item[Arguments :]  \rule{0pt}{1em}
+  \begin{description}
+  \item $size$        : an integer, the size of the boolean values collection. It must be $> 0$.
+  \item $integer$ : an integer, the boolean value. It must be $\geq 0$.
+  \end{description}
+
+\item[Value :] a BoolCollection
+  \begin{description}
+  \item  in the first usage, the BoolCollection is a list a size $size$ with the value $0$.
+  \item in the second usage, the BoolCollection is a list a size  $size$ with the value $integer$. If $integer > 0$, it corresponds to \itshape{True}. If $integer = 0$, it corresponds to \itshape{False}.
+  \end{description}
+
+\item[Some methods :]  \rule{0pt}{1em}
+
+\item $add$
+  \begin{description}
+  \item[Usage :] $add(value)$
+  \item[Arguments :] $value$ : an integer, the boolean value to be added. It must be $\geq 0$.
+  \item[Value :] a BoolCollection which size has been increased of 1 and which last value is $value$.
+  \end{description}
+  \bigskip
+
+\item $getSize$
+  \begin{description}
+  \item[Usage :] $getSize()$
+  \item[Arguments :] none
+  \item[Value :] an integer, the number of boolean values.
+  \end{description}
+  \bigskip
+
+\item $resize$
+  \begin{description}
+  \item[Usage :] $resize(newsize)$
+  \item[Arguments :]  $newsize$ : an integer, the new size of the  collection of boolean values.
+  \item[Value :]  a BoolCollection which size has been modified to $newsize$. If $newsize > size$, then the added boolean values are equal to 0. If $newsize < size$, the BoolCollection is restricted to its first $newsize$ components.
+  \end{description}
+  \bigskip
+
+\item $at$
+  \begin{description}
+  \item[Usage :] $at(i)$
+  \item[Arguments :] $i$ : an integer. Must be $\leq$ to the BoolCollection size.
+  \item[Value :] an integer, the value of the component $i$.
+  \end{description}
+  \bigskip
+
+\end{description}
+
+
+
+% =======================================================================
+
+\newpage \subsection{Description}
+
+\begin{description}
+
+\item[Usage :]  \rule{0pt}{1em}
+  \begin{description}
+  \item $Description(dim)$
+  \item $Description(dim, name)$
+  \item $Description(sequence)$
+  \item $Description(array)$
+  \end{description}
+
+\item[Arguments :]  \rule{0pt}{1em}
+  \begin{description}
+  \item $dim$ : an integer, the dimension of the Description
+  \item $name$ : a string to name the Description
+  \item $sequence$ : a python list / tuple of strings
+  \item $array$ : an 1-d string numpy array
+  \end{description}
+
+\item[Value :] a Description
+
+\item[Some methods :]  \rule{0pt}{1em}
+
+  \begin{description}
+
+  \item $[\,]$
+    \begin{description}
+    \item[Usage :] $Description[i]$
+    \item[Arguments :] $i$ : an integer, constraint : $0\leq i \leq dim-1$
+    \item[Value :] a string, the description of the $(i+1)$-th element of the Description
+    \end{description}
+    \bigskip
+
+
+  \item $add$
+    \begin{description}
+    \item[Usage :] $add(str)$
+    \item[Arguments :] $str$ : a string
+    \item[Value :] an element is added to the Description which name is $str$
+    \end{description}
+    \bigskip
+
+  \item $getSize$
+    \begin{description}
+    \item[Usage :] $getSize()$
+    \item[Arguments :] none
+    \item[Value :] an integer, the size of the Description ($dim$)
+    \end{description}
+    \bigskip
+
+
+  \item $getName$
+    \begin{description}
+    \item[Usage :] $getName()$
+    \item[Arguments :] none
+    \item[Value :] a string, the name of the Description
+    \end{description}
+    \bigskip
+
+  \item $setName$
+    \begin{description}
+    \item[Usage :] $setName(name)$
+    \item[Arguments :] $name$ : a string to name the Description
+    \item[Value :] the Description is then named $name$
+    \end{description}
+    \bigskip
+
+  \end{description}
+\end{description}
+
+
+\newpage \subsection{Indices}
+
+\begin{description}
+
+\item[Usage :] \rule{0pt}{1em}
+\begin{description}
+  \item $Indices(dim)$
+  \item $Indices(sequence)$
+  \end{description}
+
+\item[Arguments :] \rule{0pt}{1em}
+  \begin{description}
+  \item $dim$ : an integer,  the size of the collection
+  \item $sequence$ : a python list / tuple of integers
+  \end{description}
+
+\item[Value :] a Indices
+
+\item[Details :] \rule{0pt}{1em}
+  \begin{description}
+  \item This object represents a set of integers
+  \end{description}
+
+\item[Some methods :]  \rule{0pt}{1em}
+
+  \begin{description}
+
+  \item $[\,]$
+    \begin{description}
+    \item[Usage :] $indices[i]$
+    \item[Arguments :] $i$ : an integer, constraint : $0\leq i \leq dim-1$
+    \item[Value :] a string, the description of the $(i+1)$-th element of the Indices
+    \end{description}
+    \bigskip
+
+
+  \item $add$
+    \begin{description}
+    \item[Usage :] $add(index)$
+    \item[Arguments :] $index$ : an integer
+    \item[Value :] an element is added to the Indices which value is $index$
+    \end{description}
+    \bigskip
+
+  \item $getSize$
+    \begin{description}
+    \item[Usage :] $getSize()$
+    \item[Arguments :] none
+    \item[Value :] an integer, the size of the Indices ($dim$)
+    \end{description}
+    \bigskip
+
+
+  \item $getName$
+    \begin{description}
+    \item[Usage :] $getName()$
+    \item[Arguments :] none
+    \item[Value :] a string, the name of the Indices
+    \end{description}
+    \bigskip
+
+  \item $setName$
+    \begin{description}
+    \item[Usage :] $setName(name)$
+    \item[Arguments :] $name$ : a string to name the Indices
+    \item[Value :] the Indices is then named $name$
+    \end{description}
+    \bigskip
+
+  \end{description}
+\end{description}
+
+
+% =============================================================
+\newpage \subsection{Domain}
+
+\begin{description}
+
+\item[Usage :] \rule{0pt}{1em}
+  \begin{description}
+  \item $Domain()$
+  \item $Domain(a, b)$
+  \end{description}
+
+\item[Arguments :] \rule{0pt}{1em}
+  \begin{description}
+  \item $a$ : a NumericalPoint of dimension $d$, the "lower bound" of the domain
+  \item $a$ : a NumericalPoint of dimension $d$, the "upper bound" of the domain
+  \end{description}
+\item[Value :] a Domain.
+  \begin{description}
+  \item while calling the second constructor, the domain is an Interval (similar to call $Interval(a,b)$)
+  \end{description}
+
+\item[Examples :] \rule{0pt}{1em}
+
+  \begin{description}
+
+  \item $[a,b]$ : $Domain(a,b)$
+  \item $[a,b]$ : $Domain(Interval(a,b))$
+
+  \end{description}
+
+\item[Some methods :]  \rule{0pt}{1em}
+
+  \begin{description}
+
+  \item $getDimension$
+    \begin{description}
+    \item[Usage :] $getDimension()$
+    \item[Arguments :] no argument
+    \item[Value :]  an integer, the dimension of the Domain (returns $dim$)
+    \end{description}
+
+
+  \item $getName$
+    \begin{description}
+    \item[Usage :] $getName()$
+    \item[Arguments :] none
+    \item[Value :] a string, the name of the Domain
+    \end{description}
+    \bigskip
+
+  \item $contains$
+    \begin{description}
+    \item[Usage :] $contains(point)$
+    \item[Arguments :] a NumericalPoint with the same dimension as the current domain's dimension
+    \item[Value :] a Bool telling if the given point is inside of the domain or not.
+    \end{description}
+
+  \item $setName$
+    \begin{description}
+    \item[Usage :] $setName(name)$
+    \item[Arguments :] name : a string
+    \item[Value :] the Domain is named $name$
+    \end{description}
+    \bigskip
+
+  \end{description}
+
+\end{description}
+
+% ==============================================================
+
+\newpage \subsection{HistogramPair}
+
+
+\begin{description}
+
+\item[Usage :] $HistogramPair(h,l)$
+
+\item[Arguments :]  \rule{0pt}{1em}
+  \begin{description}
+  \item $h$ : a real value, the height of each element of the Histogram
+  \item $l$ : a real value, the width of each element of the Histogram
+  \end{description}
+
+\item[Value :] a HistogramPair
+
+\item[Details :] \rule{0pt}{1em}
+  \begin{description}
+  \item This object is used to build a HistogramPairCollection (hence, also used to create an Histogram)
+  \end{description}
+
+\end{description}
+
+
+% =============================================================
+
+\newpage \subsection{HistogramPairCollection}
+
+\begin{description}
+
+\item[Usage :] $HistogramPairCollection(dim)$
+
+\item[Arguments :]  $dim$ : an integer, the number of elements of the HistogramPairCollection
+
+\item[Value :] a HistogramPairCollection, to be filled after
+
+\item[Some methods :]  \rule{0pt}{1em}
+
+  \begin{description}
+
+  \item $[\,]$
+    \begin{description}
+    \item[Usage :] $HistogramPairCollection[i]$
+    \item[Arguments :]$i$ : an integer, must be $<dim$
+    \item[Value :] a HistogramPair, the $(i+1)$-th of the HistogramPairCollection
+    \end{description}
+
+
+  \item $add$
+    \begin{description}
+    \item[Usage :] $add(HistP)$
+    \item[Arguments :] $HistP$ : a HistogramPair
+    \item[Value :]        an HistogramPairCollection of $Size = dim +1$
+      with instance of the $dim +1$-th element of the HistogramPairCollection
+    \end{description}
+
+  \item $getSize$
+    \begin{description}
+    \item[Usage :] $getSize()$
+    \item[Arguments :] no argument
+    \item[Value :]    an integer, the size of HistogramPairCollection (returns $dim$)
+    \end{description}
+
+  \item $str$
+    \begin{description}
+    \item[Usage :] $str()$
+    \item[Arguments :] no argument
+    \item[Value :]      a string with elements of HistogramPairCollection
+    \end{description}
+
+  \end{description}
+
+\end{description}
+
+% =============================================================
+\newpage \subsection{Interval}
+
+\begin{description}
+
+\item[Usage :] \rule{0pt}{1em}
+  \begin{description}
+  \item $Interval()$
+  \item $Interval(dim)$
+  \item $Interval(lowerBound, upperBound)$
+  \item $Interval(lowerBound, upperBound, finiteLowerBound, finiteUpperBound)$
+  \end{description}
+
+\item[Arguments :] \rule{0pt}{1em}
+  \begin{description}
+  \item $dim$ : an integer, the dimension of the interval.
+  \item $lowerBound$ : a scalar or a NumericalPoint, the lower bound of the interval.
+  \item $upperBound$ : a scalar or a NumericalPoint, the upper bound of the interval.\\
+    Note: the lowerBound and the upperBound must be of the same type: both NumericalPoint must have the same dimension in case of NumericalPoint.
+  \item $finiteLowerBound$: a BoolCollection, flags telling for each component of the lower bound whether it is finite or not.
+  \item $finiteUpperBound$: a BoolCollection, flags telling for each component of the upper bound whether  it is finite or not.\\
+    Note: the meaning of a flag is: if $flag_i$ is true, the corresponding component of the given bound is finite and its value is given by $bound_i$. If not, the corresponding component is infinite and its value is either $-\infty$ if $bound_i<0$ or $+\infty$ if $bound_i \geq 0$.
+  \end{description}
+
+\item[Value :] an Interval.
+  \begin{description}
+  \item No parameter leads to the interval $[0, 1]$
+  \item The second usage leads to the finite interval $[0, 1]^{dim}$
+  \item The third usage leads to the finite interval:
+    $$
+    [lowerBound_0, upperBound_0]\times\dots\times [lowerBound_{dim-1}, upperBound_{dim-1}]
+    $$
+    It is allowed to have $lowerBound_i\geq upperBound_i$ for some $i$: it simply defines an empty interval.
+  \item The fourth usage allows to define partially infinite intervals. The value of the infinite bounds is defined according to the rule mentioned above.
+  \end{description}
+
+\item[Some Examples :] \rule{0pt}{1em}
+
+  \begin{description}
+
+  \item $[a,b]$ : $Interval(a,b)$
+
+  \item $[a,+\infty]$ :
+    \begin{description}
+    \item $boundLow=NumericalPoint(1,a)$
+    \item $boundUp=NumericalPoint(1,1)$
+    \item $boolLow = BoolCollection(1,1)$
+    \item $boolUp = BoolCollection(1,0)$
+    \item $int = Interval(boundLow,boundUp,boolLow,boolUp)$
+    \end{description}
+
+
+  \item $[-\infty, B]$ :
+    \begin{description}
+    \item $boundLow=NumericalPoint(1,-1)$
+    \item $boundUp=NumericalPoint(1,b)$
+    \item $boolLow = BoolCollection(1,0)$
+    \item $boolUp = BoolCollection(1,1)$
+    \item $int = Interval(boundLow,boundUp,boolLow,boolUp)$
+    \end{description}
+
+  \end{description}
+
+\item[Some methods :]  \rule{0pt}{1em}
+
+  \begin{description}
+
+  \item $*$: right multiplication by a scalar $s$ using $interval$ * $s$.
+
+  \item $+$: addition of two intervals.
+  \item $-$: substraction of two intervals.
+
+  \item $contains$
+    \begin{description}
+    \item[Usage :] $contains(point)$
+    \item[Arguments :] $point$ : a NumericalPoint with the same dimension as the current interval
+    \item[Value :] a Bool telling if the given point is inside the interval or not.
+    \end{description}
+    \bigskip
+
+  \item $numericallyContains$
+    \begin{description}
+    \item[Usage :] $numericallyContains(point)$
+    \item[Arguments :] $point$ : a NumericalPoint with the same dimension as the current interval.
+    \item[Value :] a Bool telling if the given point is inside the interval or not given the numerical truncation of any infinite interval. In case of bounded intervals, the numerical bounds coïncide with the real bounds by default. It is possible to change the numerical bounds with the method \emph{setLowerBound} and \emph{setUpperBound}.
+    \end{description}
+    \bigskip
+ 
+  \item $getDimension$
+    \begin{description}
+    \item[Usage :] $getDimension()$
+    \item[Arguments :] no argument
+    \item[Value :]  an integer, the dimension of the Interval (returns $dim$)
+    \end{description}
+    \bigskip
+
+  \item $getFiniteLowerBound$
+    \begin{description}
+    \item[Usage :] $getFiniteLowerbound()$
+    \item[Arguments :] no argument
+    \item[Value :] a BoolCollection of flags. If the $i$-th element is 0, the corresponding component of the lower bound is infinite and its value is given according to the rule given above. Otherwise, it is finite.
+    \end{description}
+    \bigskip
+
+  \item $getFiniteUpperBound$
+    \begin{description}
+    \item[Usage :] $getFiniteUpperbound()$
+    \item[Arguments :] no argument
+    \item[Value :] a BoolCollection of flags. If the $i$-th element is 0, the corresponding component of the upper bound is infinite and its value is given according to the rule given above. Otherwise, it is finite.
+    \end{description}
+    \bigskip
+
+  \item $getLowerBound$
+    \begin{description}
+    \item[Usage :] $getLowerbound()$
+    \item[Arguments :] no argument
+    \item[Value :] a NumericalPoint, the value of the lower bound or the sign of the component if it is infinite.
+    \end{description}
+    \bigskip
+
+  \item $getUpperBound$
+    \begin{description}
+    \item[Usage :] $getUpperbound()$
+    \item[Arguments :] no argument
+    \item[Value :] a NumericalPoint, the value of the upper bound or the sign of the component if it is infinite.
+    \end{description}
+    \bigskip
+
+  \item $setFiniteLowerBound$
+    \begin{description}
+    \item[Usage :] $setFiniteLowerbound(flag)$
+    \item[Arguments :] a BoolCollection
+    \item[Value :] no value returned
+    \end{description}
+    \bigskip
+
+  \item $setFiniteUpperBound$
+    \begin{description}
+    \item[Usage :] $setFiniteUpperbound(flag)$
+    \item[Arguments :] a BoolCollection
+    \item[Value :] no value returned
+    \end{description}
+    \bigskip
+
+  \item $setLowerBound$
+    \begin{description}
+    \item[Usage :] $setLowerbound(bound)$
+    \item[Arguments :] a NumericalPoint
+    \item[Value :] no value returned
+    \end{description}
+    \bigskip
+
+  \item $setUpperBound$
+    \begin{description}
+    \item[Usage :] $setUpperbound(bound)$
+    \item[Arguments :] a NumericalPoint
+    \item[Value :] no value returned
+    \end{description}
+    \bigskip
+
+  \item $intersect$
+    \begin{description}
+    \item[Usage :] $intersect(other)$
+    \item[Arguments :] an Interval of the same dimension
+    \item[Value :] an interval corresponding to the intersection of the current interval with $other$.
+    \end{description}
+    \bigskip
+
+  \item $join$
+    \begin{description}
+    \item[Usage :] $join(other)$
+    \item[Arguments :] an Interval of the same dimension
+    \item[Value :] the smallest interval that contains both the current interval and $other$
+    \end{description}
+    \bigskip
+
+  \item $isEmpty$
+    \begin{description}
+    \item[Usage :] $isEmpty()$
+    \item[Arguments :] no argument
+    \item[Value :] a Bool telling if the interior of the interval is empty or not.
+    \end{description}
+
+  \end{description}
+
+\end{description}
+
+% ============================================================
+
+\newpage \subsection{Matrix}
+
+ \subsubsection{Matrix}
+
+\begin{description}
+
+\item[Usage :] \rule{0pt}{1em}
+  \begin{description}
+  \item $Matrix(n_r,n_c)$
+  \item $Matrix(n_r,n_c,values)$
+  \end{description}
+
+\item[Arguments :]  \rule{0pt}{1em}
+  \begin{description}
+  \item $n_r$   :        an integer, the number of rows of the Matrix
+  \item $n_c$ :        an integer, the number of columns of the Matrix
+  \item $values$ : a NumericalScalarCollection with $n_r\times n_c$ elements
+  \end{description}
+
+\item[Value :] a Matrix
+  \begin{description}
+  \item while using the first parameters set, the matrix is filled with $0$.
+  \item while using second parameters set, the Matrix contains  values of the
+    NumericalScalarCollection. The matrix is filled by row
+  \end{description}
+
+\item[Some methods :]  \rule{0pt}{1em}
+
+  \begin{description}
+
+  \item $[\, , \,]$
+    \begin{description}
+    \item[Usage :] $Matrix[i,j]$
+    \item[Arguments :] \rule{0pt}{1em}
+      \begin{description}
+      \item $i$ : an integer, constraint : $0\leq i \leq n_r-1$
+      \item $j$ : an integer, constraint : $0\leq j \leq n_c-1$
+      \end{description}
+    \item[Value :] a real value, the $(i,j)$ element of the Matrix
+    \end{description}
+    \bigskip
+
+  \item $getNbColumns$
+    \begin{description}
+    \item[Usage :] $getNbColumns()$
+    \item[Arguments :] none
+    \item[Value :] an integer : the number of column $n_c$
+    \end{description}
+    \bigskip
+
+  \item $getNbRows$
+    \begin{description}
+    \item[Usage :] $getNbRows()$
+    \item[Arguments :] none
+    \item[Value :] an integer : the number of row $n_r$
+    \end{description}
+    \bigskip
+
+  \item $transpose$
+    \begin{description}
+    \item[Usage :] $transpose()$
+    \item[Arguments :] none
+    \item[Value :] the transposed Matrix
+    \end{description}
+    \bigskip
+
+  \item $getName$
+    \begin{description}
+    \item[Usage :] $getName()$
+    \item[Arguments :] none
+    \item[Value :] a string, the name of the Matrix
+    \end{description}
+    \bigskip
+
+  \item $setName$
+    \begin{description}
+    \item[Usage :] $setName(name)$
+    \item[Arguments :] name : a string
+    \item[Value :] the Matrix is named $name$
+    \end{description}
+    \bigskip
+
+  \item $solveLinearSystem$
+    \begin{description}
+    \item[Usage :] $solveLinearSystem(y)$
+    \item[Arguments :] $y$ a NumericalPoint of dimension $n_r$
+      (the number of rows of the Matrix)
+    \item[Value :] NumericalPoint, $x$, such that\\
+      {\tt Matrix * x = y}
+    \end{description}
+
+  \end{description}
+
+\end{description}
+
+
+% =================================================================
+\newpage \subsubsection{ComplexMatrix}
+
+\begin{description}
+
+\item[Usage :] \rule{0pt}{1em}
+  \begin{description}
+  \item $ComplexMatrix(n_r,n_c)$
+  \item $ComplexMatrix(n_r,n_c,values)$
+  \end{description}
+
+\item[Arguments :]  \rule{0pt}{1em}
+  \begin{description}
+  \item $n_r$   :        an integer, the number of rows of the ComplexMatrix
+  \item $n_c$ :        an integer, the number of columns of the ComplexMatrix
+  \item $values$ : a NumericalComplexCollection with $n_r\times n_c$ elements (the collection might also be a NumericalScalarCollection)
+  \end{description}
+
+\item[Value :] a ComplexMatrix
+  \begin{description}
+  \item while using the first parameters set, the matrix is filled with $(0,0)$.
+  \item while using second parameters set, the ComplexMatrix contains values of the
+    NumericalComplexCollection. The complex matrix is filled by row
+  \end{description}
+
+\item[Some methods :]  \rule{0pt}{1em}
+
+  \begin{description}
+
+  \item $[\, , \,]$
+    \begin{description}
+    \item[Usage :] $ComplexMatrix[i,j]$
+    \item[Arguments :] \rule{0pt}{1em}
+      \begin{description}
+      \item $i$ : an integer, constraint : $0\leq i \leq n_r-1$
+      \item $j$ : an integer, constraint : $0\leq j \leq n_c-1$
+      \end{description}
+    \item[Value :] a complex value, the $(i,j)$ element of the ComplexMatrix
+    \end{description}
+    \bigskip
+
+  \item $conjugate$
+    \begin{description}
+    \item[Usage :] $conjugate()$
+    \item[Arguments :] none
+    \item[Value :] the conjugated ComplexMatrix, ie the ComplexMatrix such as $\mat{M}_{i,j}$ = $\mat{\overline{M}}_{i,j}$
+    \end{description}
+    \bigskip
+
+  \item $conjugateTranspose$
+    \begin{description}
+    \item[Usage :] $conjugateTranspose()$
+    \item[Arguments :] none
+    \item[Value :] the conjugated and transposed ComplexMatrix, ie the ComplexMatrix such as $\mat{M}_{j,i}$ = $\mat{\overline{M}}_{i,j}$
+    \end{description}
+    \bigskip
+
+  \item $getName$
+    \begin{description}
+    \item[Usage :] $getname()$
+    \item[Arguments :] none
+    \item[Value :] a string, the name of the ComplexMatrix
+    \end{description}
+    \bigskip
+
+  \item $getNbColumns$
+    \begin{description}
+    \item[Usage :] $getNbColumns()$
+    \item[Arguments :] none
+    \item[Value :] an integer : the number of column $n_c$
+    \end{description}
+    \bigskip
+
+  \item $getNbRows$
+    \begin{description}
+    \item[Usage :] $getNbRows()$
+    \item[Arguments :] none
+    \item[Value :] an integer : the number of row $n_r$
+    \end{description}
+    \bigskip
+
+  \item $transpose$
+    \begin{description}
+    \item[Usage :] $transpose()$
+    \item[Arguments :] none
+    \item[Value :] the transposed ComplexMatrix
+    \end{description}
+    \bigskip
+
+  \item $setName$
+    \begin{description}
+    \item[Usage :] $setname(name)$
+    \item[Arguments :] name : a string
+    \item[Value :] the ComplexMatrix is named $name$
+    \end{description}
+    \bigskip
+
+
+  \end{description}
+
+\end{description}
+
+% =================================================================
+\newpage \subsubsection{CorrelationMatrix}
+
+\begin{description}
+
+\item[Usage :] \rule{0pt}{1em}
+  \begin{description}
+  \item $CorrelationMatrix(dim)$
+  \item $CorrelationMatrix(dim,values)$
+  \end{description}
+
+\item[Arguments :]  \rule{0pt}{1em}
+  \begin{description}
+  \item $dim$       : an integer, the dimension of the CorrelationMatrix
+    (square matrix with $dim$ rows and $dim$ colons)
+  \item $values$ : a NumericalScalarCollection of dimension $dim^2$ which contains values to put in the CorrelationMatrix, filled  by rows. When these values are not specified, the CorrelationMatrix is initialized to the identity matrix.
+  \end{description}
+
+\item[Value :] a CorrelationMatrix
+  \begin{description}
+  \item while using the first parameters set, the correlation matrix is the identity matrix
+  \item while using second parameters set, the correlation matrix contains the specified values, filled by row
+  \end{description}
+
+\item[Some methods :]  \rule{0pt}{1em}
+
+  \begin{description}
+
+  \item $str$
+    \begin{description}
+    \item[Usage :] $str()$
+    \item[Arguments :] no argument
+    \item[Value :] a string giving the description of the (class, name, dimension, values)
+    \end{description}
+    \bigskip
+
+  \item $transpose$
+    \begin{description}
+    \item[Usage :] $transpose()$
+    \item[Arguments :] no argument
+    \item[Value :] a CorrelationMatrix, the transposed CorrelationMatrix
+    \end{description}
+    \bigskip
+
+  \item $computeDeterminant$
+    \begin{description}
+    \item[Usage :] $computeDeterminant()$
+    \item[Arguments :] no argument
+    \item[Value :] a real value giving the determinant of the CorrelationMatrix
+    \end{description}
+    \bigskip
+
+  \item $computeEigenValues$
+    \begin{description}
+    \item[Usage :] $computeEigenValues()$
+    \item[Arguments :] no argument
+    \item[Value :] a NumericalPoint giving the eigen values of the CorrelationMatrix
+    \end{description}
+    \bigskip
+  \end{description}
+
+\item[Links :]  \rule{0pt}{1em}
+  \href{./Version/docref_B121_ChoixLoi.pdf}{see docref\_B121\_ChoixLoi}
+\end{description}
+
+% ==============================================================
+\newpage \subsubsection{HermitianMatrix}
+\begin{description}
+
+\item[Usage :] \rule{0pt}{1em}
+  \begin{description}
+  \item $HermitianMatrix(dim)$
+  \item
+  \end{description}
+
+\item[Arguments :]  \rule{0pt}{1em}
+  \begin{description}
+  \item $dim$      :        an integer, the dimension of the HermitianMatrix
+    (square matrix with $dim$ rows and $dim$ colons)
+  \end{description}
+
+\item[Value :] HermitianMatrix
+  \begin{description}
+  \item while using the first parameters set, the HermitianMatrix is filled with $(0, 0)$. It is not possible to fill the matrix from a collection of complex values (to be done later)
+  \end{description}
+
+\item[Some methods :]  \rule{0pt}{1em}
+
+
+   \item $computeCholesky$
+    \begin{description}
+    \item[Usage :] $conjugate()$
+    \item[Arguments :] none
+    \item[Value :] the Cholesky factor $\mat{G}$, ie the ComplexMatrix such as the $\mat{G}$ * $\mat{G^{*}}$ is the initial matrix
+    \end{description}
+    \bigskip
+
+ \item $conjugate$
+    \begin{description}
+    \item[Usage :] $conjugate()$
+    \item[Arguments :] none
+    \item[Value :] the conjugated Hermitian, ie the matrix such as $\mat{M}_{i,j}$ = $\mat{\overline{M}}_{i,j}$
+    \end{description}
+    \bigskip
+
+  \item $conjugateTranspose$
+    \begin{description}
+    \item[Usage :] $conjugateTranspose()$
+    \item[Arguments :] none
+    \item[Value :] the conjugated and transposed HermitianMatrix, ie the matrix such as $\mat{M}_{j,j}$ = $\mat{\overline{M}}_{i,j}$
+    \end{description}
+    \bigskip
+
+  \item $getDimension$
+    \begin{description}
+    \item[Usage :] $getDimension()$
+    \item[Arguments :] none
+    \item[Value :] an integer, the dimension of the HermitianMatrix (it returns $dim$)
+    \end{description}
+    \bigskip
+
+  \item $power$
+    \begin{description}
+    \item[Usage :] $power(n)$
+    \item[Arguments :] an integer
+    \item[Value :] the power of the matrix, ie the HermitianMatrix $\mat{M_n}$ such as $\mat{M_n}$  = $\underbrace{\mat{M} \ \times \ \mat{M} \ ...\ \times \ \mat{M}}_{n\ times}$ 
+    \end{description}
+    \bigskip
+
+  \item $transpose$
+    \begin{description}
+    \item[Usage :] $transpose()$
+    \item[Arguments :] none
+    \item[Value :] the transposed HermitianMatrix
+    \end{description}
+    \bigskip
+
+\end{description}
+
+
+
+% =================================================================
+
+\newpage \subsubsection{SquareMatrix}
+\begin{description}
+
+\item[Usage :] \rule{0pt}{1em}
+  \begin{description}
+  \item $SquareMatrix(dim)$
+  \item $SquareMatrix(dim,values)$
+  \item
+  \end{description}
+
+\item[Arguments :]  \rule{0pt}{1em}
+  \begin{description}
+  \item $dim$      :        an integer, the dimension of the SquareMatrix
+    (square matrix with $dim$ rows and $dim$ colons)
+  \item $values$ : a NumericalScalarCollection of dimension $dim^2$
+  \end{description}
+
+\item[Value :] SquareMatrix
+  \begin{description}
+  \item while using the first parameters set, the SquareMatrix is filled with $0$.
+  \item while using the second parameters set, the SquareMatrix contains values of the
+    NumericalScalarCollection. SquareMatrix is filled by rows.
+  \end{description}
+
+\item[Some methods :]  \rule{0pt}{1em}
+
+  \begin{description}
+
+
+  \item $computeDeterminant$
+    \begin{description}
+    \item[Usage :] $computeDeterminant()$
+    \item[Arguments :] none
+    \item[Value :] a real value giving the determinant of the SquareMatrix
+    \end{description}
+    \bigskip
+
+  \item $computeEigenValues$
+    \begin{description}
+    \item[Usage :] $computeEigenValues()$
+    \item[Arguments :] none
+    \item[Value :] a NumericalPoint giving the eigen values of the SquareMatrix
+    \end{description}
+    \bigskip
+
+  \item $getDimension$
+    \begin{description}
+    \item[Usage :] $getDimension()$
+    \item[Arguments :] none
+    \item[Value :] an integer, the dimension of the SquareMatrix (it returns $dim$)
+    \end{description}
+    \bigskip
+
+  \item $solveLinearSystem$
+    \begin{description}
+    \item[Usage :] $solveLinearSystem(y)$
+    \item[Arguments :] $y$ : a NumericalPoint of dimension $n_r$
+      (the number of row of the SquareMatrix)
+    \item[Value :] NumericalPoint, this NumericalPoint, $x$, is such that\\
+      {\tt SquareMatrix * x = y}
+    \end{description}
+    \bigskip
+
+  \item $transpose$
+    \begin{description}
+    \item[Usage :] $transpose()$
+    \item[Arguments :] none
+    \item[Value :] the transposed SquareMatrix
+    \end{description}
+    \bigskip
+  \end{description}
+
+\end{description}
+% ===========================================================
+
+\newpage \subsubsection{Tensor}
+
+\begin{description}
+
+\item[Usage :] \rule{0pt}{1em}
+  \begin{description}
+  \item $Tensor(n_r,n_c,n_s)$
+  \item $Matrix(n_r,n_c,n_s,values)$
+  \end{description}
+
+\item[Arguments :]  \rule{0pt}{1em}
+  \begin{description}
+  \item $n_r$    :        an integer, the number of rows of the Tensor
+  \item $n_c$  :        an integer, the number of columns of the Tensor
+  \item $n_s$        :        an integer, the number of sheets of the Tensor
+  \item $values$ : NumericalScalarCollection with $n_r\times n_c\times n_s$
+    elements
+  \end{description}
+
+\item[Value :] Tensor
+  \begin{description}
+  \item while using the first parameters set, the matrix is filled with $0$.
+  \item while using the second parameters set, the Matrix contains  values of the
+    NumericalScalarCollection. The tensor is filled by row.
+  \end{description}
+
+\item[Some methods :]  \rule{0pt}{1em}
+
+  \begin{description}
+
+  \item $[\, , \,, \,]$
+    \begin{description}
+    \item[Usage :] $Tensor[i,j,k]$
+    \item[Arguments :] \rule{0pt}{1em}
+      \begin{description}
+      \item $i$ : an integer, constraint : $0\leq i \leq n_r-1$
+      \item $j$ : an integer, constraint : $0\leq j \leq n_c-1$
+      \item $k$: an integer, constraint : $0\leq j \leq n_s-1$
+      \end{description}
+    \item[Value :] a real value, the $(i,j,k)$ element of the Tensor
+    \end{description}
+    \bigskip
+
+  \item $getNbColumns$
+    \begin{description}
+    \item[Usage :] $getNbColumns()$
+    \item[Arguments :] none
+    \item[Value :] an integer : the number of column $n_c$
+    \end{description}
+    \bigskip
+
+  \item $getNbRows$
+    \begin{description}
+    \item[Usage :] $getNbRows()$
+    \item[Arguments :] none
+    \item[Value :] an integer : the number of row $n_r$
+    \end{description}
+    \bigskip
+
+  \item $getNbSheets$
+    \begin{description}
+    \item[Usage :] $getNbSheets()$
+    \item[Arguments :] none
+    \item[Value :] an integer : the number of sheet $n_s$
+    \end{description}
+    \bigskip
+
+  \item $getName$
+    \begin{description}
+    \item[Usage :] $getName()$
+    \item[Arguments :] none
+    \item[Value :] a string, the name of the Tensor
+    \end{description}
+    \bigskip
+
+  \item $setName$
+    \begin{description}
+    \item[Usage :] $setName(name)$
+    \item[Arguments :] name : a string
+    \item[Value :] the Tensor is named $name$
+    \end{description}
+    \bigskip
+
+  \end{description}
+
+\end{description}
+
+
+% ==============================================================
+\newpage \subsubsection{TriangularComplexMatrix}
+\begin{description}
+
+\item[Usage :] \rule{0pt}{1em}
+  \begin{description}
+  \item $TriangularComplexMatrix(dim)$
+  \item $TriangularComplexMatrix(dim, isLower)$
+  \end{description}
+
+\item[Arguments :]  \rule{0pt}{1em}
+  \begin{description}
+  \item $dim$      :   an integer, the dimension of the TriangularComplexMatrix
+    (square matrix with $dim$ rows and $dim$ colons)
+  \item $isLower$    : a boolean flag, tells if the triangular matrix is lower ($True$) or upper ($False$). Notice that the a missing flag corresponds to $True$
+  \end{description}
+
+\item[Value :] TriangularComplexMatrix
+  \begin{description}
+  \item while using the first parameters set, the TriangularComplexMatrix is filled with $(0, 0)$. Matrix is lower triangular
+  \item while using the second parameters set, the TriangularComplexMatrix is filled with $(0, 0)$ and we fix if the matrix is lower or upper triangular.
+  \item It is not possible to fill the matrix from a collection of complex values (to be done later)
+  \end{description}
+
+\item[Some methods :]  \rule{0pt}{1em}
+
+
+ \item $conjugate$
+    \begin{description}
+    \item[Usage :] $conjugate()$
+    \item[Arguments :] none
+    \item[Value :] the conjugated triangular matrix.
+    \end{description}
+    \bigskip
+
+  \item $conjugateTranspose$
+    \begin{description}
+    \item[Usage :] $conjugateTranspose()$
+    \item[Arguments :] none
+    \item[Value :] the conjugated and transposed TriangularComplexMatrix. Notice that the result is an upper triangular matrix if the initial matrix is lower triangular.
+    \end{description}
+    \bigskip
+
+
+  \item $getDimension$
+    \begin{description}
+    \item[Usage :] $getDimension()$
+    \item[Arguments :] none
+    \item[Value :] an integer, the dimension of the TriangularComplexMatrix (it returns $dim$)
+    \end{description}
+    \bigskip
+
+  \item $isTriangularLower$
+    \begin{description}
+    \item[Usage :] $isTriangularLower()$
+    \item[Arguments :] none
+    \item[Value :] a boolean, tells if the matrix is lower or upper triangular.
+    \end{description}
+    \bigskip
+
+  \item $transpose$
+    \begin{description}
+    \item[Usage :] $transpose()$
+    \item[Arguments :] none
+    \item[Value :] the transposed TriangularComplexMatrix. Notice that the transpose of a lower triangular matrix is an upper triangular matrix.
+    \end{description}
+    \bigskip
+
+\end{description}
+
+
+% ==========================================================================
+
+\newpage
+\subsection{NumericalPoint}
+
+\begin{description}
+
+\item[Usage :]   \rule{0pt}{1em}
+  \begin{description}
+  \item $NumericalPoint(dim)$
+  \item $NumericalPoint(dim,value)$
+  \item $NumericalPoint(list)$
+  \item $NumericalPoint(tuple)$
+  \item $NumericalPoint(array)$
+  \end{description}
+
+\item[Arguments :]  \rule{0pt}{1em}
+  \begin{description}
+  \item $dim$ : an integer, the dimension of the NumericalPoint
+  \item $value$ : a real value, the value of each component of the NumericalPoint
+  \item $list$  : a {\itshape list} in the environment python
+  \item $tuple$ : a {\itshape tuple} in the environment python
+  \item $array$: a {\itshape Numpy array} with dimension (ndim) 1
+  \end{description}
+
+\item[Value :]  \rule{0pt}{1em}
+  \begin{description}
+  \item in the first usage, a NumericalPoint of dimension $dim$, which each component is equal to 0.0
+  \item in the second usage, a NumericalPoint of dimension $dim$, which each component is equal to $value$
+  \item in the third usage, a NumericalPoint which components are given by the $list$ python. For example, $list = [1.1, 2.2, 3.3, 4.4]$ and the created NumericalPoint is $(1.1, 2.2, 3.3, 4.4)^t$
+  \item in the fourth usage, a NumericalPoint which components are given by the $tuple$ python. For example, $(1.1, 2.2, 3.3, 4.4) $and the created NumericalPoint is $(1.1, 2.2, 3.3, 4.4)^t$
+  \end{description}
+
+
+\item[Some methods :]  \rule{0pt}{1em}
+
+  \begin{description}
+
+  \item $[\,]$
+    \begin{description}
+    \item[Usage :] $NumericalPoint[i]$
+    \item[Arguments :] \rule{0pt}{1em}
+      \begin{description}
+      \item $i$ : an integer, constraint : $0\leq i \leq dim-1$
+      \end{description}
+    \item[Value :] a real value, the value of the $(i+1)$-th element of the NumericalPoint
+    \end{description}
+    \bigskip
+
+  \item $getDimension$
+    \begin{description}
+    \item[Usage :] $getDimension()$
+    \item[Arguments :] none
+    \item[Value :] an integer, the value of the dimension of the NumericalPoint  (it returns dim)
+    \end{description}
+    \bigskip
+
+  \item $norm$
+    \begin{description}
+    \item[Usage :] $norm()$
+    \item[Arguments :] none
+    \item[Value :] a real value, the euclidian norm of the NumericalPoint
+    \end{description}
+    \bigskip
+
+  \item $normalize$
+    \begin{description}
+    \item[Usage :] $normalize()$
+    \item[Arguments :] none
+    \item[Value :] a NumericalPoint which is the unitary vector colinear to the intial one and pointing in the same direction. In other words, if $\vect{x}$ is the initial vector, it returns $\displaystyle \frac{\vect{x}}{||\vect{x}||}$.
+    \end{description}
+    \bigskip
+
+  \item $norm2$
+    \begin{description}
+    \item[Usage :] $norm2()$
+    \item[Arguments :] none
+    \item[Value :] a real value, the square of the euclidian norm of the NumericalPoint
+    \end{description}
+    \bigskip
+
+  \item $normalize2$
+    \begin{description}
+    \item[Usage :] $normalize2()$
+    \item[Arguments :] none
+    \item[Value :] a NumericalPoint wich is the vector $\vect{y}$ defined as follows : if $\vect{x}$ is the initial vector, then  $\vect{y} = (\displaystyle \frac{x_i^2}{||\vect{x}||^2})_i$.
+    \end{description}
+    \bigskip
+
+  \item $str$
+    \begin{description}
+    \item[Usage :] $str()$
+    \item[Arguments :] none
+    \item[Value :] a string describing the NumericalPoint
+    \end{description}
+    \bigskip
+
+  \item $dot$
+    \begin{description}
+    \item[Usage :] $dot(x,y)$
+    \item[Arguments :] $x$, $y$ : NumericalPoint
+    \item[Value :] a real value, the dot product (also known as the scalar product) of $x$ and $y$
+    \end{description}
+    \bigskip
+
+  \item $getName$
+    \begin{description}
+    \item[Usage :] $getName()$
+    \item[Arguments :] none
+    \item[Value :] a string giving the name of the NumericalPoint
+    \end{description}
+    \bigskip
+
+  \item $setName$
+    \begin{description}
+    \item[Usage :] $setName(name)$
+    \item[Arguments :] $name$ : a string
+    \item[Value :] no value, it gives a name for the considered NumericalPoint
+    \end{description}
+
+  \item $*$: right multiplication by a scalar. The NumericalPoint $n$ can be multiplied by a scalar $s$ using $n * s$.
+  \end{description}
+
+\end{description}
+
+
+
+% =================================================================
+
+
+
+\newpage \subsection{NumericalPointCollection}
+
+\begin{description}
+
+\item[Usage :] \rule{0pt}{1em}$NumericalPointCollection(dim)$
+
+\item[Arguments :]  $dim$ : an integer, the number of elements of the NumericalPointCollection
+
+\item[Value :] a NumericalPointCollection, filled by default with 0.0
+
+\item[Some methods :]  \rule{0pt}{1em}
+
+  \begin{description}
+
+  \item $[\,]$
+    \begin{description}
+    \item[Usage :] $NumericalPointCollection[i]$
+    \item[Arguments :] $i$ : an integer, constraint : $0\leq i \leq dim-1$
+    \item[Value :] a NumericalPoint, the $(i+1)$-th element of the NumericalPointCollection
+    \end{description}
+    \bigskip
+
+  \item $add$
+    \begin{description}
+    \item[Usage :] $add(numericalPoint2)$
+    \item[Arguments :] $numericalPoint2$ : a NumericalPoint
+    \item[Value :] The NumericalPointCollection of size $dim+1$.
+      The $dim+1$ element of this object is then equal to $numericalPoint2$
+    \end{description}
+    \bigskip
+
+  \item $getSize$
+    \begin{description}
+    \item[Usage :] $getSize()$
+    \item[Arguments :] none
+    \item[Value :] an integer : the size of the NumericalPointCollection
+    \end{description}
+    \bigskip
+
+
+  \end{description}
+\end{description}
+
+
+
+
+% ============================================================
+\newpage \subsection{NumericalScalarCollection}
+
+\begin{description}
+
+\item[Usage :] $NumericalScalarCollection(dim)$
+
+\item[Arguments :] $dim$     : an  integer, the number of elements of the NumericalScalarCollection
+
+\item[Value :] a NumericalScalarCollection, filled by default with $0$
+
+\item[Some methods :]  \rule{0pt}{1em}
+
+  \begin{description}
+
+  \item $[\,]$
+    \begin{description}
+    \item[Usage :] $NumericalScalarCollection[i]$
+    \item[Arguments :] \rule{0pt}{1em}
+      \begin{description}
+      \item $i$ : an integer, constraint : $0\leq i \leq dim-1$
+      \end{description}
+    \item[Value :] a real value, the $(i+1)$-th element of the NumericalScalarCollection
+    \end{description}
+    \bigskip
+
+  \item $add$
+    \begin{description}
+    \item[Usage :] $add(val)$
+    \item[Arguments :] $val$ : a real value
+    \item[Value :] The NumericalScalarCollection of size $dim+1$.
+      The $dim+1$ element of this object is then equal to $val$
+    \end{description}
+    \bigskip
+
+  \item $getSize$
+    \begin{description}
+    \item[Usage :] $getSize()$
+    \item[Arguments :] none
+    \item[Value :] an integer : the size of the NumericalScalarCollection
+    \end{description}
+    \bigskip
+
+  \end{description}
+
+
+\end{description}
+
+
+
+
+% ===================================================================
+
+
+\newpage \subsection{UserDefinedPair}
+
+\begin{description}
+
+\item[Usage :] $UserDefinedPair(x,p)$
+
+\item[Arguments :]  \rule{0pt}{1em}
+  \begin{description}
+  \item $x$ : a NumericalPoint,
+  \item $p$ : a real value, constraint $0 \leq p \leq 1$ (the probabiliy associated to the point $x$)
+  \end{description}
+
+\item[Value :] a UserDefinedPair
+
+\item[Some methods :]  \rule{0pt}{1em}
+
+  \begin{description}
+
+  \item $getX$
+    \begin{description}
+    \item[Usage :] $getX()$
+    \item[Arguments :] no argument
+    \item[Value :] a NumericalPoint, the point of the UserDefinedPair
+    \end{description}
+    \bigskip
+
+  \item $getP$
+    \begin{description}
+    \item[Usage :] $getP()$
+    \item[Arguments :] no argument
+    \item[Value :]  a NumericalScalar, the scalar of the UserDefinedPair
+    \end{description}
+
+    Each get method is associated to a set method.
+  \end{description}
+\end{description}
+
+
+% =============================================================
+
+
+\newpage \subsection{UserDefinedPairCollection}
+
+\begin{description}
+
+\item[Usage :] $UserDefinedPairCollection(dim)$
+
+\item[Arguments :]  $dim$ : an integer, the number of elements of the UserDefinedPairCollection
+
+\item[Value :] an UserDefinedPairCollection, to be filled after
+
+\item[Some methods :]  \rule{0pt}{1em}
+
+  \begin{description}
+
+  \item $[\,]$
+    \begin{description}
+    \item[Usage :] $UserDefinedPairCollection[i]$
+    \item[Arguments :] $i$ : an integer, the ith element of UserDefinedPairCollection
+    \item[Value :] a UserDefinedPair, the $(i+1)$-th element of UserDefinedPairCollection
+    \end{description}
+    \bigskip
+
+  \item $add$
+    \begin{description}
+    \item[Usage :] $add(UseDefP)$
+    \item[Arguments :] $UseDefP$ : an UserDefinedPair
+    \item[Value :]      a UserDefinedPairCollection of size  $dim +1$
+      with instance of the $(dim+1)$ element of the UserDefinedPairCollection
+    \end{description}
+    \bigskip
+
+  \item $getSize$
+    \begin{description}
+    \item[Usage :] $getSize()$
+    \item[Arguments :] no argument
+    \item[Value :]      an integer, the size of UserDefinedPairCollection (returns $dim$)
+    \end{description}
+    \bigskip
+
+  \item $str$
+    \begin{description}
+    \item[Usage :] $str()$
+    \item[Arguments :] no argument
+    \item[Value :]   a string with elements of UserDefinedPairCollection
+    \end{description}
+
+  \end{description}
+\end{description}
+
+% ================================================================================

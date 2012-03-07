@@ -1,0 +1,677 @@
+% Copyright (c)  2005-2010 EDF-EADS-PHIMECA.
+% Permission is granted to copy, distribute and/or modify this document
+% under the terms of the GNU Free Documentation License, Version 1.2
+% or any later version published by the Free Software Foundation;
+% with no Invariant Sections, no Front-Cover Texts, and no Back-Cover
+% Texts.  A copy of the license is included in the section entitled "GNU
+% Free Documentation License".
+
+\documentclass[11pt]{article}
+
+\usepackage{latex2html}
+\usepackage[latin1]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{makeidx}
+\usepackage{index}
+\usepackage[dvips]{graphicx}
+\usepackage{color}
+\usepackage{psfrag}
+\usepackage{listings}
+\usepackage{longtable}
+\usepackage{mdwtab}
+\usepackage{hhline}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{fancyhdr}
+
+\setlength{\textwidth}{18.5cm}
+\setlength{\textheight}{23cm}
+\setlength{\hoffset}{-1.04cm}
+\setlength{\voffset}{-1.54cm}
+\setlength{\oddsidemargin}{0cm}
+\setlength{\evensidemargin}{0cm}
+\setlength{\topmargin}{0cm}
+\setlength{\headheight}{1cm}
+\setlength{\headsep}{0.5cm}
+\setlength{\marginparsep}{0cm}
+\setlength{\marginparwidth}{0cm}
+\setlength{\footskip}{1cm}
+\setlength{\parindent}{0cm}
+
+\pagestyle{fancy}
+\fancyhf{} \rhead{\bfseries \thepage} \lhead{\bfseries \nouppercase Open TURNS -- Contribution guide}
+\rfoot{\bfseries \copyright 2005-2012 EDF - EADS - PhiMeca} \lfoot{}
+
+\begin{document}
+
+\begin{titlepage}
+  \vspace*{2cm}
+  \begin{center}
+    {\huge \bf Contribution Guide}
+    \input{GenericInformation.tex}
+  \end{center}
+\end{titlepage}
+\newpage
+\tableofcontents
+
+\newpage
+
+\section{Introduction}
+
+This documentation aims at guiding the developers in their contributions to the OpenTURNS software. This contribution can be done in (at least) the two following contexts:
+\begin{itemize}
+\item[$\bullet$]  a contribution to the C++ library,
+\item[$\bullet$]  a contribution to the TUI written in python,
+\end{itemize}
+
+
+\section{How to add a class MyClass in an existing directory of OpenTURNS sources?\label{SingleClass}}
+
+This how-to explains the process that must be followed to fully integrate a new class that provides an end-user facility (e.g. a new distribution). We suppose that this class will take place in an existing directory of the sources directories, to avoid the burden of the autotools infrastructure creation.
+
+\subsection{First, add the class to the OpenTURNS C++ library}
+
+\newcounter{oldenumi}
+\begin{enumerate}
+\item Create \verb!MyClass.hxx! and \verb!MyClass.cxx! in the same directory. The files must have the standard header comment, with a brief description of the class in Doxygen form and the standard reference to the LGPL license.
+  
+  For the header file \verb!MyClass.hxx!, the interface must be embraced between the preprocessing clauses:
+  
+\begin{verbatim}
+#ifndef OPENTURNS_MYCLASS_HXX
+#define OPENTURNS_MYCLASS_HXX
+...
+your interface
+...
+#endif OPENTURNS_MYCLASS_HXX
+\end{verbatim}
+  
+  to prevent from multiple inclusions.
+  
+  See any pair of .hxx/.cxx files in the current directory and the PGQL document for the OpenTURNS coding rules: case convention for the static methods, the methods and the attributes, trailing underscore for the attribute names for namming a few.
+  
+\item Modify the Makefile.am file in the directory containing \verb!MyClass.hxx! and \verb!MyClass.cxx!:
+  \begin{itemize}
+  \item add \verb!MyClass.hxx! to the \verb!otinclude_HEADERS! variable
+  \item add \verb!MyClass.cxx! to the \verb!libOTXXXXXX_la__SOURCES! variable, where \verb!XXXXXX! is the name of the current directory.
+  \end{itemize}
+  
+\item Modify the \verb!CMakeLists.txt! file in the directory containing \verb!MyClass.hxx! and \verb!MyClass.cxx!:
+  \begin{itemize}
+  \item add \verb!MyClass.hxx! to the headers using \verb!ot_install_header_file ( MyClass.hxx )!.
+  \item add \verb!MyClass.cxx! to the sources using \verb!ot_add_source_file ( MyClass.cxx )!.
+  \end{itemize}
+  
+\item Add \verb!MyClass.hxx! to the file \verb!OTXXXXXX.hxx!, where \verb!XXXXXX! is the name of the current directory.
+  
+\item Create a test file \verb!t_MyClass_std.cxx! in the directory lib/test. This test file must use the standard functionalities of the class MyClass.
+
+\item Create an autotest file \verb!t_MyClass_std.at! in the directory lib/test. This file describes the test and how to run it.
+
+\item Create an expected output file \verb!t_MyClass_std.expout\! that contains a verbatim copy of the expected output (copy-paste the \emph{validated} output of the test in this file).
+
+\item Modify the \verb!CMakeLists.txt! file in lib/test: add \verb!ot_check_test ( MyClass_std )! in this file.
+
+\item Modify the \verb!Makefile.am! file in lib/test:
+  \begin{itemize}
+  \item add \verb!t_MyClass_std! (which is the name of the test executable) to the variable \verb!CHECK_PROGS! or \verb!INSTALLCHECK_PROGS! depending on the fact the test checks the correct behaviour of OpenTURNS independently of its installation or not. The several executables are organized following the library organization, you must follow this rule.
+  \item add \verb!t_MyClass_std.at! to the variable \verb!CHECK_TESTS! or \verb!INSTALLCHECK_TESTS! and in the correct set of autotest files, following the same rules than for the executable.
+  \item add \verb!t_MyClass_std.expout! to the variable \verb!OUTFILES! in the relevant paragraph.
+  \item Create a variable called \verb!t_MyClass_std_SOURCES! and set its value to \verb!t_MyClass.cxx! in the relevant set of sources.
+  \end{itemize}
+  
+\item Modify the \verb!Makefile.am! file in lib/m4/examples:
+  \begin{itemize}
+  \item add \verb!t_MyClass_std! to the variable \verb!bin_PROGRAMS!, which is the list of program examples.
+  \item create a variable \verb!t_MyClass_std_SOURCES! and set its value to \verb!t_MyClass.cxx! in the relevant set of sources.
+  \end{itemize}
+  
+\item Add \verb!t_MyClass_std.at! to the file \verb!check_testsuite.at! or \verb!installcheck_testsuite.at! using the same rule than for the Makefile.am modification.
+  
+\item If the validation of your class involved advanced mathematics, or was a significant work using other tools, you can add this validation in the validation/src directory.
+  \begin{itemize}
+  \item copy all of your files in the validation/src directory.
+  \item modify the \verb!Makefile.am! file by appending the list of your files to the dist\_validation\_DATA variable.
+  \end{itemize}
+  \setcounter{oldenumi}{\value{enumi}}
+\end{enumerate}
+
+That's it! Your class is integrated to the library and will be checked for non-regression in all the subsequent versions of OpenTURNS, assuming that your contribution has been incorporated in the "official" OpenTURNS release. But nobody can use it!
+
+\subsection{Second, document your contribution (in english, using LaTeX)}
+
+\begin{enumerate}
+  \setcounter{enumi}{\value{oldenumi}}
+\item Add an entry in the document doc/src/ArchitectureGuide/OpenTURNS\_ArchitectureGuide.tex if your class has a significant impact on the library architecture.
+  
+\item Add an entry in the document doc/src/WrappersGuide/OpenTURNS\_WrappersGuide.tex if your class has a significant impact on the way OpenTURNS interfaces external codes.
+  
+\item Add an entry in the document doc/src/ReferenceGuide/OpenTURNS\_ReferenceGuide.tex if your class add a new concept not already described in the reference guide. Your entry must take the form of a specific description using the same template than the other descriptions.
+  \setcounter{oldenumi}{\value{enumi}}
+\end{enumerate}
+
+Ok, your contribution can be used by a programmer who uses the library. But for the other users, some work remains.
+
+\subsection{Third: make your contibution usable from the Textual User Interface}
+
+\begin{enumerate}
+  \setcounter{enumi}{\value{oldenumi}}
+\item Create MyClass.i in the python/src directory. In most situations, it should be:
+\begin{verbatim}
+// SWIG file MyClass.i
+// Author: $LastChangedBy: schueller $
+// Date: $LastChangedDate: 2012-02-27 14:48:06 +0100 (lun. 27 févr. 2012) $
+// Id: $Id: OpenTURNS_ContributionGuide.tex 1539 2012-02-27 13:48:06Z schueller $
+
+% {
+#include "MyClass.hxx"
+%}
+
+%include MyClass.hxx
+namespace OT { %extend MyClass { MyClass(const MyClass & other)
+ { return new OT::MyClass(other); } } }
+\end{verbatim}
+
+\item Modify the CMakeLists.txt file in python/src: add MyClass.i to the relevant \verb!ot_add_python_module! clause.
+
+\item Modify the Makefile.am file in python/src: add MyClass.i to the variable OPENTURNS\_SWIG\_SRC
+
+\item Locate and modify the file yyyy.i, where yyyy is the name of the python module related to MyClass, to include MyClass.i in the correct set of .i files (see the comments in yyyy.i file). In order to identify the correct python module, remember that the modules map quite closely the source tree organization.
+
+\item Create a test file t\_MyClass\_std.py in the directory python/test. This test implements the same tests than t\_MyClass\_std.cxx, but using python.
+
+\item Create an autotest file t\_MyClass\_std.atpy and the associated t\_MyClass\_std.expout file that have the same role than t\_MyClass\_std.at and t\_MyClass\_std.expout, but for the python test.
+
+\item Modify the Makefile.am file in python/test:
+  \begin{itemize}
+  \item add t\_MyClass\_std.py to the variable PYTHONINSTALLCHECK\_PROGS. The several executables are organized following the library organization, you must follow this rule.
+  \item add t\_MyClass\_std.atpy to the variable PYTHONINSTALLCHECK\_TESTS.
+  \item add t\_MyClass\_std.expout to the variable OUTFILES.
+  \end{itemize}
+  \setcounter{oldenumi}{\value{enumi}}
+\end{enumerate}
+
+\subsection{Almost finished. Document your contribution to the TUI}
+
+\begin{enumerate}
+  \setcounter{enumi}{\value{enumi}}
+\item Comment your python test as a new use-case in the document\\ doc/src/OpenTURNS\_UseCasesGuide/UseCasesGuide.tex following the generic format of this document:
+  \begin{itemize}
+  \item describe the inputs of your use-case.
+  \item extract code snippets that show the user interaction with your class.
+  \item add the relevant keywords to the index.
+  \end{itemize}
+\item Gives a description of your class in the document doc/src/UserManual/OpenTURNS\_UserManual.tex
+  \begin{itemize}
+  \item following the general form of this document, fill-in the sections but only describe the methods the user is intended to use (forget the most computer programming inclined methods).
+  \item don't hesitate to give some reminders of theoretical aspects if needed, in the form of an equation or a short (1 or 2 sentences) mathematical explanation. Give a pointer to the relevant reference guide section.
+  \end{itemize}
+\end{enumerate}
+
+That's all, folks!
+
+Some timings from an OpenTURNS Guru: 2 days of work for the most trivial contribution (a copy-paste of a class with 5 methods, no mathematical or algorithmic tricks).
+For a well-trained OpenTURNS contributor, a user-visible class with a dozen of methods and well-understood algorithms, a new class should not be less than a week of work...
+
+\section{How to add a whole set of classes in a new subdirectory of OpenTURNS sources?\label{WholeDirectory}}
+
+This how-to explains the process that must be followed to fully integrate a set of classes that provides an end-user facility (e.g. a new simulation algorithm) developped in a new subdirectory of the existing sources. The task is very similar to the steps described in the how-to (\ref{SingleClass}), only the new steps will be described. We suppose that the subdirectory has already been created, as well as the several source files. There are three new steps in additon to those of the how-to (\ref{SingleClass}): the creation of the autotool infrastructure in the new subdirectory, the modification of the autotool infrastructure in the parent directory and the modification of the autotool infrastructure in the root directory.
+
+
+\subsection{Autotool infrastructure in the root directory}
+You have to tell the configure script to create the Makefile in the new directory and to add this new directory into the list of directories where the preprocessor will look for header files. Let's assume that you want to add a subdirectory named NewDir to a directory which path is lib/Base/Directory/:
+\begin{enumerate}
+\item add the name of the Makefile to be created to the AC\_OUTPUT target:
+\begin{verbatim}
+AC_OUTPUT([...
+           src/Base/Directory/NewDir
+           ...
+\end{verbatim}
+  You have to put your new directory at the right place: all the directories are sorted in lexical order and in an increasing depth order.
+  
+\item add the path of the new directory to the openturns\_cppflags variable. The path must be relative to the top\_srcdir directory:
+\begin{verbatim}
+openturns_cppflags=
+for flag in "
+...
+-I\$(top_srcdir)/../lib/Base/Directory/NewDir
+...
+\end{verbatim}
+
+\end{enumerate}
+
+\subsection{Autotool infrastructure in the parent sudirectory}
+You have to set up the recursive call of Makefiles from a parent directory to its subdirectories, and to aggregate the libraries related to the subdirectories into the library associated to the parent directory:
+\begin{enumerate}
+  \setcounter{enumi}{2}
+\item add NewDir to the DIRS variable:
+\begin{verbatim}
+DIRS += NewDir
+\end{verbatim}
+  if NewDir is the first directory in the variable DIRS, replace += by =.
+\item aggragate the library associated to NewDir with the library associated to Directory:
+\begin{verbatim}
+libOTDirectory_la_LIBADD += $(builddir)/NewDir/libOTNewDir.la
+\end{verbatim}
+  the library names are prefixed by libOT. If libOTNewDir is the first library added to libOTDirectory, replace += by =.
+\end{enumerate}
+
+\subsection{Autotool infrastructure in the new subdirectory}
+You have to create the Makefile.am file. Its general structure is given by the following template:
+\begin{verbatim}
+#                                               -*- Makefile -*-
+#
+#  Makefile.am
+#
+#  (C) Copyright 2005-2009 EDF-EADS-Phimeca
+#
+#  This library is free software; you can redistribute it and/or
+#  modify it under the terms of the GNU Lesser General Public
+#  License as published by the Free Software Foundation; either
+#  version 2.1 of the License.
+#
+#  This library is distributed in the hope that it will be useful
+#  but WITHOUT ANY WARRANTY; without even the implied warranty of
+#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+#  Lesser General Public License for more details.
+#
+#  You should have received a copy of the GNU Lesser General Public
+#  License along with this library; if not, write to the Free Software
+#  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307 USA
+#
+#  @author: $LastChangedBy: schueller $
+#  @date:   $LastChangedDate: 2012-02-27 14:48:06 +0100 (lun. 27 févr. 2012) $
+#  Id:      $Id: OpenTURNS_ContributionGuide.tex 1539 2012-02-27 13:48:06Z schueller $
+#
+include $(top_srcdir)/config/common.am
+
+SUBDIRS  = FirstDir
+SUBDIRS += SecondDir
+...
+SUBDIRS += LastDir
+
+AM_CPPFLAGS += -I$(srcdir)/Relative/Path/To/First/Include/Dir
+...
+AM_CPPFLAGS += -I$(srcdir)/Relative/Path/To/Last/Include/Dir
+
+otincludedir = $(includedir)/openturns
+otinclude_HEADERS = \
+	FirstFile.hxx \
+        ...
+	LastFile.hxx
+
+noinst_LTLIBRARIES   = libOTNewDir.la
+libOTNewDir_la_LDFLAGS  = -no-undefined
+libOTNewDir_la_SOURCES = \
+	FirstFile.cxx \
+        ...
+	LastFile.cxx
+
+libOTNewDir_la_LIBADD  = $(builddir)/FirstDir/libOTFirstDir.la
+libOTNewDir_la_LIBADD += $(builddir)/SecondDir/libOTSecondDir.la
+...
+libOTNewDir_la_LIBADD += $(builddir)/LastDir/libOTLastDir.la
+\end{verbatim}
+Be aware of the fact that you \emph{must} use tabulations to indent the list of names in both otinclude\_HEADERS and libOTNewDir\_la\_SOURCES variables.
+
+The meaning of the different variables is recalled here:
+\begin{enumerate}
+  \setcounter{enumi}{5}
+\item SUBDIRS is a variable local to the Makefile.am file: it gathers the list of subdirectories of the current directory.
+\item AM\_CPPFLAGS is a variable that gathers the list of directories in which the perprocessor will look for header files needed by the source files in NewDir.
+\item libOTNewDir.la is the library associated to the current directory, namely NewDir.
+\item otinclude\_HEADERS is the list of header files present in the current directory, namely NewDir.
+\item libOTNewDir\_la\_LDFLAGS is the list of flags passed to the linker when creating libOTNewDir.
+\item libOTNewDir\_la\_SOURCES is the list of source files present in the current directory, namely NewDir.
+\item libOTNewDir\_la\_LIBADD is the list of libraries to aggregate in libOTNewDir.la. There should be exactly one library by subdirectory.
+\end{enumerate}
+
+
+
+
+\section{How to develop a new extra module MyModule}
+\subsection{Copy and adapt an existing template}
+\begin{enumerate}
+\item Copy and rename the source tree of an example module (for example the Strange module) from the OpenTURNS source tree. The examples modules are located under the module subdirectory of OpenTURNS source tree:
+\begin{verbatim}
+svn export https://svn.openturns.org/openturns-modules/template MyModule
+\end{verbatim}
+\item Adapt the template to your module:
+\begin{verbatim}
+./customize MyModule MyClass
+\end{verbatim}
+  This command changes the module name into MyModule in all the scripts, and adapt the example class to the new name MyClass.
+\end{enumerate}
+
+\subsection{Develop the module}
+\begin{enumerate}
+  \setcounter{enumi}{2}
+\item Implement your module using the same rules as described in the sections \ref{SingleClass} and \ref{WholeDirectory}.
+\item Build your module as usual:
+\begin{verbatim}
+./bootstrap
+mkdir build
+cd build
+../configure --with-openturns=OPENTURNS_INSTALLDIR --prefix=$PWD/install
+make
+make check
+make install
+make installcheck
+\end{verbatim}
+\end{enumerate}
+
+
+\subsection{Install and test}
+\begin{enumerate}
+
+\item Check that you have a working OpenTURNS installation, for example by trying to load the OpenTURNS module within an interactive python session:
+\begin{verbatim}
+python
+>>> from openturns import *
+\end{verbatim}
+  and python should not complain about a non existing openturns module.
+
+\item Create a source package of your module:
+\begin{verbatim}
+make dist
+\end{verbatim}
+  It will create a tarball named mymodule-X.Y.Z.tar.gz (and mymodule-X.Y.Z.tar.bz2), where X.Y.Z is the version number of the module.
+
+\item In the python directory of the OpenTURNS install directory, you can find a script named {\itshape openturns-module}. You use this script to install the tarball mymodule.tar.gz (or mymodule.tar.bz2) in your home directory ({\itshape \$HOME/openturns}):
+\begin{verbatim}
+openturns-module --install=mymodule-X.Y.Z.tar.gz --prefix=user
+\end{verbatim}
+  The installation script has many more capabilities, you can access to its embedded documentation by invoking it without argument:
+  \scriptsize
+\begin{verbatim}
+openturns-module
+Usage: openturns-module [--silent] {--install=<module> | --remove=<module>} [--prefix=PFX] [extra_configure_args]
+       openturns-module [--silent] {--install <module> | --remove <module>} [--prefix PFX] [extra_configure_args]
+       openturns-module [--silent] {--module=<module> | --module <module>} [options]
+Note:
+For installation, 'module' can be either a path to a directory
+or a path to a archive file (compressed or not).
+For removal, 'module' is the module name.
+The extra configure args are passed as is to the module configure
+script.
+
+Example:
+(install)
+  openturns-module --install=mymodule/
+  openturns-module --install=/path/to/mymodule/
+  openturns-module --install=mymodule.tar
+  openturns-module --install=mymodule.tar.gz
+  openturns-module --install=mymodule.tgz
+  openturns-module --install=mymodule.tar.bz2
+  openturns-module --install=mymodule.tbz
+
+You can provide a prefix to choose where the module will be installed.
+PFX can take one of the following values:
+ * openturns : the module will be installed in the Open TURNS installation tree
+ * user : the module will be installed in the Open TURNS user directory (/home/regis/openturns)
+ * <dir> : the module will be installed in <dir>. You should append <dir> to the
+   OPENTURNS_MODULE_PATH envvar to tell Open TURNS where to find the module
+
+(remove)
+  openturns-module --remove=mymodule
+
+(mixed form)
+  openturns-module --remove=myoldmodule1 --install=mynewmodule1 --install=mymodule2
+(module)
+  openturns-module --module=mymodule
+
+Options:
+  --silent          Do not output any message
+\end{verbatim}
+  \normalsize
+\item Test your module within python:
+\begin{verbatim}
+python
+>>> from openturns import *
+>>> from mymodule import *
+\end{verbatim}
+  and python should not complain about a non existing mymodule module.
+
+  That's all folks!
+
+\end{enumerate}
+
+
+
+
+
+
+\section{How to use version control system}
+
+This section describes how to use the Open TURNS version control system AKA subversion repository. These instructions may be useful for Open TURNS developers which have an account on subversion.
+
+\subsection{File hierarchy} 
+
+\subsubsection{Description}
+
+As usual with subversion repository, root directory contains three directories described bellow :
+\begin{itemize}
+  \item trunk
+  \item tags
+  \item branches 
+\end{itemize}
+
+Each user have a personal branch named simply by username. Every branch must be follow some rules to be more easy to merge with others developments. These rules are really simple:
+
+
+
+\begin{itemize}
+\item At the first time, the developer must create one devel directory by copying the trunk using a conventional commit message (see below);
+\item if a developer wants to make some support on one or more major version, he must copy the corresponding tags, this time using a special commit message;
+\item IT IS STRICTLY FORBIDDEN for a developer to apply a patch manually across subversion directories: he must ALWAYS use the subverion merging facility to do that;
+\item IT IS STRICTLY FORBIDDEN for a developer to merge a branch with another one: all the merges must be done from or to the trunk.
+\end{itemize}
+
+
+
+For example, with one developer "John Doh", the file hierarchy looks like this:
+
+\begin{itemize}
+  \item trunk
+  \item tags
+  \begin{itemize}
+    \item openturns-0.12.1
+    \item openturns-0.12.2
+    \item openturns-0.12.3
+    \item openturns-0.13.0 
+  \end{itemize}
+  \item branches
+  \begin{itemize}
+    \item doh
+  \end{itemize}
+\end{itemize}
+
+\subsubsection{An example}
+
+It is simpler to explain how each directory is used through an example. Suppose that a new developer, John Doh, joins the OpenTURNS development team:
+upcoming developer in OpenTURNS repository :
+\begin{itemize}
+\item On the server side :
+
+  \begin{enumerate}
+  \item Subversion's administrator creates a new account named "doh" for the user John Doh;
+  \item Subversion's administrator creates a new subdirectory /doh in /branches, leading to /branches/doh: it is the 'private' user branch;
+  \end{enumerate}
+
+  Now, John Doh can start its work in the repository. The first action for the developer is to "branch" the trunk, which is the reference for the project: the trunk is the place for the latest working development version.
+
+\item On the client side :
+
+  \begin{enumerate}
+
+  \item John Doh can now "checkout" its private branch into a local copy, i.e. on its local computer, not on the server.
+
+\begin{verbatim}
+svn checkout https://svn.openturns.org/openturns/branches/doh doh-branch
+\end{verbatim}
+
+  \item To be able to develop with the latest version, John copies the trunk's content into his local copy.
+
+    You may have multiple contiguous directories in your branch to split your developments according to their targets.
+    Here we suppose that the developments will be merged in the trunk, for example to add a new functionality.
+
+\begin{verbatim}
+svn copy https://svn.openturns.org/trunk doh-branch
+\end{verbatim}
+
+  \item The previous step has made a local copy of the trunk into the local copy of its branch. Now, John MUST make his first commit :
+
+\begin{verbatim}
+svn commit -m "BRANCH: svn copy https://.../trunk@1170 branch"
+\end{verbatim}
+
+    To ease the managment of the version control system, we enforce the systematic use of comments for each commit. When the commit is related to a branch modification such as a copy, a merge, a delete, a tag or anything similar, the comment MUST start by the corresponding keyword in uppercase. These keywords are:
+
+    \begin{itemize}
+    \item BRANCH for a branch creation or deletion
+    \item MERGE for a merge between a branche and the trunk (in either direction)
+    \item TAG for a tag
+    \end{itemize}
+   Also, when you create a branch you have to specify the associated trunk revision number (here, r1170). You can find it at http://trac.openturns.org/browser
+    It is the number in the "rev" column.
+
+
+  \item Each step (ie functionality, bug fix, etc.) must be commited separately with a comment. e.g. if John Doh write an enhanced cache system he writes:
+
+\begin{verbatim}
+svn commit -m "Introduced an enhanced cache system."
+\end{verbatim}
+
+    The -m option is useful for single line comments, ie for very small comments. If your commit needs to be explained in a few lines, it is better to log the entire comments in a plain text file (e.g., svn.log is a quite common name) and to use the -F option followed with the file name.
+\begin{verbatim}
+edit svn.log
+svn commit -F svn.log
+\end{verbatim}
+
+  \end{enumerate}
+\end{itemize}
+
+
+\subsection{Merging process}
+
+This section describes the several steps of the merging process, in particular the preparation work that must be done on the developer side before the integrator can merge its developments.
+
+The whole process must succeed in order to be able to merge. If any failure occurs, it MUST be fixed, otherwise the subversion repository would be corrupted. Suppose that John Doh wants to merge its branch with the latest revision of the trunk, nammely the revision 620 (r620). He must:
+\begin{enumerate}
+\item Checkout the branch to merge (ie: for John Doh)
+
+\begin{verbatim}
+svn co https://svn.openturns.org/branches/doh/devel doh-devel
+\end{verbatim}
+
+\item Find the latest synchronization revision of this branch with trunk (e.g. r365). he finds this information by looking at the latest MERGE or BRANCH keyword in the log of his branch
+\begin{verbatim}
+svn log | egrep -B6 -e 'BRANCH|MERGE'
+\end{verbatim}
+
+  Here we suppose that the latest synchronization was done at the revision 365 (r365).
+\item Apply the differences between the latest synchronization (r365) and the latest revision of trunk (r620) to the local copy of the branch
+
+\begin{verbatim}
+cd doh-devel
+svn merge -r365:620 https://svn.openturns.org/openturns/trunk
+\end{verbatim}
+
+\item Verify patched files and conflicts
+
+\begin{verbatim}
+svn status | egrep -e '^C'
+svn status | egrep -v -e '^[DGURAM]'
+\end{verbatim}
+
+  These commands should not return any error or missing files, i.e. the output should be empty.
+\item Verify that the compilation and the archive creation process works fine with this updated version of the branch
+
+\begin{verbatim}
+./bootstrap
+mkdir build && cd build
+../configure --prefix=\$PWD/install
+make
+make distcheck DISTCHECK_CONFIGURE_FLAGS='--without-swig'
+cd -
+\end{verbatim}
+
+  In this process, it is required to build and test the developments in a directory SEPARATED from the source directory. So DO make a build subdirectory and DO change do it. It does not take time but it ensures that the building process is correct (you can't check for this when building in the same directory than the sources).
+\item If there is no error, commit this revision with a special log message
+
+\begin{verbatim}
+svn commit -m 'MERGE: svn merge -r365:620 https://.../trunk'
+\end{verbatim}
+
+  When commiting, don't forget to add the correct keyword (MERGE, BRANCH, TAG): it will be crucial for the next merge. Otherwise it is very painful to find the latest synchronization point.
+
+\end{enumerate}
+
+\subsection{Tagging and releasing process }
+
+This section explains how the integrator must tag and release a new version with this version control system.
+
+Add this step, we suppose that the merging process has been done. The trunk is clean and is ready to be released as an official version.
+
+\subsubsection{Tagging}
+\begin{enumerate}
+\item The first step, before tagging, is to update all the ChangeLog files with a very pretty tool : 'svn2cl'
+\begin{verbatim}
+for i in `find ./ -name 'ChangeLog'`; do
+ DIR=`dirname $i`;
+ cd $DIR; svn2cl -i;
+ cd -;
+done
+\end{verbatim}
+
+\item Edit the 'configure.ac' files to set the new release version
+\begin{verbatim}
+for i in `find ./ -name 'configure.ac'`; do
+  sed -e "s:\[0.13.0\]:[0.13.1]:" $i > $i.sed && mv $i.sed $i;
+done
+\end{verbatim}
+
+\item You can now commit these modifications
+\begin{verbatim}
+svn ci -m 'Next release (0.13.1) preparation.'
+\end{verbatim}
+
+\item Finally, you can now tag the new version with the following commands
+\begin{verbatim}
+cd ..
+svn copy trunk tags/openturns-0.13.1
+svn ci -m 'TAG: This is official release 0.13.1.'
+\end{verbatim}
+
+\end{enumerate}
+\subsubsection{Releasing}
+
+\begin{enumerate}
+
+\item Export the newly created tag in a temporary directory
+\begin{verbatim}
+cd /tmp
+svn export https://svn.openturns.org/tags/openturns-0.13.1
+\end{verbatim}
+
+\item Bootstrap, configure and make your tagged version
+
+\begin{verbatim}
+cd openturns-0.13.1
+./bootstrap
+./configure
+make
+\end{verbatim}
+
+\item Build the tarball
+\begin{verbatim}
+make distcheck
+cd ..
+ls *.tar.*
+\end{verbatim}
+\end{enumerate}
+
+
+\end{document}
+
+

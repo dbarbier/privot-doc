@@ -1,0 +1,88 @@
+% Copyright (c)  2005-2010 EDF-EADS-PHIMECA.
+% Permission is granted to copy, distribute and/or modify this document
+% under the terms of the GNU Free Documentation License, Version 1.2
+% or any later version published by the Free Software Foundation;
+% with no Invariant Sections, no Front-Cover Texts, and no Back-Cover
+% Texts.  A copy of the license is included in the section entitled "GNU
+% Free Documentation License".
+\renewcommand{\filename}{docUC_StocProc_SpectralNormalProcess_Creation.tex}
+\renewcommand{\filetitle}{UC : Creation of a  stationary  normal process from its spectral density function}
+
+% \HeaderNNIILevel
+% \HeaderIILevel
+\HeaderIIILevel
+
+\label{SpectralNormalProcessCreation}
+\index{Stochastic Process!Normal Process}
+
+Let $\vect{X}(\omega,t)$ be a stationary normal process with zero mean defined  by  its unilateral spectral density function $f \in \mathbb{R}^+ \mapsto \mat{G}(f)$ defined by in (\ref{univG}). \\
+
+
+In that version, Open TURNS only implements the Cauchy spectral model, thanks to the object {\itshape CauchyModel}, which is the model associated to the exponential covariance model, defined in (\ref{TemporalNormalProcessCreation}). The Cauchy spectral model has the following spectral denity function $f \in \mathbb{R} \mapsto \mat{S}(f)$ : 
+\begin{equation}\label{cauchyModel}
+  S_{ij}(f) = \displaystyle \frac{4R_{ij}a_ia_j(\lambda_i+ \lambda_j)}{(\lambda_i+ \lambda_j)^2 + (4\pi f)^2}
+\end{equation}
+where $\mat{R}$, $\vect{a}$ and $\vect{\lambda}$ are the parameters of the Exponential covariance model. The relation (\ref{cauchyModel}) can be explicited with the spatuial covariance function  $\mat{C}^{s}(\tau)$ defined in (\ref{RClink}).\\
+ 
+
+Furthermore, Open TURNS allows the User to define its own spectral model, with the object {\itshape UserDefinedSpectralModel} as illustrated in \ref{SpectralModelCreation}\\
+
+
+The example is illustrated after the requirements and the python scipting. \\ \\
+Details on each object may be found in the User Manual  (\href{OpenTURNS_UserManual_TUI.pdf}{see User Manual - StochasticProcess}).\\
+
+
+\requirements{
+  \begin{description}
+  \item[$\bullet$]  $\vect{a}$, $\vect{\lambda}$   : {\itshape amplitude, scale}
+  \item[type:]  NumericalPoint
+  \end{description}
+
+  \begin{description}
+  \item[$\bullet$]  $\mat{R}$,  : {\itshape spatialCorrelation}
+  \item[type:]  CorrelationMatrix
+  \end{description}
+
+  \begin{description}
+  \item[$\bullet$]  $\mat{C}^s$,  : {\itshape spatialCovariance}
+  \item[type:]  CovarianceMatrix
+  \end{description}
+
+
+  \begin{description}
+  \item[$\bullet$] a time grid : {\itshape myTimeGrid}
+  \item[type:]  RegularGrid
+  \end{description}
+
+}
+{
+  \begin{description}
+  \item[$\bullet$] a spectral model : {\itshape mySpectralModel }
+  \item[type:] SpectralModel
+  \end{description}
+
+  \begin{description}
+  \item[$\bullet$] the normal process : {\itshape myNormalProcess}
+  \item[type:]  SpectralNormalProcess 
+  \end{description}
+
+}
+
+\textspace\\
+Python script for this UseCase :
+
+\begin{lstlisting}
+  # Create the spectral model
+  # for example : the Cauchy model
+
+  # from the amplitude, scale and spatialCovariance
+  mySpectralModel = CauchyModel(amplitude, scale, spatialCorrelation)
+  # or from the scale and spatialCovariance
+  mySpectralModel = CauchyModel(scale, spatialCovariance)
+
+  # Create the normal process witht the spectral view
+  myNormalProcess = SpectralNormalProcess(mySpectralModel, myTimeGrid)
+\end{lstlisting}
+
+
+

@@ -1,0 +1,69 @@
+% Copyright (c)  2005-2010 EDF-EADS-PHIMECA.
+% Permission is granted to copy, distribute and/or modify this document
+% under the terms of the GNU Free Documentation License, Version 1.2
+% or any later version published by the Free Software Foundation;
+% with no Invariant Sections, no Front-Cover Texts, and no Back-Cover
+% Texts.  A copy of the license is included in the section entitled "GNU
+% Free Documentation License".
+
+This document makes up the general specifications for the architecture of the \OT\ platform. The architecture described here adresses the following goals:
+\begin{itemize}
+\item \emph{building an open, upgradable and generic platform for the treatment of uncertainties}, relying on recognized and valid mathematical methods as well as on a methodological approach that was put forward and supported by the partners.
+\item \emph{interfacing with any field-specific code}.
+\end{itemize}
+
+To address these questions, the \OT\ platform needs to be:
+\begin{itemize}
+\item \emph{portable}: the ability to build, execute and validate the application in different environments (operating system, hardware platform as well as software environment) based on a single set of source code files.
+\item \emph{extensible}: the possibility to add new functions to the application with a minimal impact on the existing code.
+\item \emph{upgradable}: the ability to control the impact of a replacement or a change on the technical architecture, following an updgrade of the technical infrastructure (such as the replacement of one tool by another or the use of a new storage format).
+\item \emph{durable}: the technical choices must have a lifespan comparable to the application's while relying on standard and/or Open Source solutions.
+\end{itemize}
+
+
+The computing architecture will be detailed in this document according to 3 different abstraction levels:
+\begin{itemize}
+\item \emph{functional architecture}: describes the application's functions and the distribution of its components without addressing any actual programming issues.
+\item \emph{software architecture}: defines the programming design of the modules identified in the functional architecture.
+\item \emph{technical architecture}: lists the technical choices that were made for the development of each module. These technical choices are justified both by environmental constraints and by the requirements expressed in other archectural levels.
+\end{itemize}
+
+\section{Document outline}
+The document is organized as follows:
+\begin{itemize}
+\item \emph{Chapter 2} deals with the functional architecture of the \OT\ platform (module distribution and description of each brick's function).
+\item \emph{Chapter 3} defines the technical architecture of the \OT\ platform (technical choices).
+\item The \emph{bibliography} gives an alphabetical list of all references used in this document.
+\end{itemize}
+
+\section{Bibliography}
+The following subsections organize the bibliographical references used in this document according to the main fields at stake. For more details about each reference, please refer to the bibliography at the end of this document.
+\subsection{Modelling}
+\cite{UML}
+\cite{GoF}
+\subsection{C++ and STL}
+\cite{ARM}
+\cite{C++}
+\cite{EffC++}
+\cite{MeffC++}
+\cite{ModC++}
+\cite{GenSTL}
+\cite{EffSTL}
+\subsection{Multithreading}
+\cite{Thr}
+\subsection{Python}
+\cite{LearnPy}
+\cite{ProgPy}
+\cite{PY}
+\subsection{Qt}
+\cite{ProgQt}
+\subsection{Subversion}
+\cite{SvnBook}
+\cite{SVNWeb}
+\subsection{Websites}
+\cite{SWIG}
+\cite{BOOST}
+\cite{OT}
+\cite{OTDev}
+\cite{UNICODE}
+\cite{R}

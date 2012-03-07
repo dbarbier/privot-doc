@@ -1,0 +1,58 @@
+% Copyright (c)  2005-2010 EDF-EADS-PHIMECA.
+% Permission is granted to copy, distribute and/or modify this document
+% under the terms of the GNU Free Documentation License, Version 1.2
+% or any later version published by the Free Software Foundation;
+% with no Invariant Sections, no Front-Cover Texts, and no Back-Cover
+% Texts.  A copy of the license is included in the section entitled "GNU
+% Free Documentation License".
+\renewcommand{\filename}{docUC_MinMax_SpecifiedExperimentPlane.tex}
+\renewcommand{\filetitle}{UC : Re-use of a specified numerical sample as experiment plane}
+
+% \HeaderNNIILevel
+% \HeaderIILevel
+\HeaderIIILevel
+
+\label{fixedExpPlane}
+
+
+\index{Experiment Plane!Fixed experiment plane}
+
+The objective of this Use Case is to enable to re-use a experiment plane, previously elaborated.\\
+
+Details on experiment planes  may be found in the Reference Guide (\href{OpenTURNS_ReferenceGuide.pdf}{see files Reference Guide - Step C -- Min-Max approach using Experiment Planes}).\\
+
+Details on each object may be found in the User Manual  (\href{OpenTURNS_UserManual_TUI.pdf}{see User Manual - Experiment Planes / Stratified Experiment Planes}).\\
+
+
+This functionality is particularly interesting in the polynomial chaos technique, where the evaluation of the coefficients by regression requires the discretisation of a particular integral : to do that, the User may want to re-use a pre-existing numerical sample (for example, the sparse Smolyak grid) to parameterize algorithms which work with experiment plane structure (and not numerical sample one).\\
+
+When recalled, the {\itshape generate} method regives the specified numerical sample.\\
+
+
+\requirements{
+  \begin{description}
+  \item[$\bullet$] the previously elaborated  numerical sample : {\itshape mySample}
+  \item[type:] NumericalSample
+  \end{description}
+}
+{
+  \begin{description}
+  \item[$\bullet$] the experiment based on the numerical sample : {\itshape myFixedExperiment}
+  \item[type:] FixedExperiment
+  \end{description}
+}
+
+\textspace\\
+Python script for this UseCase :
+
+\begin{lstlisting}
+  # Create a fixed experiment plane
+  myFixedExperiment = FixedExperiment(mySample)
+\end{lstlisting}
+
+
+
+
+
+
+

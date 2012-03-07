@@ -1,0 +1,10 @@
+.svn
+*.log
+*.ignore
+libltdl.tar.gz
+aclocal.m4
+Makefile.in
+configure
+autom4te.cache
+build
+install

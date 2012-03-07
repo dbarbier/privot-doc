@@ -1,0 +1,92 @@
+% Copyright (c)  2005-2010 EDF-EADS-PHIMECA.
+% Permission is granted to copy, distribute and/or modify this document
+% under the terms of the GNU Free Documentation License, Version 1.2
+% or any later version published by the Free Software Foundation;
+% with no Invariant Sections, no Front-Cover Texts, and no Back-Cover
+% Texts.  A copy of the license is included in the section entitled "GNU
+% Free Documentation License".
+\renewcommand{\filename}{docUC_StocProc_Process.tex}
+\renewcommand{\filetitle}{UC : Manipulation of a process}
+
+% \HeaderNNIILevel
+ \HeaderIILevel
+%\HeaderIIILevel
+
+\label{UCprocess}
+
+
+\index{Stochastic Process!Process Manipulation}
+
+
+We recall that  $\underline{X}(\omega,t)$ is a stochastic process, where $\omega \in \Omega$ is an event, $t \in \mathbb{R}$ is the time and $\underline{X}(\omega,t) \in \mathbb{R}^d$ are the observed values of the process at each time $t$.\\
+
+The objective here is to manipulate a stochastic process, once created according to a particular model : 
+\begin {itemize}
+  \item to extract its marginal process $j$ for $ \in [0,d-1]$ : $\underline{X}_j(\omega,t)$ thanks to the method \emph{getMarginalProcess};
+  \item to get its dimension $d$  thanks to the method \emph{getDimension};
+  \item to get one or several realization(s) of the process, thanks to the methods \emph{getRealization}, \emph{getSample};
+  \item to get its time grid, thanks to the method \emph{getTimeGrid};
+  \item to check wether the process is normal, thanks to the method \emph{isNormal};
+  \item to check wether the process is stationnary, thanks to the method \emph{isStationnary};
+\end{itemize}
+
+Details on each object may be found in the User Manual  (\href{OpenTURNS_UserManual_TUI.pdf}{see User Manual - Stochastic Process}).\\
+
+\requirements{
+  \begin{description}
+  \item[$\bullet$] a stochastic process {\itshape myProcess}
+  \item[type:]  Process
+  \end{description}
+}
+{
+  \begin{description}
+  \item[$\bullet$] a time grid : {\itshape myTimeGrid}
+  \item[type:]  RegularGrid
+  \end{description}
+
+  \begin{description}
+  \item[$\bullet$] a time series : {\itshape myRealization}
+  \item[type:]  TimeSeries
+  \end{description}
+
+  \begin{description}
+  \item[$\bullet$] a sample of time series : {\itshape myRealisationSample}
+  \item[type:] ProcessSample
+  \end{description}
+
+  \begin{description}
+  \item[$\bullet$] a stochastic process {\itshape myMarginalProcess}
+  \item[type:]  Process
+  \end{description}
+}
+
+\textspace\\
+Python script for this UseCase :
+
+\begin{lstlisting}
+  # Get the dimension d of the process  
+  dimension = myProcess.getDimension()
+
+  # Get the time grid of the process
+  myTimeGrid = myProcess.getTimeGrid()
+
+  # Get a realisation of the process
+  myRealisation = myProcess.getRealization()
+
+  # Get several realisations of the process
+  number = 10
+  myRealizationSample = myProcess.getSample(number)
+
+  # Get the marginal of the process at index i
+  # Care! Numerotation begins at i=0
+  myMarginalProcess = myProcess.getMarginalProcess(i)
+
+  # Get the marginal of the process at index in indices
+  myMarginalProcess = myProcess.getMarginalProcess(indices)
+
+  # Check  wether the process is normal
+  print myProcess.isNormal()
+
+  # Check  wether the process is stationnary
+  print myProcess.isStationnary()
+\end{lstlisting}

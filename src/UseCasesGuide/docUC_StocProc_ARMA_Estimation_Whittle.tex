@@ -1,0 +1,150 @@
+% Copyright (c)  2005-2010 EDF-EADS-PHIMECA.
+% Permission is granted to copy, distribute and/or modify this document
+% under the terms of the GNU Free Documentation License, Version 1.2
+% or any later version published by the Free Software Foundation;
+% with no Invariant Sections, no Front-Cover Texts, and no Back-Cover
+% Texts.  A copy of the license is included in the section entitled "GNU
+% Free Documentation License".
+\renewcommand{\filename}{docUC_StocProc_ARMA_Estimation_Whittle.tex}
+\renewcommand{\filetitle}{UC : Estimation of an ARMA model using the Whittle likelihood function}
+
+% \HeaderNNIILevel
+% \HeaderIILevel
+\HeaderIIILevel
+
+\label{ARMAEstimationWhittle}
+
+
+\index{Stochastic Process!ARMA}
+
+
+The objective of the UseCase is to estimate an ARMA model from a time series using the Whittle estimator. \\
+We make assumption that the white noise is gaussian and that the order of the model is known (AR and MA sizes).
+The coefficients of the model and the variance of the a priori gaussian white noise have to be estimated. 
+The Whittle method bases on the maximization of the likelihood function in frequency domain. 
+Let us present quickly the estimator (which is implemented currently in OpenTURNS only for dimension $1$). \\ 
+
+We consider a time series of size $n$ for which an ARMA representation is available and orders were identified.
+Thus by using the notation of an ARMA process given in equation \ref{dim1}, the spectrum writes :
+
+\begin{equation}{\label{arma_spectrum}}
+f(\lambda, \theta, \sigma^2) = \frac{\sigma^2}{2 \pi} \frac{|1 + b_1 \exp(-\imath \lambda) + \ldots + b_q \exp(-\imath q \lambda)|^2}{|1 + a_1 \exp(-\imath \lambda) + \ldots + a_p \exp(-\imath p \lambda)|^2}
+\end{equation}
+
+with :
+\begin{itemize}
+\item $\theta$=$(a_1, a_2,...,a_p,b_1,...,b_q)$ are the $p+q$ parameters of the model;
+\item $\sigma^2$ is the variance of the gaussian white noise;
+\item $\lambda$ is the frequency value;
+\end{itemize}
+
+We notice $g$ the ratio function in the spectrum expression as :
+\begin{equation*}
+g(\lambda) = \frac{|1 + b_1 \exp(-\imath \lambda) + \ldots + b_q \exp(-\imath q \lambda)|^2}{|1 + a_1 \exp(-\imath \lambda) + \ldots + a_p \exp(-\imath p \lambda)|^2}
+\end{equation*}
+
+The Whittle likelihood associated to such a process is defined as following :
+
+\begin{equation}{\label{arma_likelihood}}
+\log Lw(\theta, \sigma^2) = - \sum_{j=1}^{m} log f(\lambda_j,  \theta, \sigma^2) - \frac{1}{2 \pi} \sum_{j=1}^{m} \frac{I(\lambda_j)}{f(\lambda_j,  \theta, \sigma^2)}
+\end{equation}
+
+with :
+\begin{itemize}
+\item $I$ is the periodogram. A tapered periodogram is prefered to this last one using for example the Welch method because of better statistical properties;
+\item $\lambda_j$ is the $j-th$ Fourier frequency, $\lambda_j = \frac{2 \pi j}{n}$, $j=1 \ldots m$ with $m$ the largest integer contained in $\frac{n-1}{2}$
+\end{itemize}
+
+$p+q+1$ scalar coefficients have to be estimated by maximizing the likelihood function. We notice that in the \ref{arma_likelihood}, we could isolate the variance.
+Indeed by derivating the likelihood with respect to $\sigma^2$, we get the optimal variance which maximizes the likelihood :
+\begin{equation*}
+\sigma^{2*} = \frac{1}{m} \sum_{j=1}^{m} \frac{I(\lambda_j)}{g(\lambda_j)}
+\end{equation*}
+
+We introduce the optimal variance expression in equation \ref{arma_likelihood} and we get a new and reduced expression of the likelihood function :
+\begin{equation*}
+\log Lw(\theta) = m (\log(2 \pi) - 1) - m \log\left( \frac{1}{m} \sum_{j=1}^{m} \frac{I(\lambda_j)}{g(\lambda_j)}\right) - \sum_{j=1}^{m} g(\lambda_j)
+\end{equation*}
+The $\theta$ maximizing this expression have to be estimated. 
+
+Notice that for a sample of realizations of an ARMA process, the estimate is similar except that the periodogram is computed differently. \\ \\
+
+In OpenTURNS, the $WhittleFactory$ enables to estimate the coefficients of an ARMA model using a time series (or a collection).
+OpenTURNS proceeds as follows :
+
+\begin{itemize}
+\item The value $p$ and $q$ are given to the \emph{WhittleFactory}. Also, by default, the Welch method is used to compute the periodogram (\emph{WelchFactory} with default parameters);
+\item The computation of the parameters of the model is done by maximizing the reduced equation of the likelihood function.
+This is done thanks to the method \emph{build} of the object \emph{WhittleFactory}
+\item The produced object is of type \emph{ARMA}. The white noise is gaussian with $\sigma^{2*}$.
+\end{itemize}
+
+Details on each object may be found in the User Manual (\href{OpenTURNS_UserManual_TUI.pdf}{see User Manual - Stochastic Process}).\\
+
+
+\requirements{
+  \begin{description}
+  \item[$\bullet$] order of the model : {\itshape p, q}
+  \item[type:]  integer
+  \end{description}
+
+
+  \begin{description}
+  \item[$\bullet$] a time series or collection of time series : {\itshape myTimeSeries}, {\itshape mySample}
+  \item[type:]  TimeSeries or ProcessSample
+  \end{description}
+
+  \begin{description}
+  \item[$\bullet$] the spectral factory : {\itshape mySpectralFactory}
+  \item[type:]  SpectralFactory
+  \end{description}
+
+}
+{
+  \begin{description}
+  \item[$\bullet$] the Whittle factory : {\itshape myFactory}
+  \item[type:]  WhittleFactory
+  \end{description}
+
+  \begin{description}
+  \item[$\bullet$] the white noise : {\itshape myWhiteNoise}
+  \item[type:]  WhiteNoise
+  \end{description}
+
+  \begin{description}
+  \item[$\bullet$] an ARMA process {\itshape myARMA}
+  \item[type:]  ARMA
+  \end{description}
+
+}
+
+\textspace\\
+Python script for this UseCase :
+
+\begin{lstlisting}
+
+  # Build a Whittle factory with default SpectralModelFactory (WelchFactory)
+  myFactory = WhittleFactory(p, q)
+
+  # For example, set WelchFactory as SpectralModelFactory
+  # the parameters are such as we split the time series in four blocs without overlap
+  myFilteringWindow = Hanning()
+  mySpectralFactory = Welch(myFilteringWindow, 4, 0)
+  
+  # Before setting the spectral model factory, get the default one
+  myDefaultSpectralModelFactory = myFactory.getSpectralModelFactory()
+
+  # now fix the new one
+  myFactory.setSpectralModelFactory(mySpectralFactory)
+
+  # Estimate the arma model from a time series
+  myARMA = factory.build(myTimeSeries)
+
+  # Estimate the arma model from a process sample
+  #myARMA = factory.build(mySample)
+
+  # Get the white noise of the arma given
+  myWhiteNoise = myARMA.getWhiteNoise()
+
+\end{lstlisting}
+

@@ -1,0 +1,407 @@
+% Copyright (c)  2005-2010 EDF-EADS-PHIMECA.
+% Permission is granted to copy, distribute and/or modify this document
+% under the terms of the GNU Free Documentation License, Version 1.2
+% or any later version published by the Free Software Foundation;
+% with no Invariant Sections, no Front-Cover Texts, and no Back-Cover
+% Texts.  A copy of the license is included in the section entitled "GNU
+% Free Documentation License".
+
+
+\newpage\section{Response Surface : Parametric Approximation}
+
+
+
+
+\subsection{Taylor approximation}
+
+\subsubsection{LinearTaylor}
+
+\begin{description}
+
+\item[Usage :] $LinearTaylor(center, function)$
+  \bigskip
+
+\item[Arguments :]  \rule{0pt}{1em}
+  \begin{description}
+  \item $center$ : a NumericalPoint, the point where the Taylor expansion of the function $function$ is performed
+  \item $function$ : a NumericalMathFunction, the function to be approximated.
+  \end{description}
+
+\item[Value :] a LinearTaylor
+
+\item[Some methods :]  \rule{0pt}{1em}
+  \begin{description}
+
+  \item $getInputFunction$
+    \begin{description}
+    \item[Usage :] $getInputFunction$
+    \item[Arguments :] none
+    \item[Value :] a NumericalMathFunction, the function $function$
+    \end{description}
+    \bigskip
+
+  \item $getName$
+    \begin{description}
+    \item[Usage :] $getName()$
+    \item[Arguments :] none
+    \item[Value :] a string, the name of the LinearTaylor
+    \end{description}
+    \bigskip
+
+  \item $getCenter$
+    \begin{description}
+    \item[Usage :] $getCenter()$
+    \item[Arguments :] none
+    \item[Value :] a NumericalPoint, around which the approximation has been made : $center$
+    \end{description}
+    \bigskip
+
+  \item $run$
+    \begin{description}
+    \item[Usage :] $run()$
+    \item[Arguments :] none
+    \item[Value :] it performs the linear Taylor expansion around $center$
+      (while this method has not been executed, only
+      $getInputFunction$, $getName$ and $setName$ methods can be used)
+    \end{description}
+    \bigskip
+
+  \item $getConstant$
+    \begin{description}
+    \item[Usage :] $getConstant()$
+    \item[Arguments :] none
+    \item[Value :] a NumericalPoint, the constant vector of the approximation, equal to $function(center)$
+    \end{description}
+    \bigskip
+
+  \item $getLinear$
+    \begin{description}
+    \item[Usage :] $getLinear()$
+    \item[Arguments :] none
+    \item[Value :] a Matrix, the gradient of the function $function$ at the point $center$ (the transposition of the jacobian matrix)
+    \end{description}
+    \bigskip
+
+
+  \item $getResponseSurface$
+    \begin{description}
+    \item[Usage :] $getResponseSurface()$ %
+    \item[Arguments :] none
+    \item[Value :] a NumericalMathFunction, an approximation of the function $function$ by a linear Taylor expansion at the $center$
+    \end{description}
+    \bigskip
+
+  \end{description}
+
+\item[Links :] \rule{0pt}{1em}
+  \href{./Version/docref_SurfRep_Taylor_en.pdf}{see docref\_SurfRep\_Taylor}
+\end{description}
+
+The methods $getInputFunction$, $getName$, $getCenter$ have their associated $setMethod$.
+
+% -=============================================================
+
+
+\newpage \subsubsection{QuadraticTaylor}
+
+\begin{description}
+
+\item[Usage :] $QuadraticTaylor(center, function)$
+
+\item[Arguments :]  \rule{0pt}{1em}
+  \begin{description}
+  \item $center$ : a NumericalPoint, the point where the quadratic Taylor expansion of
+    the function $function$ is performed
+  \item $function$ : a NumericalMathFunction, the function to be approximated : the gradient and  hessian of the NumericalMathFunction must be defined.
+  \end{description}
+
+\item[Value :] a QuadraticTaylor
+  \bigskip
+
+\item[Some methods :]  \rule{0pt}{1em}
+  \begin{description}
+
+  \item $getInputFunction$
+    \begin{description}
+    \item[Usage :] $getInputFunction$
+    \item[Arguments :] none
+    \item[Value :] a NumericalMathFunction, the function $function$
+    \end{description}
+    \bigskip
+
+  \item $getName$
+    \begin{description}
+    \item[Usage :] $getName()$
+    \item[Arguments :] none
+    \item[Value :] a string, the name of the QuadraticTaylor
+    \end{description}
+    \bigskip
+
+  \item $getCenter$
+    \begin{description}
+    \item[Usage :] $getCenter()$
+    \item[Arguments :] none
+    \item[Value :] a NumericalPoint, around which the approximation has been made : $center$
+    \end{description}
+    \bigskip
+
+  \item $run$
+    \begin{description}
+    \item[Usage :] $run()$
+    \item[Arguments :] none
+    \item[Value :] it performs the Quadratic Taylor expansion around $center$
+      (while this method has not been executed, only
+      $getInputFunction$, $getName$ and $setName$ methods can be used)
+    \end{description}
+    \bigskip
+
+  \item $getConstant$
+    \begin{description}
+    \item[Usage :] $getConstant()$
+    \item[Arguments :] none
+    \item[Value :] a NumericalPoint, the constant vector of the approximation, equal to $function(center)$
+    \end{description}
+    \bigskip
+
+  \item $getLinear$
+    \begin{description}
+    \item[Usage :] $getLinear()$
+    \item[Arguments :] none
+    \item[Value :] a Matrix, the gradient of the function $function$ at the point $center$ (the transposition of the jacobian matrix)
+    \end{description}
+    \bigskip
+
+  \item $getQuadratic$
+    \begin{description}
+    \item[Usage :] $getQuadratic()$
+    \item[Arguments :] none
+    \item[Value :] a SymmetricTensor which contains the 0.5 *  transposition of the hessian values of $function$ at $center$
+    \end{description}
+    \bigskip
+
+  \item $getResponseSurface$
+    \begin{description}
+    \item[Usage :] $getResponseSurface()$
+    \item[Arguments :] none
+    \item[Value :] a NumericalMathFunction, an approximation of the function $function$ by a Quadratic Taylor expansion at  $center$
+    \end{description}
+  \end{description}
+
+\item[Links :] \rule{0pt}{1em}
+  \href{./Version/docref_SurfRep_Taylor_en.pdf}{see docref\_SurfRep\_Taylor}
+
+  The methods $getInputFunction$, $getName$, $getCenter$ have their associated $setMethod$.
+
+\end{description}
+
+
+
+% ===================================================================
+
+
+\newpage \subsection{Least squares approximation}
+
+
+\subsubsection{LinearLeastSquares}
+
+\begin{description}
+
+\item[Usage :] \rule{0pt}{1em}
+  \begin{description}
+  \item $LinearLeastSquares(dataIn, function)$
+  \item $LinearLeastSquares(dataIn,dataOut)$
+  \end{description}
+
+\item[Arguments :]  \rule{0pt}{1em}
+  \begin{description}
+  \item $dataIn$ : a NumericalSample, the input variables
+  \item $function$ : a NumericalMathFunction, the function to be approximated
+  \item $dataOut$ : a NumericalSample, the output variables
+  \end{description}
+
+\item[Value :] a LinearLeastSquares, the linear least squares approximation between :
+  \begin{description}
+  \item the two samples  $dataIn$ and $dataOut$ in the case of the second usage
+  \item the two samples  $dataIn$ and $function(dataIn)$ in the case of the first usage
+  \end{description}
+
+\item[Some methods :]  \rule{0pt}{1em}
+  \begin{description}
+
+  \item $getInputFunction$
+    \begin{description}
+    \item[Usage :] $getInputFunction()$
+    \item[Arguments :] none
+    \item[Value :] a NumericalMathfunctiontion the $function$ parameter in the case of the first usage
+    \end{description}
+    \bigskip
+
+  \item $getDataIn$
+    \begin{description}
+    \item[Usage :] $getDataIn()$
+    \item[Arguments :] none
+    \item[Value :] a NumericalSample, the $dataIn$ parameter
+    \end{description}
+    \bigskip
+
+  \item $getName$
+    \begin{description}
+    \item[Usage :] $getName()$
+    \item[Arguments :] none
+    \item[Value :] a string, the name of the LinearLeastSquares
+    \end{description}
+    \bigskip
+
+
+  \item $run$
+    \begin{description}
+    \item[Usage :] $run()$
+    \item[Arguments :] none
+    \item[Value :] it performs the linear least squares approximation (while this method has not been executed, only $getInputfunctiontion$, $getDataIn$, $getName$ and $setName$ methods can be used)
+    \end{description}
+    \bigskip
+
+
+  \item $getDataOut$
+    \begin{description}
+    \item[Usage :] $getDataIn()$
+    \item[Arguments :] none
+    \item[Value :] a NumericalSample, it returns the ouput variable :
+      \begin{description}
+      \item in the case of the first usage, it corresponds to the values of the function $function$ at the input variables $dataIn$ : $function(dataIn)$
+      \item in the case of the second usage, it corresponds to  $dataOut$
+      \end{description}
+    \end{description}
+    \bigskip
+
+  \item $getLinear$
+    \begin{description}
+    \item[Usage :] $getLinear()$ %
+    \item[Arguments :] none
+    \item[Value :] a Matrix, the gradient of the function $function$ at the point $center$ (the transposition of the jacobian matrix)
+    \end{description}
+    \bigskip
+
+  \item $getResponseSurface$
+    \begin{description}
+    \item[Usage :] $getResponseSurface()$ %
+    \item[Arguments :] none
+    \item[Value :] a NumericalMathFunction, an approximation of the function $function$ by Linear Least Squares
+    \end{description}
+
+  \end{description}
+
+\item[Links :]
+  \href{./Version/docref_SurfRep_LeastSquare_en.pdf}{see docref\_SurfRep\_LeastSquare}
+\end{description}
+
+The methods $getInputFunction$, $getName$, $getDataIn$ have their associated $setMethod$.
+
+% ===================================================================
+
+
+\newpage \subsubsection{QuadraticLeastSquares}
+
+\begin{description}
+
+\item[Usage :]
+  \begin{description}
+  \item $QuadraticLeastSquares(dataIn, function)$
+  \item $QuadraticLeastSquares(dataIn, dataOut)$
+  \end{description}
+
+\item[Arguments :]  \rule{0pt}{1em}
+  \begin{description}
+  \item $dataIn$ : a NumericalSample, the input variables
+  \item $function$ : a NumericalMathFunction, the function to be approximated
+  \item $dataOut$ : a NumericalSample, the output variables
+  \end{description}
+
+\item[Value :] a QuadraticLeastSquares, the quadratic least squares approximation between :
+  \begin{description}
+  \item the two samples  $dataIn$ and $dataOut$ in the case of the second usage
+  \item the two samples  $dataIn$ and $function(dataIn)$ in the case of the first usage
+  \end{description}
+
+\item[Some methods :]  \rule{0pt}{1em}
+  \begin{description}
+
+  \item $getInputFunction$
+    \begin{description}
+    \item[Usage :] $getInputFunction$
+    \item[Arguments :] none
+    \item[Value :] a NumericalMathFunction, the function $function$
+    \end{description}
+    \bigskip
+
+  \item $getName$
+    \begin{description}
+    \item[Usage :] $getName()$
+    \item[Arguments :] none
+    \item[Value :] a string, the name of the QuadraticLeastSquares
+    \end{description}
+    \bigskip
+
+  \item $run$
+    \begin{description}
+    \item[Usage :] $run()$
+    \item[Arguments :] none
+    \item[Value :] it performs the quadratic least squares approximation
+      (while this method has not been executed, only
+      $getInputFunction$, $getName$ and $setName$ methods can be used)
+    \end{description}
+    \bigskip
+
+  \item $getDataOut$
+    \begin{description}
+    \item[Usage :] $getDataIn()$
+    \item[Arguments :] none
+    \item[Value :] a NumericalSample, it returns the ouput variable :
+      \begin{description}
+      \item in the case of the first usage, it corresponds to the values of the function $function$ at the input variables $dataIn$ : $function(dataIn)$
+      \item in the case of the second usage,  it corresponds to  $dataOut$
+      \end{description}
+    \end{description}
+    \bigskip
+
+  \item $getConstant$
+    \begin{description}
+    \item[Usage :] $getConstant()$
+    \item[Arguments :] none
+    \item[Value :] a NumericalPoint, the constant vector of the approximation, equal to $function(center)$
+    \end{description}
+    \bigskip
+
+  \item $getLinear$
+    \begin{description}
+    \item[Usage :] $getLinear()$
+    \item[Arguments :] none
+    \item[Value :] a Matrix, the linear matrix of the approximation
+    \end{description}
+    \bigskip
+
+
+  \item $getQuadratic$
+    \begin{description}
+    \item[Usage :] $getQuadratic()$
+    \item[Arguments :] none
+    \item[Value :] a SymmetricTensor, the quadratic term of the approximation
+    \end{description}
+
+  \item $getResponseSurface$
+    \begin{description}
+    \item[Usage :] $getResponseSurface()$ %
+    \item[Arguments :] none
+    \item[Value :] a NumericalMathFunction, an approximation of the function $function$ by Quadratic Least Squares
+    \end{description}
+
+  \end{description}
+
+\item[Links :]\rule{0pt}{1em}
+  \href{./Version/docref_SurfRep_LeastSquare_en.pdf}{see docref\_SurfRep\_LeastSquare}
+\end{description}
+
+The methods $getInputFunction$, $getName$, $getDataIn$ have their associated $setMethod$.
+
+% ===================================================================
+

@@ -1,0 +1,108 @@
+% Copyright (c)  2005-2010 EDF-EADS-PHIMECA.
+% Permission is granted to copy, distribute and/or modify this document
+% under the terms of the GNU Free Documentation License, Version 1.2
+% or any later version published by the Free Software Foundation;
+% with no Invariant Sections, no Front-Cover Texts, and no Back-Cover
+% Texts.  A copy of the license is included in the section entitled "GNU
+% Free Documentation License".
+\renewcommand{\filename}{docUC_ThresholdExceedance_FORMAlgorithm.tex}
+\renewcommand{\filetitle}{UC : Creation of an analytical algorithm : FORM/SORM}
+
+% \HeaderNNIILevel
+% \HeaderIILevel
+\HeaderIIILevel
+
+\label{analyticalRes}
+
+\index{Threshold Probability!FORM}
+\index{Threshold Probability!SORM}
+\index{Optimization!Cobyla}
+\index{Optimization!AbdoRacwitz}
+\index{Optimization!SQP}
+
+
+The objective of this Use Case is to create an analytical algorithm FORM or SORM, in order to evaluate in fine the event probability from the FORM or SORM  method and all the associated reliability indicators.\\
+
+
+
+
+Details on FORM algorithm may be found in the Reference Guide (\href{OpenTURNS_ReferenceGuide.pdf}{see files Reference Guide - Step C -- FORM}).\\
+
+
+Details on each object may be found in the User Manual  (\href{OpenTURNS_UserManual_TUI.pdf}{see User Manual - Threshold exceedance probability evaluation with reliability algorithm / Reliability Algorithms}).\\
+
+
+
+Be carefull, the ouput vector of interest, defined in the Event, must be of type {\itshape CompositeRandomVector }, which means defined from the relation : $output = limitStateFunction(input)$.\\
+
+The possible constraints algorithms  in Open TURNS are :
+\begin{itemize}
+\item Abdo-Rackwitz,
+\item Cobyla, which doesn't require the gradient evaluation of the limit state function,
+\item SQP.
+\end{itemize}
+The following Use Case illustrate the implementation of all of them and show how to parameterize them.\\
+
+It is often usefull to initialie the optimization of the algorithm to the mean of the input random vector, obtained thanks to the method $getMean()$.\\
+
+
+\requirements{
+  \begin{description}
+  \item[$\bullet$] the event in physical space : {\itshape myEvent}
+  \item[type:] Event
+  \item[$\bullet$] the starting vector of the optimization of the algorithm : {\itshape myStartingPoint}
+  \item[type:] NumericalPoint
+  \end{description}
+}
+{
+  \begin{description}
+  \item[$\bullet$] the FORM algorithm : {\itshape myFORMalgo}
+  \item[type:] FORM
+  \item[$\bullet$] the SORM algorithm : {\itshape mySORMalgo}
+  \item[type:] SORM
+  \end{description}
+}
+
+\textspace\\
+Python  script for this UseCase :
+
+\begin{lstlisting}
+  # Create a NearestPoint algorithm with Cobyla
+  myCobyla = Cobyla()
+
+  # The Cobyla algorithm has default specific parameters
+  # To get them, write
+  print "Default Parameters of Cobyla = ", myCobyla.getSpecificParameters()
+
+  # It is possible to change the default values of the specific parameters :
+  # For that, create the object CobylaSpecificParameters()
+  myCobylaSpecificParameters = CobylaSpecificParameters()
+  # Then change the values of the parameters : for example, the RhoBeg parameter
+  myCobylaSpecificParameters.setRhoBeg(myValue)
+  # Give these new parameters to the Cobyla algoithm
+  myCobyla.setSpecificParameters(myCobylaSpecificParameters)
+
+  # We could have created a NearestPoint algorithm with AbdoRackwitz
+  myAbdoRackwitz = AbdoRackwitz()
+
+  # We could have created a NearestPoint algorithm with SQP
+  mySQP = SQP()
+
+  # Change the general parameters of the algorithm
+  myCobyla.setMaximumIterationsNumber(100)
+  myCobyla.setMaximumAbsoluteError(1.0e-10)
+  myCobyla.setMaximumRelativeError(1.0e-10)
+  myCobyla.setMaximumResidualError(1.0e-10)
+  myCobyla.setMaximumConstraintError(1.0e-10)
+  print  "myCobyla=", myCobyla
+
+  # Create a FORM or SORM algorithm :
+  # The first parameter is a NearestPointAlgorithm
+  # The second parameter is an Event in the physical space
+  # The third parameter is a starting point for the design point research
+
+  myAlgo = FORM(myCobyla, myEvent, myStartingPoint)
+  print  "FORM=" , myAlgo
+
+  myAlgo = SORM(myCobyla, myEvent, myStartingPoint)
+\end{lstlisting}

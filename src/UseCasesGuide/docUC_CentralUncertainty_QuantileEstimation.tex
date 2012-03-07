@@ -1,0 +1,137 @@
+% Copyright (c)  2005-2010 EDF-EADS-PHIMECA.
+% Permission is granted to copy, distribute and/or modify this document
+% under the terms of the GNU Free Documentation License, Version 1.2
+% or any later version published by the Free Software Foundation;
+% with no Invariant Sections, no Front-Cover Texts, and no Back-Cover
+% Texts.  A copy of the license is included in the section entitled "GNU
+% Free Documentation License".
+\renewcommand{\filename}{docUC_CentralUncertainty_QuantileEstimation.tex}
+\renewcommand{\filetitle}{UC : Quantile estimations : Wilks and empirical estimators}
+
+% \HeaderNNIILevel
+% \HeaderIILevel
+\HeaderIIILevel
+
+
+
+\index{Quantile!Empirical estimation}
+\index{Quantile!Wilks estimation}
+\index{Wilks}
+
+The objective of this Use Case is to evaluate a particular quantile, with the empirical estimator or the Wilks one, from a numerical sample of the random variable. Each estimation is associated to a confidence interval, which level is specified. \\
+
+
+Details on probability estimators  may be found in the Reference Guide (\href{OpenTURNS_ReferenceGuide.pdf}{see files Reference Guide - Step C -- Estimating a quantile by Sampling / Wilks Method}).\\
+
+
+Details on each object may be found in the User Manual  (\href{OpenTURNS_UserManual_TUI.pdf}{see User Manual - Threshold exceedance probability evaluation with simulation / Wilks}).\\
+
+
+
+Let's suppose we want to estimate the quantile $q_{\alpha}$ of order $\alpha$ of the variable $Y$ : $Proba(Y \leq q_{\alpha}) = \alpha$, from the numerical sample $(Y_1, ..., Y_n)$ of size $n$, with a confidence level equal to $\beta$. We note $(Y^(1), ..., Y^(n))$ the numerical sample where the values are sorted in ascending order.\\
+The empirical estimator,  noted $q_{\alpha}^{emp}$, and its confidence intervall, is defined by the expressions :
+$$
+\left\{
+  \begin{array}{lcl}
+    q_{\alpha}^{emp} & = & Y^{(E[n\alpha])} \\
+    P(q_{\alpha} \in [Y^{(i_n)}, Y^{(j_n)}]) & = & \beta \\
+    i_n & = & E[n\alpha - a_{\alpha}\sqrt{n\alpha(1-\alpha)}] \\
+    i_n & = & E[n\alpha + a_{\alpha}\sqrt{n\alpha(1-\alpha)}]
+  \end{array}
+\right.
+$$
+The Wilks estimator,  noted $q_{\alpha, \beta}^{Wilks}$, and its confidence intervall, is defined by the expressions :
+$$
+\left\{
+  \begin{array}{lcl}
+    q_{\alpha, \beta}^{Wilks} & = & Y^{(n-i)} \\
+    P(q_{\alpha}  \leq q_{\alpha, \beta}^{Wilks}) & \geq & \beta \\
+    i\geq 0 \, \, /  \, \, n \geq N_{Wilks}(\alpha, \beta,i)
+  \end{array}
+\right.
+$$
+
+Once the order $i$ has been chosen, the Wilks number $N_{Wilks}(\alpha, \beta,i)$ is evaluated by Open TURNS, thanks to the static method $ComputeSampleSize(\alpha, \beta, i)$ of the $Wilks$ object.\\
+
+In the example, we want to evaluate a quantile $\alpha = 95\%$, with a confidence level of $\beta = 90\%$ thanks to the $4$th maximum of the ordered sample (associated to the order $i = 3$).\\
+Care : $i=0$ signifies that the Wilks estimator is the maximum of the numerical sample : it corresponds to the first maximum of the numerical sample.\\
+
+Before any simulation, we initialise the state of the random generator.\\
+
+The method {\itshape computeQuantile} evaluates the empirical quantile from a numerical sample in the case of dimension $n \geq 1$. However, the evaluation of the confidence interval is given only in the case of dimension 1.\\
+Furter more, the Wilks estimator and its confidence interval is evaluated in the case of dimension 1 only.\\
+
+\requirements{
+  \begin{description}
+  \item[$\bullet$] the output variable of interest  of dimension 1 : {\itshape output}
+  \item[type:] RandomVector
+  \end{description}
+}
+{
+  \begin{description}
+  \item[$\bullet$] the quantile estimators
+  \item[type:] NumericalSaclar
+  \item[$\bullet$] Confidence Interval length
+  \item[type:] NumericalScalar
+  \end{description}
+}
+
+\textspace\\
+Python script for this UseCase :
+
+\begin{lstlisting}
+  # Order of the quantile to estimate
+  alpha = 0.95
+
+  # Confidence level of the estimation
+  beta = 0.90
+
+
+  # Empirical Quantile Estimator
+
+  # Get the numerical sample of the variable
+  N = 10^4
+  outputNumericalSample = output.getNumericalSample(N)
+
+  # Get the empirical estimation
+  empiricalQuantile = outputNumericalSample.computeQuantile(alpha)
+
+  # Confidence interval of the Empirical Quantile Estimator
+  # Get the indices of the confidence interval bounds
+  aAlpha = Normal(1).computeQuantile((1-beta)/2)
+  min = int(N*alpha - aAlpha*sqrt{n*alpha*(1-alpha)})
+  max = int(N*alpha + aAlpha*sqrt{n*alpha*(1-alpha)})
+
+  # Get the sorted numerical sample
+  sortedOutputNumericalSample = outputNumericalSample.sort()
+
+  # Get the Confidence interval [infQuantile, supQuantile]
+  infQuantile =  sortedOutputNumericalSample[min][0]
+  infQuantile =  sortedOutputNumericalSample[max][0]
+
+
+  # Wilks Quantile Estimator
+
+  # Get the Wilks number : the minimal number of realizations to perform
+  # in order to garantee that the empirical quantile alpha be greater than
+  # the theoretical one with a probability of beta,
+  # when the empirical quantile is evaluated with the (n-i)th maximum of the sample.
+  # For the example, we consider alpha=0.95, beta=0.90 and i=3
+  # By default, i=0 (empirical quantile = maximum of the sample)
+  wilksNumber = Wilks.ComputeSampleSize(0.95, 0.90, 3)
+
+  # Get the numerical sample of the variable
+  outputNumericalSample = output.getNumericalSample(wilksNumber)
+
+  # Get the sorted numerical sample
+  sortedOutputNumericalSample = outputNumericalSample.sort()
+
+  # Calculate the indice of the Wilks quantile
+  indice = wilksNumber-i
+
+  # Get the empirical estimation
+  wilksQuantile = sortedOutputNumericalSample[indice][0]
+\end{lstlisting}
+
+
+

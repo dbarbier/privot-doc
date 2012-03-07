@@ -1,0 +1,86 @@
+\newpage
+
+\section{Taylor decomposition of the limit state function}
+
+\subsection{QuadraticCumul}
+\begin{description}
+
+\item[Usage :]  $QuadraticCumul(randVect)$
+
+\item[Arguments :]  $randVect$ : a RandomVector, constraint : this RandomVector must be of type Composite, which means it must have been defined with the second usage of declaration of a RandomVector (from a NumericalMathFunction and an antecedent Distribution)
+
+\item[Value :] a QuadraticCumul
+
+\item[Some methods :]  \rule{0pt}{1em}
+
+  \begin{description}
+
+  \item $drawImportanceFactors$
+    \begin{description}
+    \item[Usage :] $drawImportanceFactors()$
+    \item[Arguments :] none
+    \item[Value :] a Graph, the structure containing the pie corresponding to the importance factors of the probabilistic variables
+    \end{description}
+    \bigskip
+
+  \item $getCovariance$
+    \begin{description}
+    \item[Usage :] $getCovariance()$
+    \item[Arguments :] none
+    \item[Value :] a CovarianceMatrix, approximation of first order of the covariance matrix of the random vector
+    \end{description}
+    \bigskip
+
+  \item $getImportanceFactors$
+    \begin{description}
+    \item[Usage :] $getImportanceFactors()$
+    \item[Arguments :] none
+    \item[Value :] a NumericalPoint, the importance factors of the inputs : only when $randVect$ is of dimension 1
+    \end{description}
+
+    \bigskip
+  \item $getMeanFirstOrder$
+    \begin{description}
+    \item[Usage :] $getMeanFirstOrder()$
+    \item[Arguments :] none
+    \item[Value :] a NumericalPoint, approximation at the first order of the mean of the random vector
+    \end{description}
+    \bigskip
+
+
+  \item $getMeanSecondOrder$
+    \begin{description}
+    \item[Usage :] $getMeanSecondOrder()$
+    \item[Arguments :] none
+    \item[Value :] a NumericalPoint, approximation at the second order of the mean of the random vector (it requires that the hessian of the NumericalMathFunction has been defined)
+    \end{description}
+    \bigskip
+
+  \item $getValueAtMean$
+    \begin{description}
+    \item[Usage :] $getValueAtMean()$
+    \item[Arguments :] none
+    \item[Value :] a NumericalPoint, the value of the NumericalMathFunction which defines the random vector at the mean point of the input random vector
+    \end{description}
+    \bigskip
+
+  \item $getGradientAtMean$
+    \begin{description}
+    \item[Usage :] $getGradientAtMean()$
+    \item[Arguments :] none
+    \item[Value :] a Matrix, the gradient of the NumericalMathFunction which defines the random vector at the mean point of the input random vector
+    \end{description}
+    \bigskip
+
+  \item $getHessianAtMean$
+    \begin{description}
+    \item[Usage :] $getHessianAtMean()$
+    \item[Arguments :] none
+    \item[Value :] a SymmetricTensor, the hessian of the NumericalMathFunction which defines the random vector at the mean point of the input random vector
+    \end{description}
+
+  \end{description}
+
+\end{description}
+
+

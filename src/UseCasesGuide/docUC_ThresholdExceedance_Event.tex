@@ -1,0 +1,73 @@
+% Copyright (c)  2005-2010 EDF-EADS-PHIMECA.
+% Permission is granted to copy, distribute and/or modify this document
+% under the terms of the GNU Free Documentation License, Version 1.2
+% or any later version published by the Free Software Foundation;
+% with no Invariant Sections, no Front-Cover Texts, and no Back-Cover
+% Texts.  A copy of the license is included in the section entitled "GNU
+% Free Documentation License".
+\renewcommand{\filename}{docUC_ThresholdExceedance_Event.tex}
+\renewcommand{\filetitle}{UC : Creation of an event in the physical and the standard spaces}
+
+% \HeaderNNIILevel
+% \HeaderIILevel
+\HeaderIIILevel
+
+\label{StandardPhysicalEvent}
+
+\index{Event!Physical space}
+\index{Event!Standard space}
+
+
+This section gives elements to create events in the physical space {\itshape Event} and in the standard space {\itshape StandardEvent}.\\
+
+
+
+Details on isoproabilitic transformations  may be found in the Reference Guide (\href{OpenTURNS_ReferenceGuide.pdf}{see files Reference Guide - Step C -- Isoprobabilistic transformation preliminary to FORM-SORM methods}).\\
+
+
+Details on each object may be found in the User Manual  (\href{OpenTURNS_UserManual_TUI.pdf}{see User Manual - Threshold exceedance probability evaluation with reliability algorithm / Reliability Algorithms}).\\
+
+
+
+The example here is the output variable {\itshape output} defined from the limit state function {\itshape poutre} defined in  Eq.(\ref{equatPoutre}) and the input random  vector $(E,F,L,I)$. The event considered is :
+$$
+myEvent = \{ (E,F,L,I) \in \mathbb{R}^4 / poutre(E,F,L,I) \leq -1.5\}.
+$$
+
+\requirements{
+  \begin{description}
+  \item[$\bullet$] the random input vector : {\itshape input}
+  \item[type:] RandomVector which implementation is a UsualRandomVector
+  \item[$\bullet$] the output variable of interest : {\itshape output} of dimension 1
+  \item[type:] RandomVector which implementation is a CompositeRandomVector
+  \end{description}
+}
+{
+  \begin{description}
+  \item[$\bullet$] the events in the physical and standard spaces : {\itshape myEvent}, {\itshape myStandardEvent}
+  \item[type:] Event and StandardEvent
+  \end{description}
+}
+
+\textspace\\
+Python  script for this UseCase :
+
+\begin{lstlisting}
+  # To have a beautifull graph of importance factors,
+  # give the output random variable a name
+  output.setName("Output_1")
+
+  # Create an event in the physical space
+  # from the variable of interest 'output'
+  # Give it a name ofr graphs
+  myEvent = Event(output, ComparisonOperator(Less()), -1.5, "Event 1")
+
+  # Create an standard event in the standard space
+  # 1 : from the variable of interest 'output'
+  myStandardEvent = StandardEvent(output,ComparisonOperator(Less()), 1.0)
+
+  # 2 : Build a standard event based on an event
+  myStandardEvent2 = StandardEvent(myEvent)
+\end{lstlisting}
+
+

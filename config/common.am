@@ -1,0 +1,122 @@
+#                                               -*- Makefile -*-
+#
+#  common.am
+#
+#  (C) Copyright 2005-2012 EDF-EADS-Phimeca
+#
+#  This library is free software; you can redistribute it and/or
+#  modify it under the terms of the GNU Lesser General Public
+#  License as published by the Free Software Foundation; either
+#  version 2.1 of the License.
+#
+#  This library is distributed in the hope that it will be useful
+#  but WITHOUT ANY WARRANTY; without even the implied warranty of
+#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+#  Lesser General Public License for more details.
+#
+#  You should have received a copy of the GNU Lesser General Public
+#  License along with this library; if not, write to the Free Software
+#  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307 USA
+#
+#  @author: $LastChangedBy: schueller $
+#  @date:   $LastChangedDate: 2012-02-27 14:48:06 +0100 (lun. 27 févr. 2012) $
+#  Id:      $Id: common.am 1539 2012-02-27 13:48:06Z schueller $
+#
+
+latex2htmldir = $(top_srcdir)/latex2html
+latexpaths = :.:$(top_builddir)/src:$(srcdir):$(latex2htmldir):
+
+if WITH_TRALICS
+tralicsflags = -oe8 -noentnames -nozerowidthspace
+tralicsflags += -confdir=@TRALICS_CONFDIR@ -confdir=$(latex2htmldir)
+tralicsflags += -inputdir=.:$(top_builddir)/src:$(srcdir)
+tralicsflags += -outputdir=$(builddir)
+endif
+
+CLEANFILES = *.aux *.lg *.4ct *.4tc *.log *.ps *~ *.xhtml *.xml *.plt
+CLEANFILES += *.dvi *.idv *.tmp *.xref *.toc *.out *.idx *.ind *.ilg
+CLEANFILES += *.4dx *.4ix *.lot *.lof *.bbl *.blg $(doc_DATA)
+
+
+.tex.pdf:
+	@echo "*** INFO: first pdflatex compilation"
+	if test ! -e ../logoOpenTURNS.jpg; then \
+	  ln -s "$(abs_srcdir)/../logoOpenTURNS.jpg" ../logoOpenTURNS.jpg ; \
+	fi
+	TEXINPUTS=$(latexpaths) $(PDFLATEX) $<
+	@echo "*** INFO: generating the index"
+	if test -f $*.idx; then \
+	  $(MAKEINDEX) $*.idx ; \
+	fi
+	@echo "*** INFO: creating the bibliography"
+	if ls $(srcdir)/*.bib > /dev/null 2>&1 ; then \
+	  BIBINPUTS=:$(srcdir): $(BIBTEX) $*.aux ; \
+	fi
+	@echo "*** INFO: inserting the table of contents"
+	TEXINPUTS_pdflatex=$(latexpaths) $(PDFLATEX) $<
+	@echo "*** INFO: inserting the labels"
+	TEXINPUTS_pdflatex=$(latexpaths) $(PDFLATEX) $< -o $(top_builddir)/$*.pdf
+	if test -h ../logoOpenTURNS.jpg; then \
+	  rm -f ../logoOpenTURNS.jpg ; \
+	fi
+
+
+if WITH_LIBXSLT
+if WITH_TRALICS
+.sty.plt:
+	ln -s $< $@
+
+# Currently, tralics errors are ignored.
+# If you want strict error checking, replace the line that calls tralics with:
+#	$(TRALICS) $(tralicsflags) $<
+.tex.xml:
+	@echo "*** INFO: tralics compilation"
+	($(TRALICS) $(tralicsflags) $< ; true)
+
+.xml.xhtml:
+	@echo "*** INFO: generating the HTML file"
+	$(XSLTPROC) --novalid $(latex2htmldir)/latex2html.xsl $< > cut.xml
+	@echo "*** INFO: cutting it into pieces"
+	$(XSLTPROC) $(latex2htmldir)/scissors.xsl cut.xml > /dev/null
+	@echo "*** INFO: glueing it into one big page"
+	$(XSLTPROC) --novalid $(latex2htmldir)/glue.xsl cut.xml > $@
+
+.xhtml.tgz:
+	@echo "*** INFO: copying related files"
+	fulldirname=`pwd` ; \
+	dirname=`basename "$$fulldirname"` ; \
+	for file in ../logoOpenTURNS.jpg ../OpenTURNS.css \
+	            ../PreviousButton.png ../UpButton.png ../NextButton.png \
+	            `(cd $(top_srcdir)/src/$$dirname; find -name "*.png")`; do \
+	  if test ! -e $$file; then \
+	    ln -s "$(abs_srcdir)/$$file" $$file ; \
+	  fi ; \
+	done
+	@echo "*** INFO: creating the tarball"
+	fulldirname=`pwd` ; \
+	dirname=`basename "$$fulldirname"` ; \
+	cd .. ; \
+	tar czhf $$dirname/$@ $$dirname/*.xhtml \
+	         logoOpenTURNS.jpg OpenTURNS.css \
+	         PreviousButton.png UpButton.png NextButton.png \
+	         `find $$dirname -name "*.png"`
+	@echo "*** INFO: cleaning up"
+	fulldirname=`pwd` ; \
+	dirname=`basename "$$fulldirname"` ; \
+	for file in ../logoOpenTURNS.jpg ../OpenTURNS.css \
+	            ../PreviousButton.png ../UpButton.png ../NextButton.png \
+	            `(cd $(top_srcdir)/src/$$dirname; find -name "*.png")`; do \
+	  if test -h $$file; then \
+	    rm -f $$file ; \
+	  fi ; \
+	done
+
+.tgz.installed:
+	@echo "*** INFO: installing the HTML files"
+	mkdir -p $(DESTDIR)$(docdir)
+	dir=`pwd` ; \
+	cd $(DESTDIR)$(docdir) ; \
+	tar xzf "$$dir"/$<
+
+endif
+endif

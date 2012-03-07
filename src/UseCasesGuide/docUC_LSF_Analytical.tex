@@ -1,0 +1,85 @@
+% Copyright (c)  2005-2010 EDF-EADS-PHIMECA.
+% Permission is granted to copy, distribute and/or modify this document
+% under the terms of the GNU Free Documentation License, Version 1.2
+% or any later version published by the Free Software Foundation;
+% with no Invariant Sections, no Front-Cover Texts, and no Back-Cover
+% Texts.  A copy of the license is included in the section entitled "GNU
+% Free Documentation License".
+\renewcommand{\filename}{docUC_LSF_Analytical.tex}
+\renewcommand{\filetitle}{UC : From an analytical formula declared inline}
+
+% \HeaderNNIILevel
+% \HeaderIILevel
+\HeaderIIILevel
+
+
+\index{Limit State Function!Analytical formula declared in line}
+\index{Limit State Function!Gradient}
+\index{Limit State Function!Hessian}
+
+
+The objective of this Use Case is to specify the limit state function, defined through an analytical formula declared in line.\\
+
+Open TURNS automatically evaluates the analytical expressions of the gradient and the hessian, except if the analytical expression of the function is not differentiable everywhere. In that case, Open TURNS implements a finite difference method :
+\begin{itemize}
+\item the gradient evaluation method is the centered finite difference method, with the differential increment $h=1e-5$ for each direction,
+\item the hessian evaluation method is the centered finite difference method, with the differential increment $h=1e-4$ for each direction.
+\end{itemize}
+
+Details on each object may be found in the User Manual  (\href{OpenTURNS_UserManual_TUI.pdf}{see User Manual - Base Objects / NumericalMathFunction}).\\
+
+
+
+The example here is the analytical function {\itshape myAnalyticalFunction} defined by the formula :
+$$
+\begin{array}{l|cll}
+  myAnalyticalFunction : &   \mathbb{R}^2 & \rightarrow & \mathbb{R} \\
+  & (x_0, x_1)     & \mapsto     & y_0 = -(6+x_0^2-x_1)
+\end{array}
+$$
+
+In the case of functions $scalarF : \mathbb{R}  \rightarrow \mathbb{R}$, a simplified constructor exists that requires to define the description of the scalar input and the description of the formulas. We give the example where $scalarF(x) = x^2$.\\
+
+\textspace\\
+
+\requirements{
+  \begin{description}
+  \item[$\bullet$] none
+  \end{description}
+}
+{
+  \begin{description}
+  \item[$\bullet$] some functions : {\itshape myAnalyticalFunction, scalarF}
+  \item[type:] NumericalMathFunction
+  \end{description}
+}
+
+\textspace\\
+Python script for this UseCase :
+
+\begin{lstlisting}
+  # Case where f : R^n --> R^p
+  # Describe the input vector of dimension 2
+  inputFunc = Description( ("x0", "x1") )
+
+  # Describe the output vector of dimension 1
+  outputFunc = Description( ("Output Variable of Interest 1",) )
+
+  # Give the formulas
+  formulas = Description(outputFunc.getSize())
+  formulas[0] = "-(6 - x1 + x0^2)"
+  print "formulas=" , formulas
+
+  # Create the analytical function 
+  myAnalyticalFunction = NumericalMathFunction(inputFunc, outputFunc, formulas)
+
+  # Case where f : R --> R
+  scalarF = NumericalMathFunction('x','x^2')
+\end{lstlisting}
+
+or, the fast way:
+\begin{lstlisting} 
+  # Create the analyticalfunction 'myFunction'
+  myAnalyticalFunction = NumericalMathFunction( ("x0", "x1"), ("Output Variable of Interest 1",), ("-(6 - x1 + x0^2)",) )
+\end{lstlisting}
+

@@ -1,0 +1,84 @@
+% Copyright (c)  2005-2010 EDF-EADS-PHIMECA.
+% Permission is granted to copy, distribute and/or modify this document
+% under the terms of the GNU Free Documentation License, Version 1.2
+% or any later version published by the Free Software Foundation;
+% with no Invariant Sections, no Front-Cover Texts, and no Back-Cover
+% Texts.  A copy of the license is included in the section entitled "GNU
+% Free Documentation License".
+\renewcommand{\filename}{docUC_StocProc_SecondOrderNormalProcess_Creation.tex}
+\renewcommand{\filetitle}{UC : Creation of stationary normal process from temporal and spectral views}
+
+% \HeaderNNIILevel
+% \HeaderIILevel
+\HeaderIIILevel
+
+\label{SecondOrderNormalProcessCreation}
+\index{Stochastic Process!Normal Process}
+
+This UC details how to  manipulate the same centered stationary normal process $\vect{X}(\omega,t)$  through both the temporal and spectral views. For that purpose, it is necessary to create a second order model that insures the coherence between the convariance function $\tau \mapsto \mat{C}^{stat}(\tau)$ and the spectral density fucntion  $f \in \mathbb{R}^+ \mapsto \mat{G}(f)$ through the relation (\ref{specdensFunc}).\\
+
+OpenTURNS saves the complete second order model in the object {\itshape SecondOrderModel} that is used to create a {\itshape TemporalNormalProcess} and a {\itshape SpectralNormalProcess}.\\
+
+In that version, Open TURNS proposes the second order model {\itshape ExponentialCauchy} where the covariance function is the Exponential model defined in (\ref{TemporalNormalProcessCreation}) and the associated spectral density function is the Cauchy model defined in (\ref{SpectralNormalProcessCreation}).\\
+
+Details on each object may be found in the User Manual  (\href{OpenTURNS_UserManual_TUI.pdf}{see User Manual - StochasticProcess}).\\
+
+This modelization is used when it is possible the define both models, which is not always the case (for example, the spectral model is defined but the associated covariance model is not analytical).\\
+
+\requirements{
+  \begin{description}
+  \item[$\bullet$]  $\vect{a}$, $\vect{\lambda}$   : {\itshape amplitude, scale}
+  \item[type:]  NumericalPoint
+  \end{description}
+
+  \begin{description}
+  \item[$\bullet$]  $\mat{R}$,  : {\itshape spatialCorrelation}
+  \item[type:]  CorrelationMatrix
+  \end{description}
+
+  \begin{description}
+  \item[$\bullet$]  $\mat{C}^s$,  : {\itshape spatialCovariance}
+  \item[type:]  CovarianceMatrix
+  \end{description}
+
+}
+{
+
+  \begin{description}
+  \item[$\bullet$] a second order model : {\itshape mySecondOrderModel }
+  \item[type:] SecondOrderModel
+  \end{description}
+
+  \begin{description}
+  \item[$\bullet$] a spectral model : {\itshape myTemporalProcess}
+  \item[type:] SpectralModel
+  \end{description}
+
+  \begin{description}
+  \item[$\bullet$] the normal process : {\itshape mySpectralProcess}
+  \item[type:]  SpectralNormalProcess 
+  \end{description}
+
+}
+
+\textspace\\
+Python script for this UseCase :
+
+\begin{lstlisting}
+  # Create the second order model
+  # for example : the Exponential Cauchy
+
+  # from the amplitude, scale and spatialCovariance
+  mySecondOrderModel = ExponentialCauchy(amplitude, scale, spatialCorrelation)
+  # or from the scale and spatialCovariance
+  mySecondOrderModel = ExponentialCauchy(scale,spatialCovariance)
+ 
+  # Create the normal process to use its temporal properties
+  myTemporalProcess = TemporalNormalProcess(mySecondOrderModel, myTimeGrid)
+ 
+  # Create the normal process to use its spectral properties
+  mySpectralProcess = SpectralNormalProcess(mySecondOrderModel, myTimeGrid)
+\end{lstlisting}
+
+
+

@@ -1,0 +1,657 @@
+% Copyright (c)  2005-2010 EDF-EADS-PHIMECA.
+% Permission is granted to copy, distribute and/or modify this document
+% under the terms of the GNU Free Documentation License, Version 1.2
+% or any later version published by the Free Software Foundation;
+% with no Invariant Sections, no Front-Cover Texts, and no Back-Cover
+% Texts.  A copy of the license is included in the section entitled "GNU
+% Free Documentation License".
+\newpage\section{Threshold  probability : Reliability algorithms}
+
+
+
+\subsection{Reliability Algorithms}
+
+\subsubsection{Analytical}
+
+\begin{description}
+
+\item[Usage :] $Analytical(nearestPointAlgorithm, event, physicalStartingPoint)$
+
+\item[Arguments :]  \rule{0pt}{1em}
+  \begin{description}
+  \item $nearestPointAlgorithm$ :  a NearestPointAlgorithm, the optimization algorithm which will be used to research the design point
+  \item $event$ : a Event, the event we want to evaluate the probability
+  \item $physicalStartingPoint$ : a NumericalPoint, the starting point of the optimization research, declared in the physical space
+  \end{description}
+
+\item[Some methods :]  \rule{0pt}{1em}
+
+  \begin{description}
+
+  \item $getAnalyticalResult$
+    \begin{description}
+    \item[Usage :] $getAnalyticalResult()$
+    \item[Arguments :] none
+    \item[Value :]  a AlgorithmAnalyticalResult, the result structure which contains results
+    \end{description}
+    \bigskip
+
+  \item $getEvent$
+    \begin{description}
+    \item[Usage :] $getEvent()$
+    \item[Arguments :] none
+    \item[Value :]  a Event, the event we want to evaluate the probability
+    \end{description}
+    \bigskip
+
+  \item $getNearestPointAlgorithm$
+    \begin{description}
+    \item[Usage :] $getNearestPointAlgorithm()$
+    \item[Arguments :] none
+    \item[Value :]  a NearestPointAlgorithm, the optimization algorithm which will be used to research the design point
+    \end{description}
+    \bigskip
+
+  \item $getPhysicalStartingPoint$
+    \begin{description}
+    \item[Usage :] $getPhysicalStartingPoint()$
+    \item[Arguments :] none
+    \item[Value :]  a NumericalPoint, the starting point of the optimization research, declared in the physical space
+    \end{description}
+    \bigskip
+
+  \item $run$
+    \begin{description}
+    \item[Usage :] $run()$
+    \item[Arguments :] none
+    \item[Value :]  it performs the research design point and creates a AnalyticalResult, the structure result which is accessible with the method getAnalyticalResult().
+    \end{description}
+    \bigskip
+
+  \end{description}
+  The methods $getEvent$, $getNearestPointAlgorithm$ and $getPhysicalStartingPoint$ are associated to a $setMethod$.
+
+\item[Derivative Classes :] FORM ans SORM
+
+\end{description}
+
+
+% =============================================================
+
+\newpage \subsubsection{AnalyticalResult}
+
+\begin{description}
+
+\item[Usage :] structure created by the method run() of a Analytical and obtained thanks to the method $getAnalyticalResult()$
+
+\item[Some methods :]  \rule{0pt}{1em}
+
+  \begin{description}
+
+  \item $drawHasoferReliabilityIndexSensitivity$
+    \begin{description}
+    \item[Usage :] $drawHasoferReliabilityIndexSensitivity()$
+    \item[Arguments :] none
+    \item[Value :]  a GraphCollection (the collection of two barplots) drawing the sensitivity of the Hasofer Reliability Index to the parameters of the marginals of the probabilistic input vector (first graph) and to the parameters of the dependence structure of the probabilistic input vector (second graph).
+    \end{description}
+    \bigskip
+
+  \item $drawImportanceFactors$
+    \begin{description}
+    \item[Usage :] \rule{0pt}{1em}
+      \begin{description}
+      \item $drawImportanceFactors()$
+      \item $drawImportanceFactors(True)$
+      \end{description}
+    \item[Arguments :] $True$ : a Boolean. When 'True', the importance factors are evaluated as the square of the co-factors of the design point in the $\bdU$-space (see (\ref{def1UM})) : 
+\begin{equation}\label{def1UM}
+    \alpha_i^2 = \displaystyle \frac{(u_i^{*})^2}{\beta_{HL}^2}
+  \end{equation}
+ When not specified, the importance fators are  evaluated as the square of the co-factors of the design point in the $\bdY$-space (see (\ref{def2UM})) : 
+\begin{equation}\label{def2UM}
+    \alpha_i^2 = \displaystyle \frac{(y_i^{*})^2}{||\vect{y}^{*}||^2}
+  \end{equation}
+where 
+  \begin{eqnarray}
+    \boldsymbol{Y}^* =  \left(
+      \begin{array}{c}
+        E^{-1}\circ F_1(X_1^*) \\
+        E^{-1}\circ F_2(X_2^*) \\
+        \vdots \\
+        E^{-1}\circ F_n(X_n^*)
+      \end{array}
+    \right).\label{varY10}
+  \end{eqnarray}
+whith $\vect{X}^*$ is the design point in the physical space and $E$ the univariate standard CDF of the elliptical space. \\
+In the case where the input distribution of $\vect{X}$ has an elliptical copula $C_E$, then $E$ has the same type as  $C_E$.\\
+In the case where the input distribution of $\vect{X}$ has a copula $C$ which is not elliptical, then  $E=\Phi$ where $\Phi$ is the CDF of the standard normal.
+    \item[Value :]  a Graph, the pie of the importance factors of the probabilistic variables
+    \end{description}
+    \bigskip
+    \bigskip
+
+  \item $getHasoferReliabilityIndex$
+    \begin{description}
+    \item[Usage :] $getHasoferReliabilityIndex()$
+    \item[Arguments :] none
+    \item[Value :]  a real positive value, the Hasofer Reliability Index
+    \end{description}
+    \bigskip
+
+  \item $getHasoferReliabilityIndexSensitivity$
+    \begin{description}
+    \item[Usage :] $getHasoferReliabilityIndexSensitivity()$
+    \item[Arguments :] none
+    \item[Value :]  a Sensitivity, the sensitivities of the Hasofer Reliability Index to the parameters of the probabilistic input vector (marginals and dependence structure)
+    \end{description}
+    \bigskip
+
+  \item $getImportanceFactors$
+    \begin{description}
+    \item[Usage :] \rule{0pt}{1em}
+      \begin{description}
+      \item $getImportanceFactors()$
+      \item $getImportanceFactors(True)$
+      \end{description}
+    \item[Arguments :] $True$ : a Boolean. When 'True', the importance factors are evaluated as the square of the co-factors of the design point in the $\bdU$-space (see (\ref{def1UM})).\\
+ When not specified, the importance fators are  evaluated as the square of the co-factors of the design point in the $\bdY$-space (see (\ref{def2UM})).
+    \item[Value :]  a NumericalPoint, the importance factors of probabilistic variables
+    \end{description}
+    \bigskip
+
+  \item $getIsStandardPointOriginInFailureSpace$
+    \begin{description}
+    \item[Usage :] $getIsStandardPointOriginInFailureSpace()$
+    \item[Arguments :] none
+    \item[Value :]  a boolean which indicates whether the origin of the standard space is in the failure space
+    \end{description}
+    \bigskip
+
+  \item $getLimitStateVariable$
+    \begin{description}
+    \item[Usage :] $getLimitStateVariable()$
+    \item[Arguments :] none
+    \item[Value :]  a Event, the event we evaluated the probability
+    \end{description}
+    \bigskip
+
+  \item $getMeanPointInStandardEventDomain$
+    \begin{description}
+    \item[Usage :] $getMeanPointInStandardEventDomain()$
+    \item[Arguments :] none
+    \item[Value :]  a NumericalPoint, the mean point of the standard space distribution restricted to the event domain : $\displaystyle \frac{1}{E_1(-\beta)}\int_{\beta}^{\infty} u_1 p_1(u_1)du_1$ where $E_1$ is the spheric univariate distribution of the standard space and $\beta$ the reliability index.
+    \end{description}
+
+  \item $getPhysicalSpaceDesignPoint$
+    \begin{description}
+    \item[Usage :] $getPhysicalSpaceDesignPoint()$
+    \item[Arguments :] none
+    \item[Value :]  a NumericalPoint, the starting point of the optimization research, declared in the physical space
+    \end{description}
+    \bigskip
+  \item $getStandardSpaceDesignPoint$
+    \begin{description}
+    \item[Usage :] $getStandardSpaceDesignPoint()$
+    \item[Arguments :] none
+    \item[Value :]  a NumericalPoint, the starting point of the optimization research, declared in the standard space
+    \end{description}
+    \bigskip
+  \end{description}
+
+\item[Derivative Classes :] FORMResult and SORMResult
+
+
+\end{description}
+
+
+% =============================================================
+\newpage \subsubsection{Event}
+
+
+
+\begin{description}
+
+\item[Usage :] \rule{0pt}{1em}
+  \begin{description}
+  \item $Event(antecedent, comparisonOperator, threshold)$
+  \item $Event(antecedent, comparisonOperator, threshold, name)$
+  \item $Event(antecedent, domain)$
+  \item $Event(antecedent, domain, name)$
+  \end{description}
+
+\item[Arguments :]  \rule{0pt}{1em}
+  \begin{description}
+  \item $antecedent$ : a RandomVector, of dimension 1 : the output variable of interest
+  \item $comparisonOperator$ : a ComparisonOperator, the comparison operator which is equal to $Less$, $Greater$, $LessOrEqual$ or $GreaterOrEqual$
+  \item $threshold$ : a real value, the threshold we want to compare to $antecedent$
+  \item $domain$ : a domain, the domain failure
+  \item $name$ : a string, the name of the event
+  \end{description}
+
+\item[Some methods :]  \rule{0pt}{1em}
+
+  \begin{description}
+
+  \item $getDimension$
+    \begin{description}
+    \item[Usage :] $getDimension()$
+    \item[Arguments :] none
+    \item[Value :]  an integer, the dimension of the probabilistic input vector
+    \end{description}
+    \bigskip
+  \item $getNumericalSample$
+    \begin{description}
+    \item[Usage :] $getNumericalSample(size)$
+    \item[Arguments :] $size$ : an integer, the size of the numerical sample generated
+    \item[Value :]  a NumericalSample filled with boolean values (1 for the realization of the event and 0 else) : $size$ realizations of the event (considered as a Bernoulli variable)
+    \end{description}
+    \bigskip
+  \item $getOperator$
+    \begin{description}
+    \item[Usage :] $getOperator()$
+    \item[Arguments :] none
+    \item[Value :]  a ComparisonOperator, the comparison operator of the event
+    \end{description}
+    \bigskip
+  \item $getRealization$
+    \begin{description}
+    \item[Usage :] $getRealization()$
+    \item[Arguments :] none
+    \item[Value :]  a NumericalPoint of dimension 1, filled with a boolean value (1 for the realization of the event and 0 else) : one realization of the event (considered as a Bernoulli variable)
+    \end{description}
+    \bigskip
+  \item $getThreshold$
+    \begin{description}
+    \item[Usage :] $getThreshold()$
+    \item[Arguments :] none
+    \item[Value :]  a real value, the threshold of the event
+    \end{description}
+    \bigskip
+  \end{description}
+
+\item[Derivative Class :] StandardEvent
+
+\end{description}
+
+% =============================================================
+\newpage \subsubsection{StandardEvent}
+
+
+This class inherits from Event.
+
+
+\begin{description}
+
+\item[Usage :] \rule{0pt}{1em}
+  \begin{description}
+  \item $StandardEvent( antecedent, comparisonOperator, threshold)$
+  \item $StandardEvent(antecedent, comparisonOperator, threshold, name)$
+  \item $StandardEvent(event)$
+  \end{description}
+
+\item[Arguments :]  \rule{0pt}{1em}
+  \begin{description}
+  \item $antecedent$ : a RandomVector, of dimension 1 : the output variable of interest
+  \item $comparisonOperator$ : a ComparisonOperator, the comparison operator which is equal to $Less$, $Greater$, $LessOrEqual$ or $GreaterOrEqual$
+  \item $threshold$ : a real value, the threshold we want to compare to $antecedent$
+  \item $name$ : a string, the name of the event
+  \item $event$ : a Event, the physical event associated to the standard event
+  \end{description}
+
+\end{description}
+
+
+
+% =============================================================
+\newpage \subsubsection{FORM}
+
+This class inherits from Analytical.
+
+\begin{description}
+
+\item[Usage :] $FORM(nearestPointAlgorithm, event, physicalStartingPoint)$
+
+\item[Arguments :]  \rule{0pt}{1em}
+  \begin{description}
+  \item $nearestPointAlgorithm$ :  a NearestPointAlgorithm, the optimization algorithm which will be used to research the design point
+  \item $event$ : a Event, the event in the physical space we want to evaluate the probability
+  \item $physicalStartingPoint$ : a NumericalPoint, the starting point of the optimization research, declared in the physical space
+  \end{description}
+
+\item[Some methods :]  \rule{0pt}{1em}
+
+  \begin{description}
+
+  \item $getResult$
+    \begin{description}
+    \item[Usage :] $getResult()$
+    \item[Arguments :] none
+    \item[Value :] a FORMResult, structure containing all the results of the FORM analysis
+    \end{description}
+    \bigskip
+
+  \item $run$
+    \begin{description}
+    \item[Usage :] $run()$
+    \item[Arguments :] none
+    \item[Value :] it creates a FORMResult, the optimization result which is accessible with the method getResult().
+    \end{description}
+    \bigskip
+
+  \end{description}
+
+
+\end{description}
+% =============================================================
+\newpage \subsubsection{FORMResult}
+
+This class inherits from AnalyticalResult.
+
+\begin{description}
+
+\item[Usage :] structure created by the method run() of a FORM and obtained thanks to the method $getResult()$
+
+\item[Some methods :]  \rule{0pt}{1em}
+
+  \begin{description}
+
+  \item $drawEventProbabilitySensitivity$
+    \begin{description}
+    \item[Usage :] $drawEventProbabilitySensitivity()$
+    \item[Arguments :] none
+    \item[Value :]  a GraphCollection (the collection of two barplots) drawing the sensitivities of the FORM Probability with regards to the parameters of the probabilistic input vector (first graph) and to parameters of the dependence structure of the probabilistic input vector (second graph)
+    \end{description}
+    \bigskip
+
+  \item $getEventProbability$
+    \begin{description}
+    \item[Usage :] $getEventProbability()$
+    \item[Arguments :] none
+    \item[Value :]  a positive real value, the FORM probability of the event
+    \end{description}
+    \bigskip
+
+  \item $getEventProbabilitySensitivity$
+    \begin{description}
+    \item[Usage :] $getEventProbabilitySensitivity()$
+    \item[Arguments :] none
+    \item[Value :]  a Sensitivity, the sentivities of the FORM Probability with regards to the parameters of the probabilistic input vector and to parameters of the dependence structure of the probabilistic input vector
+    \end{description}
+    \bigskip
+
+  \item $getGeneralisedReliabilityIndex$
+    \begin{description}
+    \item[Usage :] $getGeneralisedReliabilityIndexHohenBichler()$
+    \item[Arguments :] none
+    \item[Value :]  a  real value, the generalised reliability index evaluated from the FORM Probability. The generalised reliability index from the FORM probability is equal to $\pm$ the Hasofer reliability index according to the fact the standard space center fulfills the event or not
+    \end{description}
+
+  \end{description}
+
+
+\end{description}
+
+
+% =============================================================
+\newpage \subsubsection{SORM}
+
+This class inherits from Analytical.
+
+\begin{description}
+
+\item[Usage :] $SORM(nearestPointAlgorithm, event, physicalStartingPoint)$
+
+\item[Arguments :]  \rule{0pt}{1em}
+  \begin{description}
+  \item $nearestPointAlgorithm$ :  a NearestPointAlgorithm, the optimization algorithm which will be used to research the design point
+  \item $event$ : a Event, the event in the physical space we want to evaluate the probability
+  \item $physicalStartingPoint$ : a NumericalPoint, the starting point of the optimization research, declared in the physical space
+  \end{description}
+
+\item[Some methods :]  \rule{0pt}{1em}
+
+  \begin{description}
+
+  \item $getResult$
+    \begin{description}
+    \item[Usage :] $getResult()$
+    \item[Arguments :] none
+    \item[Value :] a SORMResult, structure containing all the results of the SORM analysis
+    \end{description}
+    \bigskip
+
+  \item $run$
+    \begin{description}
+    \item[Usage :] $run()$
+    \item[Arguments :] none
+    \item[Value :] it creates a SORMResult, the optimization result which is accessible with the method getResult().
+    \end{description}
+    \bigskip
+
+  \end{description}
+
+
+\end{description}
+% =============================================================
+\newpage \subsubsection{SORMResult}
+
+This class inherits from AnalyticalResult.
+
+\begin{description}
+
+\item[Usage :] structure created by the method run() of a SORM and obtained thanks to the method $getResult()$
+
+\item[Some methods :]  \rule{0pt}{1em}
+
+  \begin{description}
+
+  \item $getEventProbabilityBreitung$
+    \begin{description}
+    \item[Usage :] $getEventProbabilityBreitung()$
+    \item[Arguments :] none
+    \item[Value :]  a positive real value, the SORM Probability according to the Breitung approximation
+    \end{description}
+    \bigskip
+
+  \item $getEventProbabilityHohenBichler$
+    \begin{description}
+    \item[Usage :] $getEventProbabilityHohenBichler()$
+    \item[Arguments :] none
+    \item[Value :]  a positive real value, the SORM Probability according to the Hohen Bichler approximation
+    \end{description}
+    \bigskip
+
+  \item $getEventProbabilityTvedt$
+    \begin{description}
+    \item[Usage :] $getEventProbabilityTvedt()$
+    \item[Arguments :] none
+    \item[Value :]  a positive real value, the SORM Probability according to the Tvedt approximation
+    \end{description}
+    \bigskip
+
+  \item $getGeneralisedReliabilityIndexBreitung$
+    \begin{description}
+    \item[Usage :] $getGeneralisedReliabilityIndexBreitung()$
+    \item[Arguments :] none
+    \item[Value :]  a  real value, the generalised reliability index evaluated from the Breitung SORM Probability (positive or negative according to the fact the standard space center fulfills the event or not)
+    \end{description}
+    \bigskip
+
+  \item $getGeneralisedReliabilityIndexHohenBichler$
+    \begin{description}
+    \item[Usage :] $getGeneralisedReliabilityIndexHohenBichler()$
+    \item[Arguments :] none
+    \item[Value :]  a  real value, the generalised reliability index evaluated from the Hohen Bichler SORM Probability (positive or negative according to the fact the standard space center fulfills the event or not)
+    \end{description}
+    \bigskip
+
+  \item $getGeneralisedReliabilityIndexTvedt$
+    \begin{description}
+    \item[Usage :] $getGeneralisedReliabilityIndexTvedt()$
+    \item[Arguments :] none
+    \item[Value :]  a  real value, the generalised reliability index evaluated from the Tvedt SORM Probability (positive or negative according to the fact the standard space center fulfills the event or not)
+    \end{description}
+    \bigskip
+  \end{description}
+
+
+\end{description}
+
+
+
+
+% =============================================================
+
+\newpage \subsection{The Strong Maximum Test}
+
+\subsubsection{StrongMaximumTest}
+
+
+
+\begin{description}
+
+\item[Usage :] \rule{0pt}{1em}
+  \begin{description}
+  \item $StrongMaximumTest(event, standardSpaceDesignPoint,  importanceLevel,  \cdots $
+  \item \hspace*{2cm} $accuracyLevel,  confidenceLevel)$
+  \item $StrongMaximumTest(event, standardSpaceDesignPoint,  importanceLevel,  \cdots $
+  \item \hspace*{2cm} $accuracyLevel,  pointNumber)$
+  \end{description}
+
+\item[Arguments :]  \rule{0pt}{1em}
+  \begin{description}
+  \item $event$ : a StandardEvent,
+  \item $standardSpaceDesignPoint$ : a NumericalPoint,
+  \item $importanceLevel$ : a real value $\in ]0,1]$, the importance level $\varepsilon$.
+  \item $accuracyLevel$ : a positive real value, the accuracy Level $\tau$. It is recommanded to take $\tau \leq 4$.
+  \item $confidenceLevel$ : a positive real value, the confidenceLevel $(1 - q)$, must be $<1$.
+  \item $pointNumber$ : the number of points used to perform the Strong Maximum Test on which the limit state function is evaluated
+  \end{description}
+
+\item[Some methods :]  \rule{0pt}{1em}
+
+  \begin{description}
+
+  \item $getAccuracyLevel$
+    \begin{description}
+    \item[Usage :] $getAccuracyLevel()$
+    \item[Arguments :] none
+    \item[Value :]  a positive real value, the accuracy Level $\tau$
+    \end{description}
+    \bigskip
+
+  \item $getConfidenceLevel$
+    \begin{description}
+    \item[Usage :] $getConfidenceLevel()$
+    \item[Arguments :] none
+    \item[Value :]  a positive real value, the confidenceLevel $(1 - q)$
+    \end{description}
+    \bigskip
+
+  \item $getEvent$
+    \begin{description}
+    \item[Usage :] $getEvent()$
+    \item[Arguments :] none
+    \item[Value :]  a StandardEvent, the event in the standard space on which is based the Strong Maximum Test
+    \end{description}
+    \bigskip
+
+  \item $getFarDesignPointVerifyingEventPoints$
+    \begin{description}
+    \item[Usage :] $getFarDesignPointVerifyingEventPoints()$
+    \item[Arguments :] none
+    \item[Value :]  a NumericalSample, the list of points of the discretized sphere which are out of the vicinity of the standard design point and which verify the event
+    \end{description}
+    \bigskip
+
+  \item $getFarDesignPointVerifyingEventValues$
+    \begin{description}
+    \item[Usage :] $getFarDesignPointVerifyingEventValues()$
+    \item[Arguments :] none
+    \item[Value :]   a NumericalSample, the list of the values of the limit state function on the points of the discretized sphere which are out of the vicinity of the standard design point and which verify the event
+    \end{description}
+    \bigskip
+
+  \item $getFarDesignPointViolatingEventPoints$
+    \begin{description}
+    \item[Usage :] $getFarDesignPointViolatingEventPoints()$
+    \item[Arguments :] none
+    \item[Value :]   a NumericalSample, the list of points of the discretized sphere which are out of the vicinity of the standard design point and which don't verify the event
+    \end{description}
+    \bigskip
+
+  \item $getFarDesignPointViolatingEventValues$
+    \begin{description}
+    \item[Usage :] $getFarDesignPointViolatingEventValues()$
+    \item[Arguments :] none
+    \item[Value :]   a NumericalSample, the list of the values of the limit state function on the points of the discretized sphere which are out of the vicinity of the standard design point and which don't verify the event
+    \end{description}
+    \bigskip
+
+  \item $getImportanceLevel$
+    \begin{description}
+    \item[Usage :] $getImportanceLevel()$
+    \item[Arguments :] none
+    \item[Value :]  a positive real value, the importance level $\varepsilon$
+    \end{description}
+    \bigskip
+
+  \item $getNearDesignPointVerifyingEventPoints$
+    \begin{description}
+    \item[Usage :] $getNearDesignPointVerifyingEventPoints()$
+    \item[Arguments :] none
+    \item[Value :]   a NumericalSample, the list of points of the discretized sphere which are inside the vicinity of the standard design point and which verify the event
+    \end{description}
+    \bigskip
+
+  \item $getNearDesignPointVerifyingEventValues$
+    \begin{description}
+    \item[Usage :] $getNearDesignPointVerifyingEventValues()$
+    \item[Arguments :] none
+    \item[Value :]   a NumericalSample, the list of the values of the limit state function on the points of the discretized sphere which are inside the vicinity of the standard design point and which verify the event
+    \end{description}
+    \bigskip
+
+  \item $getNearDesignPointViolatingEventPoints$
+    \begin{description}
+    \item[Usage :] $getNearDesignPointViolatingEventPoints()$
+    \item[Arguments :] none
+    \item[Value :]   a NumericalSample, the list of points of the discretized sphere which are out of the vicinity of the standard design point and which don't verify the event
+    \end{description}
+    \bigskip
+
+  \item $getNearDesignPointViolatingEventValues$
+    \begin{description}
+    \item[Usage :] $getNearDesignPointViolatingEventValues()$
+    \item[Arguments :] none
+    \item[Value :]
+    \end{description} a NumericalSample, the list of the values of the limit state function on the points of the discretized sphere which are inside the vicinity of the standard design point and which don't verify the event
+    \bigskip
+
+  \item $getPointNumber$
+    \begin{description}
+    \item[Usage :] $getPointNumber()$
+    \item[Arguments :] none
+    \item[Value :]  an integer, the number of points used to perform the Strong Maximum Test, evaluated by the limit state function
+    \end{description}
+    \bigskip
+
+  \item $getStandardSpaceDesignPoint$
+    \begin{description}
+    \item[Usage :] $getStandardSpaceDesignPoint()$
+    \item[Arguments :] none
+    \item[Value :]  a NumericalPoint, the standard space design point
+    \end{description}
+    \bigskip
+
+  \item $run$
+    \begin{description}
+    \item[Usage :] $run()$
+    \item[Arguments :] none
+    \item[Value :]  it performs the Strong Maximum Test.
+    \end{description}
+    \bigskip
+
+  \end{description}
+
+\end{description}

@@ -1,0 +1,67 @@
+% Copyright (c)  2005-2009  EDF-EADS-PHIMECA.
+% Permission is granted to copy, distribute and/or modify this document
+% under the terms of the GNU Free Documentation License, Version 1.2
+% or any later version published by the Free Software Foundation;
+% with no Invariant Sections, no Front-Cover Texts, and no Back-Cover
+% Texts.  A copy of the license is included in the section entitled "GNU
+% Free Documentation License".
+
+This file allows to check the syntax of the wrapper's \index{DTD}\index{description file}description file.
+
+\lstset{language=XML, basicstyle=\normalsize}
+\begin{lstlisting}[frame=TBRL]
+  <?xml encoding="ISO-8859-1"?>
+  <!-- LastChangedBy   : $LastChangedBy: dutka $ -->
+  <!-- LastChangeddate : $LastChangedDate: 2008-09-22 11:34:11 +0200 $ -->
+
+  <!ELEMENT wrapper           (library,external-code) >
+  <!ELEMENT library           (path,description) >
+  <!ELEMENT description       (variable-list,function,gradient,hessian) >
+  <!ELEMENT external-code     (data?,wrap-mode,command) >
+  <!ELEMENT data              (file*) >
+  <!ELEMENT file              (name?,path,subst?) >
+  <!ELEMENT variable-list     (variable*) >
+  <!ELEMENT variable          (comment?,unit?,regexp?,format?) >
+  <!ELEMENT function          (#PCDATA) >
+  <!ELEMENT gradient          (#PCDATA) >
+  <!ELEMENT hessian           (#PCDATA) >
+  <!ELEMENT name              (#PCDATA) >
+  <!ELEMENT path              (#PCDATA) >
+  <!ELEMENT subst             (#PCDATA) >
+  <!ELEMENT regexp            (#PCDATA) >
+  <!ELEMENT format            (#PCDATA) >
+  <!ELEMENT unit              (#PCDATA) >
+  <!ELEMENT comment           (#PCDATA) >
+  <!ELEMENT wrap-mode         (in-data-transfer,out-data-transfer) >
+  <!ELEMENT command           (#PCDATA) >
+  <!ELEMENT in-data-transfer  (#PCDATA) >
+  <!ELEMENT out-data-transfer (#PCDATA) >
+
+  <!ATTLIST file
+  id ID #REQUIRED
+  type (in|out) #REQUIRED>
+
+  <!ATTLIST variable
+  id ID #REQUIRED
+  type (in|out) #REQUIRED
+  computed-gradient (yes|no) #IMPLIED>
+
+  <!ATTLIST wrap-mode
+  type (static-link|dynamic-link|fork) #REQUIRED
+  state (shared|specific) #IMPLIED>
+
+  <!ATTLIST in-data-transfer
+  mode (files|pipe|arguments|socket|CORBA) #REQUIRED>
+
+  <!ATTLIST out-data-transfer
+  mode (files|pipe|arguments|socket|CORBA) #REQUIRED>
+
+  <!ATTLIST function
+  provided (yes|no) #REQUIRED>
+
+  <!ATTLIST gradient
+  provided (yes|no) #REQUIRED>
+
+  <!ATTLIST hessian
+  provided (yes|no) #REQUIRED>
+\end{lstlisting}

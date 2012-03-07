@@ -1,0 +1,83 @@
+% Copyright (c)  2005-2010 EDF-EADS-PHIMECA.
+% Permission is granted to copy, distribute and/or modify this document
+% under the terms of the GNU Free Documentation License, Version 1.2
+% or any later version published by the Free Software Foundation;
+% with no Invariant Sections, no Front-Cover Texts, and no Back-Cover
+% Texts.  A copy of the license is included in the section entitled "GNU
+% Free Documentation License".
+\renewcommand{\filename}{docUC_InputWithData_RegressionTest.tex}
+\renewcommand{\filetitle}{UC : Regression test between two scalar numerical samples}
+
+% \HeaderNNIILevel
+% \HeaderIILevel
+\HeaderIIILevel
+
+
+
+\index{Regression Linear Model!Rsquared@$R^2$ test}
+
+
+
+The objective of this Use Case is to detect a linear relation between two scalar numerical samples. \\
+
+
+
+Details on the linear regression model  may be found in the Reference Guide (\href{OpenTURNS_ReferenceGuide.pdf}{see file Reference Guide - Step B -- Linear regression}).\\
+
+Details on each object may be found in the User Manual  (\href{OpenTURNS_UserManual_TUI.pdf}{see User Manual - Statistics on sample / Fitting Test and Statistics on sample / Linear model}).\\
+
+
+
+
+
+\requirements{
+  \begin{description}
+  \item[$\bullet$] one continuous scalar numerical sample of dimension n : {\itshape continuousSample1}
+  \item[type:]  NumericalSample
+  \item[$\bullet$] one continuous scalar numerical sample of dimension 1 : {\itshape continuousSample2}
+  \item[type:]  NumericalSample
+  \end{description}
+}
+{
+  \begin{description}
+  \item[$\bullet$] tests results : {\itshape resultPartialRegression, resultFullRegression, resultPartialSpearman, resultFullSpearman}
+  \item[type:] TestResultCollection
+  \end{description}
+}
+
+\textspace\\
+Python script for this UseCase :
+
+\begin{lstlisting}
+
+  # Partial Regression Test between 2 samples : firstSample of dimension n and secondSample of dimension 1. If firstSample[i] is the numerical sample extracted from firstSample (ith coordinate of each point of the numerical sample), PartialRegression performs the linear regression test simultaneously on all firstSample[i] and secondSample, for i in the selection. The linear regression test tests if the regression model between two scalar numerical samples is significant. It is based on the deviation analysis of the regression. The Fisher distribution is used.
+
+  # selection of coordinates of continuousSample1 to be tested to continuousSample2
+  # for example, coordinates 1, 2, 3, 4, 5, (suppose n>5)
+  selection = range(5)
+
+  # Perform the Partial Regression Test
+  resultPartialRegression = HypothesisTest.PartialRegression(continuousSample1, continuousSample2, selection, 0.90)
+
+  # Print the global result of the Regression Test
+  print "Test global result : ", resultPartialRegression
+
+  # Print result of the Regression Test for each coordinate tested
+  for i in range(5) :
+  print "Test Succes for Coordinate =  ", selection[i], "? ", (resultPartialRegression[i].getBinaryQualityMeasure()==1)
+
+  # Get the p-value of the Regression Test
+  print "p-value of the Regression Test = ", resultPartialRegression[i].getPValue()
+
+  # Get the p-value threshold of the  Test
+  print "p-value threshold for Coordinate =  ", selection[i], " = ", resultPartialRegression[i].getThreshold()
+
+  # Full Regression Test : it performs the partial  Regression test on the whole coordinates of the first sample
+
+  # Perform the Full Regression  Test
+  resultFullRegression = HypothesisTest.FullRegression(continuousSample1, continuousSample2, 0.90)
+
+  # Same manipulations than those realised on resultPartialRegression to get the results
+\end{lstlisting}
+
+

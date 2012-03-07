@@ -1,0 +1,119 @@
+% Copyright (c)  2005-2009  EDF-EADS-PHIMECA.
+% Permission is granted to copy, distribute and/or modify this document
+% under the terms of the GNU Free Documentation License, Version 1.2
+% or any later version published by the Free Software Foundation;
+% with no Invariant Sections, no Front-Cover Texts, and no Back-Cover
+% Texts.  A copy of the license is included in the section entitled "GNU
+% Free Documentation License".
+
+\documentclass[a4paper,11pt]{article}
+
+\usepackage{latex2html}
+\usepackage[T1]{fontenc}
+\usepackage[latin1]{inputenc}
+\usepackage{graphicx,color,listings}
+\usepackage{fancyhdr}
+\usepackage{amsmath, amssymb}
+% \DeclareGraphicsExtensions{.png}
+\usepackage{ifpdf}
+
+\setlength{\textwidth}{18.5cm}
+\setlength{\textheight}{23cm}
+\setlength{\hoffset}{-1.04cm}
+\setlength{\voffset}{-1.54cm}
+\setlength{\oddsidemargin}{0cm}
+\setlength{\evensidemargin}{0cm}
+\setlength{\topmargin}{0cm}
+\setlength{\headheight}{1cm}
+\setlength{\headsep}{0.5cm}
+\setlength{\marginparsep}{0cm}
+\setlength{\marginparwidth}{0cm}
+\setlength{\footskip}{1cm}
+\setlength{\parindent}{0cm}
+
+\pagestyle{fancy}
+\fancyhf{} \rhead{\bfseries \thepage} \lhead{\bfseries \nouppercase Wrappers Guide}
+\rfoot{\bfseries \copyright 2005-2012 EDF - EADS - PhiMeca} \lfoot{}
+
+% package url is used in the bibliography for URL layout
+\usepackage{url}
+
+% fonts for the table and figure captions
+% \usepackage[small,bf,up]{caption}
+% \renewcommand{\captionfont}{\small\itshape}
+
+% depth of the TOC
+\setcounter{tocdepth}{4}
+
+% macros used in the document
+\newcommand{\OT} {Open TURNS}
+\def\R{\mathbb{R}}
+
+% index
+\usepackage{makeidx}
+\makeindex
+
+\begin{document}
+
+\begin{titlepage}
+  \vspace*{2cm}
+  \begin{center}
+    {\huge \bf Open TURNS -- Wrappers Guide}
+    \input{GenericInformation.tex}
+  \end{center}
+\end{titlepage}
+
+\newpage
+\input{Summary}
+
+\cleardoublepage
+\tableofcontents
+\cleardoublepage
+
+
+\cleardoublepage
+
+\section{Introduction}
+\input{Introduction}
+\cleardoublepage
+
+\section{The different types of functions}
+\input{FunctionTypes}
+\cleardoublepage
+
+\section{The wrapper}
+\input{Wrapper}
+\cleardoublepage
+
+\section{The structure of a wrapper}
+\input{WrapperStructure}
+\cleardoublepage
+
+\section{The wrapper as interface for the external code}
+\input{ExternalCodeInterface}
+\cleardoublepage
+
+\section{Future developments}
+\input{FutureDevelopments}
+\cleardoublepage
+
+\appendix
+\section{Functions from the WrapperCommon library}
+\input{Appendix1}
+\cleardoublepage
+
+\section{Macros from the WrapperMacros library}
+\input{Appendix2}
+\cleardoublepage
+
+\section{Description of the wrapper's development structures}
+\input{Appendix3}
+\cleardoublepage
+
+\section{DTD for the wrapper's description file}
+\input{Appendix4}
+\cleardoublepage
+
+\printindex
+
+\end{document}

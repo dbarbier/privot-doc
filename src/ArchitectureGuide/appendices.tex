@@ -1,0 +1,607 @@
+%Copyright (c)  2005-2010 EDF-EADS-PHIMECA.
+%  Permission is granted to copy, distribute and/or modify this document
+%  under the terms of the GNU Free Documentation License, Version 1.2
+%  or any later version published by the Free Software Foundation;
+%  with no Invariant Sections, no Front-Cover Texts, and no Back-Cover
+%  Texts.  A copy of the license is included in the section entitled "GNU
+%  Free Documentation License".\section{Modeling package}
+
+\subsection{Importing a numerical sample from a file}
+\emph{Input data} \newline
+\begin{tabular*}{\linewidth}{p{1in}p{2.5in}p{2in}}
+  \textbf{ID} & \textbf{Type} & \textbf{Value} \\
+  nameOfFile & FileName &
+\end{tabular*}
+\newline \newline
+\emph{Output data} \newline
+\begin{tabular*}{\linewidth}{p{1in}p{2.5in}p{2in}}
+  \textbf{ID} & \textbf{Type} & \textbf{Value} \\
+  sample & NumericalSample &
+\end{tabular*}
+\newline
+\newline
+\emph{Sequence of operations in the use case}
+\begin{verbatim}
+  std::ifstream fileStream( pathToFile ) ;
+  CSVNumericalSampleFactory csvFact( fileStream ) ;
+  NumericalSample sample = csvFact.getNumericalSample() ;
+\end{verbatim}
+
+\subsection{Multidimensional normal distribution inference based on a sample, using a parametric method following the method of moments}
+\emph{Input data} \newline
+\begin{tabular*}{\linewidth}{p{1in}p{2.5in}p{2in}}
+  \textbf{ID} & \textbf{Type} & \textbf{Value} \\
+  sample & NumericalSample &
+\end{tabular*}
+\newline \newline
+\emph{Output data} \newline
+\begin{tabular*}{\linewidth}{p{1in}p{2.5in}p{2in}}
+  \textbf{ID} & \textbf{Type} & \textbf{Value} \\
+  distribution & Normal &
+\end{tabular*}
+\newline
+\newline
+\emph{Sequence of operations in the use case}
+\begin{verbatim}
+  NormalFactory< MomentMethod > myFact ;
+  Normal distribution = myFact.getDistribution( sample ) ;
+\end{verbatim}
+\emph{Method NormalFactory\textless MomentMethod \textgreater::getDistribution()}
+\begin{verbatim}
+  NumericalPoint mean = Normal::getMeanValue< MomentMethod >( sample ) ;
+  CovarianceMatrix cov = Normal::getCovariance< MomentMethod >( sample ) ;
+  return Normal( mean, cov ) ;
+\end{verbatim}
+
+\subsection{Multidimensional normal distribution inference based on a sample, using a parametric method following the method of maximum likelihood}
+\emph{Input data} \newline
+\begin{tabular*}{\linewidth}{p{1in}p{2.5in}p{2in}}
+  \textbf{ID} & \textbf{Type} & \textbf{Value} \\
+  sample & NumericalSample &
+\end{tabular*}
+\newline \newline
+\emph{Output data} \newline
+\begin{tabular*}{\linewidth}{p{1in}p{2.5in}p{2in}}
+  \textbf{ID} & \textbf{Type} & \textbf{Value} \\
+  distribution & Normal &
+\end{tabular*}
+\newline
+\newline
+\emph{Sequence of operations in the use case}
+\begin{verbatim}
+  NormalFactory< MaximumLikelihood > myFact ;
+  Normal distribution = myFact.getDistribution( sample ) ;
+\end{verbatim}
+\emph{Method NormalFactory\textless MaximumLikelihood \textgreater::getDistribution()}
+\begin{verbatim}
+  NumericalPoint mean = Normal::getMeanValue< MaximumLikelihood >( sample ) ;
+  CovarianceMatrix cov = Normal::getCovariance< MaximumLikelihood >( sample ) ;
+  return Normal( mean, cov ) ;
+\end{verbatim}
+
+\subsection{Multidimensional exponential distribution inference based on a sample, using a parametric method following the method of moments}
+\emph{Input data} \newline
+\begin{tabular*}{\linewidth}{p{1in}p{2.5in}p{2in}}
+  \textbf{ID} & \textbf{Type} & \textbf{Value} \\
+  sample & NumericalSample &
+\end{tabular*}
+\newline \newline
+\emph{Output data} \newline
+\begin{tabular*}{\linewidth}{p{1in}p{2.5in}p{2in}}
+  \textbf{ID} & \textbf{Type} & \textbf{Value} \\
+  distribution & Exponential &
+\end{tabular*}
+\newline
+\newline
+\emph{Sequence of operations in the use case}
+\begin{verbatim}
+  ExponentialFactory< MomentMethod > myFact ;
+  Exponential distribution = myFact.getDistribution( sample ) ;
+\end{verbatim}
+\emph{Method ExponentialFactory\textless MomentMethod \textgreater::getDistribution()}
+\begin{verbatim}
+  NumericalScalar lambda = Exponential::getLambda< MomentMethod >( sample ) ;
+  return Exponential( lambda ) ;
+\end{verbatim}
+
+\subsection{Multidimensional exponential distribution inference based on a sample, using a parametric method following the method of maximum likelihood}
+\emph{Input data} \newline
+\begin{tabular*}{\linewidth}{p{1in}p{2.5in}p{2in}}
+  \textbf{ID} & \textbf{Type} & \textbf{Value} \\
+  sample & NumericalSample &
+\end{tabular*}
+\newline \newline
+\emph{Output data} \newline
+\begin{tabular*}{\linewidth}{p{1in}p{2.5in}p{2in}}
+  \textbf{ID} & \textbf{Type} & \textbf{Value} \\
+  distribution & Exponential &
+\end{tabular*}
+\newline
+\newline
+\emph{Sequence of operations in the use case}
+\begin{verbatim}
+  ExponentialFactory< MaximumLikelihood > myFact ;
+  Exponential distribution = myFact.getDistribution( sample ) ;
+\end{verbatim}
+\emph{Method ExponentialFactory\textless MaximumLikelihood \textgreater::getDistribution()}
+\begin{verbatim}
+  NumericalScalar lambda = Exponential::getLambda< MaximumLikelihood >( sample ) ;
+  return Exponential( lambda ) ;
+\end{verbatim}
+
+\subsection{Definition of a mixture distribution with constant parameters by the user}
+\emph{Input data} \newline
+\begin{tabular*}{\linewidth}{p{1in}p{2.5in}p{2in}}
+  \textbf{ID} & \textbf{Type} & \textbf{Value} \\
+  distribution1 & Normal & \\
+  distribution1 & Exponential & \\
+  w1 & NumericalScalar & 0.4 \\
+  w2 & NumericalScalar & 0.6
+\end{tabular*}
+\newline \newline
+\emph{Output data} \newline
+\begin{tabular*}{\linewidth}{p{1in}p{2.5in}p{2in}}
+  \textbf{ID} & \textbf{Type} & \textbf{Value} \\
+  mix & Mixture & w1*distribution1 + w2*distribution2
+\end{tabular*}
+\newline
+\newline
+\emph{Sequence of operations in the use case}
+\begin{verbatim}
+  distribution1.setWeight( w1 ) ;
+  distribution2.setWeight( w2 ) ;
+  DistributionCollection myColl ;
+  myColl.add( distribution1 ) ;
+  myColl.add( distribution2 ) ;
+  Mixture mix( myColl ) ;
+\end{verbatim}
+
+\subsection{Definition of a non-parametric mixture distribution using the kernel method}
+\emph{Input data} \newline
+\begin{tabular*}{\linewidth}{p{1in}p{2.5in}p{2in}}
+  \textbf{ID} & \textbf{Type} & \textbf{Value} \\
+  sample & NumericalSample & \\
+  fact & DistributionFactory & \\
+  h & CovarianceMatrix &
+\end{tabular*}
+\newline \newline
+\emph{Output data} \newline
+\begin{tabular*}{\linewidth}{p{1in}p{2.5in}p{2in}}
+  \textbf{ID} & \textbf{Type} & \textbf{Value} \\
+  mix & Mixture &
+\end{tabular*}
+\newline
+\newline
+\emph{Sequence of operations in the use case}
+\begin{verbatim}
+  Mixture mix = Mixture::getKernelRebuildDistribution( sample, fact, h ) ;
+\end{verbatim}
+\emph{Method Mixture::getKernelRebuildDistribution()}
+\begin{verbatim}
+  if ( sample.size() == 0 ) throw Exception ;
+  Kernel K = fact.getKernel() ;
+  if ( h.rank() != sample.dim() ) throw Exception ;
+  DistributionCollection myColl ;
+  NumericalPoint Xi ;
+  for Xi in sample :
+  UsualDistribution distribution = fact.getDistribution( Xi, h ) ;
+  distribution.setWeight( 1. / sample.size() ) ;
+  myColl.add( distribution ) ;
+  end for
+  Mixture mix( myColl ) ;
+  return mix
+\end{verbatim}
+
+\subsection{Definition of a non-parametric mixture distribution using the kernel method}
+\emph{Input data} \newline
+\begin{tabular*}{\linewidth}{p{1in}p{2.5in}p{2in}}
+  \textbf{ID} & \textbf{Type} & \textbf{Value} \\
+  sample & NumericalSample & \\
+  fact & DistributionFactory & \\
+  algo & KernelAlgorithm &
+\end{tabular*}
+\newline \newline
+\emph{Output data} \newline
+\begin{tabular*}{\linewidth}{p{1in}p{2.5in}p{2in}}
+  \textbf{ID} & \textbf{Type} & \textbf{Value} \\
+  mix & Mixture &
+\end{tabular*}
+\newline \newline
+\emph{Sequence of operations in the use case}
+\begin{verbatim}
+  Mixture mix = Mixture::getKernelRebuildDistribution( sample, fact, algo ) ;
+\end{verbatim}
+\emph{Method Mixture::getKernelRebuildDistribution()}
+\begin{verbatim}
+  if ( sample.size() == 0 ) throw Exception ;
+  Kernel K = fact.getKernel() ;
+  CovarianceMatrix h = algo( sample, K ) ;
+  if ( h.dim() != sample.dim() ) throw Exception ;
+  DistributionCollection myColl ;
+  NumericalPoint Xi ;
+  for Xi in sample :
+  UsualDistribution distribution = fact.getDistribution( Xi, h ) ;
+  distribution.setWeight( 1. / sample.size() ) ;
+  myColl.add( distribution ) ;
+  end for
+  Mixture mix( myColl ) ;
+  return mix
+\end{verbatim}
+\emph{Method KernelAlgorithm::operator()}
+\begin{verbatim}
+  [...]
+  NumericalScalar normL2K = K.getL2Norm() ;
+  CovarianceMatrix covK = K.getCovariance() ;
+  [...]
+\end{verbatim}
+
+\subsection{Definition of a random vector based on constant parameters}
+\emph{Input data} \newline
+\begin{tabular*}{\linewidth}{p{1in}p{2.5in}p{2in}}
+  \textbf{ID} & \textbf{Type} & \textbf{Value} \\
+  distribution1 & Normal & dim = 1, mean = 0.1, sigma = 0.3 \\
+  distribution2 & Exponential & dim = 1, lambda = 0.8 \\
+  mat & SpearmanCorrelationMatrix & Non diagonal coefficients = 0.2
+\end{tabular*}
+\newline \newline
+\emph{Output data} \newline
+\begin{tabular*}{\linewidth}{p{1in}p{2.5in}p{2in}}
+  \textbf{ID} & \textbf{Type} & \textbf{Value} \\
+  P & ConcreteRandomVector & (distribution1, distribution2) correlated by mat
+\end{tabular*}
+\newline
+\newline
+\emph{Sequence of operations in the use case}
+\begin{verbatim}
+  DistributionCollection myColl ;
+  myColl.add( distribution1 ) ;
+  myColl.add( distribution2 ) ;
+  if ( myColl.size() != mat.rank() ) throw Exception ;
+  FictiveCorrelationMatrix< NormalFamily > fictiveMat = mat ;
+  NormalCopula copula( fictiveMat ) ;
+  ConcreteRandomVector P( AssemblyDistribution( myColl, copula ) ) ;
+\end{verbatim}
+
+\subsection{Definition of a random vector as a function of other random vectors}
+\emph{Input data} \newline \newline
+\begin{tabular*}{\linewidth}{p{1in}p{2.5in}p{2in}}
+  \textbf{ID} & \textbf{Type} & \textbf{Value} \\
+  X & RandomVector & \\
+  F & NumericalMathFunction & \\
+\end{tabular*}
+\newline \newline
+\emph{Output data} \newline \newline
+\begin{tabular*}{\linewidth}{p{1in}p{2.5in}p{2in}}
+  \textbf{ID} & \textbf{Type} & \textbf{Value} \\
+  Y & CompositeRandomVector & Y = F(X)
+\end{tabular*}
+\newline
+\newline
+\emph{Sequence of operations in the use case}
+\begin{verbatim}
+  CompositeRandomVector Y( F, X ) ;
+\end{verbatim}
+
+\subsection{Definition of a failure event}
+\emph{Input data} \newline
+\begin{tabular*}{\linewidth}{p{1in}p{2.5in}p{2in}}
+  \textbf{ID} & \textbf{Type} & \textbf{Value} \\
+  X & RandomVector & dim = n \\
+  F & NumericalMathFunction & inNumericalPointDim = n, \newline outNumericalPointDim = 1 \\
+  threshold & NumericalScalar &
+\end{tabular*}
+\newline \newline
+\emph{Output data} \newline
+\begin{tabular*}{\linewidth}{p{1in}p{2.5in}p{2in}}
+  \textbf{ID} & \textbf{Type} & \textbf{Value} \\
+  evt & FailureEvent & F(X) < threshold
+\end{tabular*}
+\newline
+\newline
+\emph{Sequence of operations in the use case}
+\begin{verbatim}
+  CompositeRandomVector Y( F, X ) ;
+  FailureEvent evt( Y, Less, threshold ) ;
+\end{verbatim}
+
+\section{Propagation package}
+
+\subsection{Generation of a numerical sample according to a distribution}
+\emph{Input data} \newline
+\begin{tabular*}{\linewidth}{p{1in}p{2.5in}p{2in}}
+  \textbf{ID} & \textbf{Type} & \textbf{Value} \\
+  distribution & Distribution &
+\end{tabular*}
+\newline \newline
+\emph{Output data} \newline
+\begin{tabular*}{\linewidth}{p{1in}p{2.5in}p{2in}}
+  \textbf{ID} & \textbf{Type} & \textbf{Value} \\
+  sample & NumericalSample &
+\end{tabular*}
+\newline
+\newline
+\emph{Sequence of operations in the use case}
+\begin{verbatim}
+  UnsignedLong nbRealization = 100 ;
+  NumericalSample sample = Distribution.getNumericalSample( nbRealization ) ;
+
+\end{verbatim}
+\emph{Method Distribution::getNumericalSample()}
+\begin{verbatim}
+  NumericalSample sample ;
+  UnsignedLong i ;
+  for i in 1..nbRealization :
+  NumericalPoint point = realize() ;
+  sample.add( point ) ;
+  end for
+  return sample ;
+\end{verbatim}
+
+\subsection{Generation of a numerical sample according to the distribution of a vector function of other random vectors}
+\emph{Input data} \newline
+\begin{tabular*}{\linewidth}{p{1in}p{2.5in}p{2in}}
+  \textbf{ID} & \textbf{Type} & \textbf{Value} \\
+  V & CompositeRandomVector & V = F(X)
+\end{tabular*}
+\newline \newline
+\emph{Output data} \newline
+\begin{tabular*}{\linewidth}{p{1in}p{2.5in}p{2in}}
+  \textbf{ID} & \textbf{Type} & \textbf{Value} \\
+  sample & NumericalSample &
+\end{tabular*}
+\newline
+\newline
+\emph{Sequence of operations in the use case}
+\begin{verbatim}
+  UnsignedLong nbRealization = 100 ;
+  NumericalSample sample = V.getNumericalSample( nbRealization ) ;
+\end{verbatim}
+\emph{Method CompositeRandomVector::getNumericalSample()}
+\begin{verbatim}
+  RandomVector X = getAntecedent() ;
+  NumericalMathFunction F = getNumericalMathFunction() ;
+  NumericalSample sample ;
+  UnsignedLong i ;
+  for i in 1..nbRealization :
+  NumericalPoint inPoint = X.realize() ;
+  NumericalPoint outPoint = F( inPoint ) ;
+  sample.add( outPoint ) ;
+  end for
+  return sample ;
+\end{verbatim}
+
+\subsection{Computation of a mean value with a first order SRSS}
+\emph{Input data} \newline
+\begin{tabular*}{\linewidth}{p{1in}p{2.5in}p{2in}}
+  \textbf{ID} & \textbf{Type} & \textbf{Value} \\
+  Y & CompositeRandomVector & Y = F(X)
+\end{tabular*}
+\newline \newline
+\emph{Output data} \newline
+\begin{tabular*}{\linewidth}{p{1in}p{2.5in}p{2in}}
+  \textbf{ID} & \textbf{Type} & \textbf{Value} \\
+  meanY & NumericalPoint &
+\end{tabular*}
+\newline
+\newline
+\emph{Sequence of operations in the use case}
+\begin{verbatim}
+  RandomVector X = Y.getAntecedent() ;
+  NumericalMathFunction F = Y.getNumericalMathFunction() ;
+  NumericalPoint meanX = X.getMeanValue() ;
+  NumericalPoint meanY = F( meanX ) ;
+\end{verbatim}
+
+\subsection{Computation of a covariance with a first order SRSS}
+\emph{Input data} \newline
+\begin{tabular*}{\linewidth}{p{1in}p{2.5in}p{2in}}
+  \textbf{ID} & \textbf{Type} & \textbf{Value} \\
+  Y & CompositeRandomVector & Y = F(X)
+\end{tabular*}
+\newline \newline
+\emph{Output data} \newline
+\begin{tabular*}{\linewidth}{p{1in}p{2.5in}p{2in}}
+  \textbf{ID} & \textbf{Type} & \textbf{Value} \\
+  covY & CovarianceMatrix &
+\end{tabular*}
+\newline
+\newline
+\emph{Sequence of operations in the use case}
+\begin{verbatim}
+  RandomVector X = Y.getAntecedent() ;
+  NumericalMathFunction F = Y.getNumericalMathFunction() ;
+  NumericalPoint meanX = X.getMeanValue() ;
+  Matrix gradF = F.gradient( meanX ) ;
+  CovarianceMatrix covX = X.getCovariance() ;
+  CovarianceMatrix covY = gradF.transpose() * covX * gradF ;
+\end{verbatim}
+
+\subsection{Computation of a threshold crossing probability using Monte Carlo (counting method)}
+\emph{Input data} \newline
+\begin{tabular*}{\linewidth}{p{1in}p{2.5in}p{2in}}
+  \textbf{ID} & \textbf{Type} & \textbf{Value} \\
+  evt & FailureEvent & \\
+  mat & CovarianceMatrix & \\
+\end{tabular*}
+\newline \newline
+\emph{Output data} \newline
+\begin{tabular*}{\linewidth}{p{1in}p{2.5in}p{2in}}
+  \textbf{ID} & \textbf{Type} & \textbf{Value} \\
+  P & NumericalPoint & \\
+\end{tabular*}
+\newline
+\newline
+\emph{Sequence of operations in the use case}
+\begin{verbatim}
+  UnsignedLong nbMaxRealization = 1000 ;
+  UncertaintyAlgorithm mc = MonteCarlo( evt, nbMaxRealization, mat ) ;
+
+  Thread th( mc ) ;
+  th.run() ;
+  ThreadStatus status = th.query() ;
+
+  NumericalPoint P ;
+
+  if ( status.isDone() ) P = mc.result() ;
+\end{verbatim}
+\emph{Method MonteCarlo::run()}
+\begin{verbatim}
+  [...]
+  evt.realize() ;
+  [...]
+\end{verbatim}
+
+\subsection{Computation of a threshold crossing probability using FORM}
+\emph{Input data} \newline
+\begin{tabular*}{\linewidth}{p{1in}p{2.5in}p{2in}}
+  \textbf{ID} & \textbf{Type} & \textbf{Value} \\
+  evt & FailureEvent & \\
+  Pstart & NumericalPoint & \\
+  Pref & NumericalPoint &
+\end{tabular*}
+\newline \newline
+\emph{Output data} \newline
+\begin{tabular*}{\linewidth}{p{1in}p{2.5in}p{2in}}
+  \textbf{ID} & \textbf{Type} & \textbf{Value} \\
+  P & NumericalPoint &
+\end{tabular*}
+\newline
+\newline
+\emph{Sequence of operations in the use case}
+\begin{verbatim}
+  UnsignedLong nbMaxRealization = 1000 ;
+  OptimizationAlgorithm optim = SQP( nbMaxRealization ) ;
+  UncertaintyAlgorithm solv = FORM( evt, optim, Pref, Pstart ) ;
+
+  Thread th( solv ) ;
+  th.run() ;
+  ThreadStatus status = th.query() ;
+
+  NumericalPoint P ;
+
+  if ( status.isDone() ) P = solv.result() ;
+\end{verbatim}
+\emph{Method FORM::run()}
+\begin{verbatim}
+  // Prerequisite : we get the random vector X which should be the only terminal
+  //                leaf of evt's dependency tree
+
+  DistributionCollection myColl = X.getMarginalDistributions() ;
+
+  FictiveCorrelationMatrix< NormalFamily > M =
+  X.getFictiveCorrelationMatrix() ;
+
+  NumericalMathFunction T    = Nataf( myColl, M ) ;
+  NumericalMathFunction Tinv = InverseNataf( myColl, M ) ;
+
+  NumericalPoint stdPref   = T( Pref ) ;
+  NumericalPoint stdPstart = T( Pstart ) ;
+
+  NumericalMathFunction objectif = L2_2Norm( stdPref.dim() ) ;
+  NumericalMathFunction XtoY = ... ;
+  // we get this function from evt = transfer function from X to Y
+
+  NumericalMathFunction constraint =
+  ( XtoY(Tinv) - evt.getThreshold() ) / ( XtoY( Pref ) - evt.getThreshold() ) ;
+
+  // An adequacy test needs to be carried out on the optimizer and the marginal distributions, which
+  // must be either noncontinuous or derivable
+  NumericalPoint Pconception = optim( objectif, constraint, Pstart ) ;
+
+  NumericalPoint res = Normal( 0, 1 ).F(- Pconception.getNorm() ) ;
+  // res must be stored in a Result object
+\end{verbatim}
+
+\subsection{Computation of a threshold crossing probability using Breitung's SORM}
+\emph{Input data} \newline
+\begin{tabular*}{\linewidth}{p{1in}p{2.5in}p{2in}}
+  \textbf{ID} & \textbf{Type} & \textbf{Value} \\
+  evt & FailureEvent & \\
+  Pstart & NumericalPoint & \\
+  Pref & NumericalPoint &
+\end{tabular*}
+\newline \newline
+\emph{Output data} \newline
+\begin{tabular*}{\linewidth}{p{1in}p{2.5in}p{2in}}
+  \textbf{ID} & \textbf{Type} & \textbf{Value} \\
+  P & NumericalPoint &
+\end{tabular*}
+\newline
+\newline
+\emph{Sequence of operations in the use case}
+\begin{verbatim}
+  UnsignedLong nbMaxRealization = 1000 ;
+  OptimizationAlgorithm optim = SQP( nbMaxRealization ) ;
+  UncertaintyAlgorithm solv = SORM_Breitung( evt, optim, Pref, Pstart ) ;
+
+  Thread th( solv ) ;
+  th.run() ;
+  ThreadStatus status = th.query() ;
+
+  NumericalPoint P ;
+
+  if ( status.isDone() ) P = solv.result() ;
+\end{verbatim}
+\emph{Method SORM\_Breitung::run()}
+\begin{verbatim}
+  // Prerequisite : we get the random vector X which should be the only terminal
+  //                leaf of evt's dependency tree
+
+  DistributionCollection myColl = X.getMarginalDistributions() ;
+
+  FictiveCorrelationMatrix< NormalFammilly > M =
+  X.getFictiveCorrelationMatrix() ;
+
+  NumericalMathFunction T    = Nataf( myColl, M ) ;
+  NumericalMathFunction Tinv = InverseNataf( myColl, M ) ;
+
+  NumericalPoint stdPref   = T( Pref ) ;
+  NumericalPoint stdPstart = T( Pstart ) ;
+
+  NumericalMathFunction objectif = L2_2Norm( stdPref.dim() ) ;
+  NumericalMathFunction XtoY = ... ;
+  // we get this function from evt = transfer function from X to Y
+  NumericalMathFunction constraint =
+  ( XtoY(Tinv) - evt.getThreshold() ) / ( XtoY( Pref ) - evt.getThreshold() ) ;
+
+  // An adequacy test needs to be carried out on the optimizer and the marginal distributions, which
+  // must be either noncontinuous or derivable
+  NumericalPoint Pconception = optim( objectif, constraint, Pstart ) ;
+
+  NumericalPoint gradient  = constraint.gradient( Pconception ) ;
+  NumericalPoint hessian = constraint.hessian( Pconception ) ;
+
+  NumericalPoint curvature = CurvatureComputation( gradient, hessienne ) ;
+
+  NumericalPoint res =
+  Normal( 0, 1 ).F(- Pconception.getNorm() ) * PRODUIT(0:n)( 1 / sqrt(1-curvature[i]) ) ;
+  // res must be stored in a Result object
+\end{verbatim}
+
+\section{Prioritization package}
+
+\subsection{Regression-based prioritization}
+\emph{Input data} \newline
+\begin{tabular*}{\linewidth}{p{1in}p{2.5in}p{2in}}
+  \textbf{ID} & \textbf{Type} & \textbf{Value} \\
+  sampleY & NumericalSample &
+\end{tabular*}
+\newline \newline
+\emph{Output data} \newline
+\begin{tabular*}{\linewidth}{p{1in}p{2.5in}p{2in}}
+  \textbf{ID} & \textbf{Type} & \textbf{Value} \\
+  C & NumericalPoint &
+\end{tabular*}
+\newline
+\newline
+\emph{Sequence of operations in the use case}
+\begin{verbatim}
+  Regression myReg( sampleY ) ;
+  NumericalPoint C = myReg.ranking() ;
+\end{verbatim}
+\emph{Method Regression::ranking()}
+\begin{verbatim}
+  NumericalSample sampleX = sampleY.getAntecedent() ;
+  NumericalPoint C = OT::Base::R::regression_coeff( sampleX, sampleY) ;
+  return C ;
+\end{verbatim}

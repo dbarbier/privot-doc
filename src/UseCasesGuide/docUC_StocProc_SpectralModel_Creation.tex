@@ -1,0 +1,132 @@
+% Copyright (c)  2005-2010 EDF-EADS-PHIMECA.
+% Permission is granted to copy, distribute and/or modify this document
+% under the terms of the GNU Free Documentation License, Version 1.2
+% or any later version published by the Free Software Foundation;
+% with no Invariant Sections, no Front-Cover Texts, and no Back-Cover
+% Texts.  A copy of the license is included in the section entitled "GNU
+% Free Documentation License".
+\renewcommand{\filename}{docUC_StocProc_SpectralModel_Creation.tex}
+\renewcommand{\filetitle}{UC : Creation of a spectral model}
+
+% \HeaderNNIILevel
+% \HeaderIILevel
+\HeaderIIILevel
+
+\label{SpectralModelCreation}
+\index{Stochastic Process!Normal Process}
+
+A Normal process is parametrized by its second order model which might be a covariance model or a spectral model. 
+In this part, we illustrate how user might define a spectral model and use it later to create a Normal process. \\
+
+A spectral model is seen as a mathematical function $f : \mathbb{R} \rightarrow \mathbb{M}_d(\mathbb{C})$: for each frequency $\omega$ is associated an hermitian complex matrix.
+OpenTURNS allows the User to define its own spectral model thanks to the object {\itshape UserDefinedSpectralModel}. 
+Recalling the definition of such a model, inputs needed are :
+\begin{itemize}
+\item A frequency grid given with the object \emph{RegularGrid}. The grid should be of from $\left\{-\omega,-\omega + \delta \omega,\ldots, \omega \right\}$ with $\delta \omega$ the frequency step;
+\item A collection of hermitian matrices corresponding to the spectral function thanks to the object \emph{HermitianMatrixCollection}. 
+All elements of the collection should be of same dimension, which is also the dimension of the model.
+\end{itemize}
+
+As the object \emph{UserDefinedSpectralModel} inherits from \emph{SpectralModel}, it is possible to get the spectral density function for a given frequency thanks to the method {\itshape computeSpectralDensity}.
+OpenTurns proceeds as following to return the result :
+\begin{itemize}
+\item It computes an approximation of the index in the frequency grid using the minimal frequency and frequency step values;
+\item If index is higher than the size of the grid, than it returns an exception. Otherwise, it returns the hermitian matrix stored at the computed index;
+\end{itemize}
+Notice that this corresponds to a piecwise function.\\ \\
+
+Details on each object may be found in the User Manual  (\href{OpenTURNS_UserManual_TUI.pdf}{see User Manual - StochasticProcess}).\\
+
+
+\requirements{
+
+  \begin{description}
+  \item[$\bullet$] a frequency grid : {\itshape myFrequencyGrid}
+  \item[type:]  RegularGrid
+  \end{description}
+
+  \begin{description}
+  \item[$\bullet$] a collection of hermitian matrices : {\itshape myCollection}
+  \item[type:]  HermitianMatrixCollection
+  \end{description}
+
+}
+{
+  \begin{description}
+  \item[$\bullet$] a spectral model : {\itshape mySpectralModel }
+  \item[type:] SpectralModel
+  \end{description}
+
+}
+
+\textspace\\
+Python script for this UseCase :
+
+\begin{lstlisting}
+  # Create the spectral model
+  mySpectralModel = UserDefinedSpectralModel(myFrequencyGrid, myCollection)
+
+  # Get the spectral density function computed at first frequency values
+  frequency = myFrequencyGrid.getStart()
+  frequencyStep = myFrequencyGrid.getStep()
+  myHermitian = mySpectralModel.computeSpectralDensity(frequency)
+
+  # Get the spectral function at frequency + 0.5 * frequencyStep
+  mySpectralModel.computeSpectralDensity(frequency + 0.5 * frequencyStep)
+  # Result is similar as myHermitian
+ 
+\end{lstlisting}
+
+
+
+As an example, we illustrate how to create a modified low pass model with exponential decrease as following :
+\begin{itemize}
+\item If $|f| < 3 Hz$, the spectral function is $1.0$
+\item If $|f| > 3 Hz$, the spectral function is done by $\exp \left(- 2.0 (|f| - 3.0)^2 \right)$
+\item In our example, the frequency grid is choosen as [-5,5] with $\delta f = 0.5$ Hz
+\end{itemize}
+
+
+\begin{lstlisting}
+
+  # Create the frequency grid
+  fmin = -5.0
+  df = 0.5
+  N = int(-2 * fmin / df) + 1
+  myFrequencyGrid =  RegularGrid(fmin, df, N)
+
+  # compute the index such as frequency is -3.0 Hz and 3.0 Hz
+  index1 = int((-3.0 - fmin)/df)
+  index2 = int((3.0 - fmin)/df)
+
+  myCollection = HermitianMatrixCollection()
+  for k in range(index1):
+    frequency = myFrequencyGrid.getStart() + k * myFrequencyGrid.getStep()
+    matrix = HermitianMatrix(1)
+    matrix[0, 0] = exp(-2 * (abs(frequency) - 3.0)**2)
+    myCollection.add(matrix)
+
+  for k in range(index1, index2):
+    matrix = HermitianMatrix(1)
+    matrix[0, 0] = 1.0
+    myCollection.add(matrix)
+
+  for k in range(index2, N):
+    frequency = myFrequencyGrid.getStart() + k * myFrequencyGrid.getStep()
+    matrix = HermitianMatrix(1)
+    matrix[0, 0] = exp(-2 * (abs(frequency) - 3.0)**2)
+    myCollection.add(matrix)
+      
+  # Create the spectral model
+  mySpectralModel = UserDefinedSpectralModel(myFrequencyGrid, myCollection)
+
+  # Get the spectral density function computed at first frequency values
+  frequency = myFrequencyGrid.getStart()
+  frequencyStep = myFrequencyGrid.getStep()
+  myHermitian = mySpectralModel.computeSpectralDensity(frequency)
+
+  # Get the spectral function at frequency + 0.5 * frequencyStep
+  mySpectralModel.computeSpectralDensity(frequency + 0.5 * frequencyStep)
+  # Result is similar as myHermitian
+ 
+\end{lstlisting}

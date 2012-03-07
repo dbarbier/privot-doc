@@ -1,0 +1,162 @@
+% Copyright (c)  2005-2009  EDF-EADS-PHIMECA.
+% Permission is granted to copy, distribute and/or modify this document
+% under the terms of the GNU Free Documentation License, Version 1.2
+% or any later version published by the Free Software Foundation;
+% with no Invariant Sections, no Front-Cover Texts, and no Back-Cover
+% Texts.  A copy of the license is included in the section entitled "GNU
+% Free Documentation License".
+
+Starting with version 0.12.2 of the \OT\ platform, a {\bf WrapperMacros.h} file offers a set of C \index{macro}macros which can greatly simplify the task of writing wrappers. These macros entirely support interfacing the wrapper with the \OT\ platform, which means the developer only needs to write the functions' content purged from any programming clutter.
+
+This, however, requires to make some choices in terms of how the wrapper operates. These macros thus assume that the internal state only contains one copy of the exchange data structure. In most cases, this should not be a problem. Occasionnally, the developer will not be able to rely on these macros, and they will have to use conventional function calls and the functions from the wrapper's library.
+
+\lstset{language=C++, basicstyle=\normalsize}
+\begin{lstlisting}[frame=TRBL]
+  CAST (type, arg)
+\end{lstlisting}
+
+This macro converts the {\bf arg} argument into the specified type.
+
+\lstset{language=C++, basicstyle=\normalsize}
+\begin{lstlisting}[frame=TRBL]
+  SET_INFORMATION_FROM_EXCHANGED_DATA( p_exchangedData )
+\end{lstlisting}
+
+This macro fills a structure named {\bf p\_info} based on data contained in the {\bf p\_exchangedData} exchange data structure.
+
+\lstset{language=C++, basicstyle=\normalsize}
+\begin{lstlisting}[frame=TRBL]
+  GET_EXCHANGED_DATA_FROM( pointer )
+\end{lstlisting}
+
+This macro converts the {\bf pointer} argument into an exchange data structure called {\bf p\_exchangedData}.
+
+\lstset{language=C++, basicstyle=\normalsize}
+\begin{lstlisting}[frame=TRBL]
+  COPY_EXCHANGED_DATA_TO( pointer )
+\end{lstlisting}
+
+This macro copies the content of the exchange data structure called {\bf p\_exchangedData} into the {\bf pointer} argument.
+
+\lstset{language=C++, basicstyle=\normalsize}
+\begin{lstlisting}[frame=TRBL]
+  DELETE_EXCHANGED_DATA_FROM( pointer )
+\end{lstlisting}
+
+This macro destroys the exchange data structure contained in the {\bf pointer} argument.
+
+\lstset{language=C++, basicstyle=\normalsize}
+\begin{lstlisting}[frame=TRBL]
+  CHECK_WRAPPER_MODE( mode )
+\end{lstlisting}
+
+This macro checks that the mode specified for the wrapper in the description file is indeed {\bf mode} or returns a {\bf WRAPPER\_USAGE\_ERROR} error.
+
+\lstset{language=C++, basicstyle=\normalsize}
+\begin{lstlisting}[frame=TRBL]
+  CHECK_WRAPPER_IN( mode )
+\end{lstlisting}
+
+This macro checks that the {\bf in} parameter specified for the wrapper in the description file is indeed {\bf mode} or returns a {\bf WRAPPER\_USAGE\_ERROR} error.
+
+\lstset{language=C++, basicstyle=\normalsize}
+\begin{lstlisting}[frame=TRBL]
+  CHECK_WRAPPER_OUT( mode )
+\end{lstlisting}
+
+This macro checks that the {\bf out} parameter specified for the wrapper in the description file is indeed {\bf mode} or returns a {\bf WRAPPER\_USAGE\_ERROR} error.
+
+\lstset{language=C++, basicstyle=\normalsize}
+\begin{lstlisting}[frame=TRBL]
+  PRINT( message )
+\end{lstlisting}
+
+This macro sends the {\bf message} string message to the platform's log system.
+
+\lstset{language=C++, basicstyle=\normalsize}
+\begin{lstlisting}[frame=TRBL]
+  INPOINT_ARRAY
+  OUTPOINT_ARRAY
+\end{lstlisting}
+
+These macros return pointers to the data tables contained in the {\bf point} structures of the execution functions.
+
+\lstset{language=C++, basicstyle=\normalsize}
+\begin{lstlisting}[frame=TRBL]
+  INPOINT_SIZE
+  OUTPOINT_SIZE
+\end{lstlisting}
+
+These macros return the size of the data tables contained in the {\bf point} structures of the execution functions.
+
+\lstset{language=C++, basicstyle=\normalsize}
+\begin{lstlisting}[frame=TRBL]
+  INPOINT_COORD( i )
+  OUTPOINT_COORD( i )
+\end{lstlisting}
+
+These macros return the value of the $i^{th}$ data table contained in the {\bf point} structures of the execution functions. Following the C convention, the index numbering starts at zero.
+
+\lstset{language=C++, basicstyle=\normalsize}
+\begin{lstlisting}[frame=TRBL]
+  FUNC_INFO( name, code )
+  FUNC_CREATESTATE( name, code )
+  FUNC_DELETESTATE( name, code )
+  FUNC_INIT( name, code )
+  FUNC_EXEC( name, code )
+  FUNC_EXEC_SAMPLE( name, code )
+  FUNC_FINALIZE( name, code )
+  GRAD_INFO( name, code )
+  GRAD_CREATESTATE( name, code )
+  GRAD_DELETESTATE( name, code )
+  GRAD_INIT( name, code )
+  GRAD_EXEC( name, code )
+  GRAD_FINALIZE( name, code )
+  HESS_INFO( name, code )
+  HESS_CREATESTATE( name, code )
+  HESS_DELETESTATE( name, code )
+  HESS_INIT( name, code )
+  HESS_EXEC( name, code )
+  HESS_FINALIZE( name, code )
+\end{lstlisting}
+
+These macros define the functions after which they are named with the {\bf name} suffix (which must be the same as the one stated in the wrapper's description file), and whose active part is described by {\bf code}.
+
+The {\bf name} argument is a standard C identifier, but not a string. Therefore, it must not be placed in quotes.
+
+Similarly, {\bf code} is a set of C instructions that we take care to write between an opening brace and a closing brace, in order to avoid any interpretation problem.
+
+It is often useful to declare a wrapper-specific macro which bears the name of the Function, of the Gradient and of the Hessian one wants to code. This can be done as follows:
+
+\lstset{language=C++, basicstyle=\normalsize}
+\begin{lstlisting}[frame=TRBL]
+  #define WRAPPERNAME myCode
+  FUNC_INIT( WRAPPERNAME, {} ) /* Nothing to do in func_init_ */
+  FUNC_EXEC( WRAPPERNAME,
+  {
+    /* Here we enter what to do in func_exec_ */
+  } )
+\end{lstlisting}
+
+A set of opening and closing braces without any content is used to indicate that nothing is to be executed in this function.
+
+\lstset{language=C++, basicstyle=\normalsize}
+\begin{lstlisting}[frame=TRBL]
+  FUNC_EXEC_SAMPLE_MULTITHREADED( name )
+\end{lstlisting}
+
+This macro replaces the classical {\bf FUNC\_EXEC\_SAMPLE} macro and provides an implementation based on the {\bf func\_exec\_} function, whether it be declared through the {\bf FUNC\_EXEC} macro or manually, in order to perform a multithreaded sample calculation. It is necessary that the function {\bf func\_exec\_} be multithread-safe.
+
+\lstset{language=C++, basicstyle=\normalsize}
+\begin{lstlisting}[frame=TRBL]
+  FUNC_EXEC_BODY_CALLING_COMMAND_IN_TEMP_DIR( prefix )
+\end{lstlisting}
+
+The execution of the external code by the use of files and of a call to a command isolated in a temporary directory is so common that this macro replaces the code that a developer should write in their {\bf FUNC\_EXEC} macro. Only the prefix, which will allow to easily find the temporary execution directory, needs to be specified. This macro is used as follows:
+
+\lstset{language=C++, basicstyle=\normalsize}
+\begin{lstlisting}[frame=TRBL]
+  #define WRAPPERNAME myCode
+  FUNC_EXEC( WRAPPERNAME,
+  FUNC_EXEC_BODY_CALLING_COMMAND_IN_TEMP_DIR( "myCode" ) )
+\end{lstlisting}

@@ -1,0 +1,87 @@
+% Copyright (c)  2005-2010 EDF-EADS-PHIMECA.
+% Permission is granted to copy, distribute and/or modify this document
+% under the terms of the GNU Free Documentation License, Version 1.2
+% or any later version published by the Free Software Foundation;
+% with no Invariant Sections, no Front-Cover Texts, and no Back-Cover
+% Texts.  A copy of the license is included in the section entitled "GNU
+% Free Documentation License".
+\renewcommand{\filename}{docUC_StocProc_NormalIntro.tex}
+\renewcommand{\filetitle}{Intro}
+
+% \HeaderNNIILevel
+% \HeaderIILevel
+%\HeaderIIILevel
+
+
+\index{Stochastic Process!Normal Process}
+
+
+
+
+Let $\vect{X}(\omega,t)$ be a multivariate random process  of dimension $d$.  We note, when the quantities exist :
+\begin{itemize}
+\item  $\vect{m}$ its \emph{mean function},  defined for all $t>0$, by $\vect{m}(t)=\mathbb{E}[\vect{X}_t] \in \mathbb{R}^d$ , 
+\item $\mat{C}$ its \emph{temporal covariance function},  defined for all $(s,t)>0$, by $\mat{C}(s, t)=\mathbb{E}[(\vect{X}_s-\vect{m}(s))(\vect{X}_t-\vect{m}(t))^t] \in  \mathcal{M}_{d \times d}(\mathbb{R})$,
+\item  $\mat{R}$ its \emph{temporal correlation function}, defined for all $(s,t)>0$, by $\mat{R}(s, t)  \in  \mathcal{M}(\mathbb{R}^d,\mathbb{R}^d)$ where for all $(i,j)$, $R_{ij}(s, t)=C_{ij}(s, t)/\sqrt{C_{ii}(s, t)C_{jj}(s,t)}$.
+\end{itemize}
+
+We recall here some useful defintiions.\\
+
+{\bf Normal process} : A stochastic process is {\itshape normal}  if all its finite dimensional joint distributions are normal, which means that for all $k  \in  \mathbb{N}$ and $I_k \in \mathbb{N}^*$, with $card I_k = k$, there exist $\vect{m}_1,\dots,\vect{m}_k\in\mathbb{R}^d$ and $\mat{C}_{1,\dots,k}\in\mathcal{M}_{kd\times kd}(\mathbb{R})$ such that :
+\begin{eqnarray}
+   \mathbb{E}[\exp\left\{i\vect{X}_{I_k}^t \vect{U}_{k}  \right\}] = 
+\exp\left\{i\vect{U}_{k}^t\vect{M}_{k}-\frac{1}{2}\vect{U}_{k}^t\mat{C}_{1,\dots,k}\vect{U}_{k}\right\}
+\end{eqnarray}
+where $\vect{X}_{I_k}^t = (\vect{X}_{t_1}^t, \hdots, \vect{X}_{t_k}^t)$ the concatenation in one vector of the $k$ vectors $\vect{X}_{t_i}$, $\vect{U}_{k}^t = (\vect{u}_{1}^t, \hdots, \vect{u}_{k}^t)$ and $\vect{M}_{k}^t = (\vect{m}_{1}^t, \hdots, \vect{m}_{k}^t)$  the concatenation in one vector of the $k$ vectors $\vect{u}_{i}$ or $\vect{m}_{i}$, and $\mat{C}_{1,\dots,k}$ is the symmetric matrix : 
+\begin{equation}\label{covMatrix}
+\mat{C}_{1,\dots,k} = \left(
+\begin{array}{cccc}
+  \mat{C}(t_1, t_1) & \mat{C}(t_1, t_2) & \hdots & \mat{C}(t_1, t_{k}) \\
+   \hdots &\mat{C}(t_2, t_2)  & \hdots & \mat{C}(t_2, t_{k}) \\
+  \hdots & \hdots & \hdots & \hdots \\
+   \hdots & \hdots & \hdots & \mat{C}(t_{k}, t_{k}) 
+\end{array}
+\right)
+\end{equation}
+
+A normal process is entirely defined by its mean function $t \mapsto \vect{m}(t)$ and its temporal covariance function  $(s,t) \mapsto \mat{C}(s,t)$.\\
+
+
+{\bf Weak stationarity (second order stationarity) } : A process $\vect{X}(\omega,t)$ is \emph{ weakly stationary} or \emph{stationary of second order} if its mean function is constant and its covariance function is invariant by time translation : 
+\begin{eqnarray}\label{stat2order}
+ \forall t>0,&   \vect{m}(t)   = \vect{m} \\
+ \forall (s,t,h) >0,  &  \mat{C}(s,s+h)  = \mat{C}(t,t+h)
+\end{eqnarray}
+Abusing the notation, we use $\mat{C}^{stat}(\tau)$ for $\mat{C}(s, s+\tau)$ as this quantitiy does not depend on $s$.\\
+
+ A process $\vect{X}(\omega,t)$ is \emph{ \bf stationary} if all its finite dimensional joint distributions  are the same. A normal process with second order stationarity is stationary.\\
+ 
+
+{\bf Spectral density function} :  If $\vect{X}(\omega,t)$  is a stationary process, we  define the \emph{ bilateral spectral density function} $\mat{S}(f) \in \mathcal{M}(\mathbb{R}^d \times \mathbb{R}^n)$ as the Fourier transform of the covariance function $\mat{C}^{stat}$ :
+\begin{equation} \label{specdensFunc}
+  \forall f \in \mathbb{R}, \, \mat{S}(f) = \int_{\mathbb{R}}\exp\left\{  -2i\pi f \tau \right\} \mat{C}^{stat}(\tau)\, d\tau
+\end{equation}
+and the  \emph{ unilateral spectral density function} $\mat{G}(f)$ defined by : 
+\begin{equation}\label{univG}
+  \forall f \geq 0, \mat{G}(f) = 2\mat{S}(f)
+\end{equation}
+
+The  covariance function $\mat{C}^{stat}$ may be evaluated from the spectral density function $\mat{S}(f)$  if $\mat{S}$ is $L^1(\mathcal{M}_{dd}(\mathbb{C}))$ as follows :
+\begin{equation} \label{cspectransform}
+  \mat{C}^{stat}(\tau)  = \int_{\mathbb{R}}\exp\left\{  2i\pi f \tau \right\} \mat{S}(f)\, df
+\end{equation}
+
+
+
+
+ In Open TURNS, all the stationary normal processes are centered : 
+ \begin{equation}
+ \vect{m}(t)   = \vect{m} = \vect{0}
+ \end{equation}
+and  defined either by : 
+\begin{itemize} 
+  \item their covariance function  $\tau \mapsto \mat{C}^{stat}(\tau)$. Then the normal process is used trhough its temporal view, thanks to the object {\itshape TemporalNormalProcess} (see UC \ref{TemporalNormalProcessCreation}),
+  \item or their unilateral spectral density function $f \in \mathbb{R}^+ \mapsto \mat{G}(f)$. Then the normal process is used trhough its spectral view, thanks to the object {\itshape SpectralNormalProcess} (see UC \ref{SpectralNormalProcessCreation}).
+\end{itemize}
+
+In order to manipulate the same normal process through both the temporal and spectral views, it is necessary to create a second order model that insures the coherence between the convariance function $\tau \mapsto \mat{C}^{stat}(\tau)$ and the specatrl density fucntion  $f \in \mathbb{R}^+ \mapsto \mat{G}(f)$ through the relation (\ref{specdensFunc}). In that purpose, the object {\itshape SecondorderModel} is built then used to create a {\itshape TemporalNormalProcess} and the associated {\itshape SpectralNormalProcess} (see UC (\ref{SecondOrderNormalProcessCreation})).

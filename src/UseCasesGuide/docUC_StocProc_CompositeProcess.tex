@@ -1,0 +1,62 @@
+% Copyright (c)  2005-2010 EDF-EADS-PHIMECA.
+% Permission is granted to copy, distribute and/or modify this document
+% under the terms of the GNU Free Documentation License, Version 1.2
+% or any later version published by the Free Software Foundation;
+% with no Invariant Sections, no Front-Cover Texts, and no Back-Cover
+% Texts.  A copy of the license is included in the section entitled "GNU
+% Free Documentation License".
+\renewcommand{\filename}{docUC_StocProc_CompositeProcess.tex}
+\renewcommand{\filetitle}{UC : Creation of a Composite Process}
+
+% \HeaderNNIILevel
+% \HeaderIILevel
+\HeaderIIILevel
+
+\label{UCprocess}
+
+
+\index{Stochastic Process!Process Manipulation}
+
+
+We recall that  $\underline{X}(\omega,t)$ is a stochastic process, where $\omega \in \Omega$ is an event, $t \in \mathbb{R}$ is the time and $\underline{X}(\omega,t) \in \mathbb{R}^d$ are the observed values of the process at each time $t$.\\
+
+The objective here is to create the output variable of interest which is a  composite process defined as the image through a dynamical function $f$ of a process $(\vect{X}_t)_t$ : 
+\begin{equation} 
+\vect{Y}_t = f(t, \vect{X}_t)
+\end{equation}
+
+
+Details on each object may be found in the User Manual  (\href{OpenTURNS_UserManual_TUI.pdf}{see User Manual - Stochastic Process}).\\
+
+\requirements{
+  \begin{description}
+  \item[$\bullet$] a stochastic process {\itshape myInputProcess}
+  \item[type:]  Process
+  \end{description}
+
+  \begin{description}
+  \item[$\bullet$] a dynamlical function {\itshape f}
+  \item[type:]  DynamicalFunction
+  \end{description}
+}
+{
+
+  \begin{description}
+  \item[$\bullet$] a stochastic process {\itshape myOutputProcess}
+  \item[type:]  CompositeProcess
+  \end{description}
+}
+
+\textspace\\
+Python script for this UseCase :
+
+\begin{lstlisting}
+  # Create the output process of interest
+  myOutputProcess = CompositeProcess(f, myInputProcess)
+
+  # Get the antecedent myInputProcess
+  myOutputProcess.getAntecedent()
+
+  # Get the dynamical function f
+   myOutputProcess.getFunction()
+\end{lstlisting}

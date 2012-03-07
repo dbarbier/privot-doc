@@ -1,0 +1,78 @@
+% Copyright (c)  2005-2010 EDF-EADS-PHIMECA.
+% Permission is granted to copy, distribute and/or modify this document
+% under the terms of the GNU Free Documentation License, Version 1.2
+% or any later version published by the Free Software Foundation;
+% with no Invariant Sections, no Front-Cover Texts, and no Back-Cover
+% Texts.  A copy of the license is included in the section entitled "GNU
+% Free Documentation License".
+\renewcommand{\filename}{docUC_TimeGrid.tex}
+\renewcommand{\filetitle}{UC : Creation of a time grid}
+
+% \HeaderNNIILevel
+ \HeaderIILevel
+%\HeaderIIILevel
+
+\label{UCtimeGrig}
+
+
+\index{Stochastic Process!Time Grid}
+
+
+This section details first how to create a time grid.\\
+
+All the stochastic process are associated to a discrete time grid that writes $(t_0, t_1, \hdots, t_{n})$.\\ 
+The time grid can be defined using $(t_{Min}, \Delta t, n)$ where $n$ is the number of steps. $\Delta t$ the time step between two concsecutive instants and $t_0 = t_{Min}$. Then,  $t_k = t_{Min} + k \Delta t$ and $t_{Max} = t_{Min} +  (n) \Delta t$.
+
+Details on each object may be found in the User Manual  (\href{OpenTURNS_UserManual_TUI.pdf}{see User Manual -  Stochastic Process}).\\
+
+\requirements{
+  \begin{description}
+  \item[$\bullet$] minimal instant : {\itshape $tMin$}
+  \item[type:]  NumericalScalar
+  \end{description}
+
+  \begin{description}
+  \item[$\bullet$] time step : {\itshape $timeStep$}
+  \item[type:]  NumericalScalar
+  \end{description}
+
+  \begin{description}
+  \item[$\bullet$] number of timesteps   : {\itshape $n$}
+  \item[type:]  integer
+  \end{description}
+
+}
+{
+  \begin{description}
+  \item[$\bullet$] a time grid : {\itshape myRegularGrid}
+  \item[type:]  RegularGrid
+  \end{description}
+}
+
+\textspace\\
+Python script for this UseCase :
+
+\begin{lstlisting}
+  # Create a time grid
+
+  # Define the min bound of the time grid, the number of steps points
+  # and the time step between two instants
+  # Care ! this point number does not include the bounds (total number of points is n+1)
+  tMin = 0.
+  timeStep = 0.1
+  n = 10
+
+  # Create the RegularGrid
+  myRegularGrid = RegularGrid(tMin, timeStep, n)
+
+  # Get the min, max, step and number of points of a RegularGrid
+  myMin = myRegularGrid.getStart()
+  myMax = myRegularGrid.getEnd()
+  myStep = myRegularGrid.getStep()
+  myRegularGridSize = myRegularGrid.getN()
+
+
+\end{lstlisting}
+
+
+

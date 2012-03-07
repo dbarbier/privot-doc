@@ -1,0 +1,116 @@
+% Copyright (c)  2005-2010 EDF-EADS-PHIMECA.
+% Permission is granted to copy, distribute and/or modify this document
+% under the terms of the GNU Free Documentation License, Version 1.2
+% or any later version published by the Free Software Foundation;
+% with no Invariant Sections, no Front-Cover Texts, and no Back-Cover
+% Texts.  A copy of the license is included in the section entitled "GNU
+% Free Documentation License".
+
+\documentclass[a4paper,11pt]{book}
+
+\usepackage[T1]{fontenc}
+\usepackage[latin1]{inputenc}
+\usepackage{graphicx,color,listings}
+\usepackage{fancyhdr}
+\DeclareGraphicsExtensions{.png}
+
+\setlength{\textwidth}{18.5cm}
+\setlength{\textheight}{23cm}
+\setlength{\hoffset}{-1.04cm}
+\setlength{\voffset}{-1.54cm}
+\setlength{\oddsidemargin}{0cm}
+\setlength{\evensidemargin}{0cm}
+\setlength{\topmargin}{0cm}
+\setlength{\headheight}{1cm}
+\setlength{\headsep}{0.5cm}
+\setlength{\marginparsep}{0cm}
+\setlength{\marginparwidth}{0cm}
+\setlength{\footskip}{1cm}
+\setlength{\parindent}{0cm}
+
+\pagestyle{fancy}
+\fancyhf{} \rhead{\bfseries \thepage} \lhead{\bfseries \nouppercase Coupling mechanisms between the Open TURNS platform and computational codes}
+\rfoot{\bfseries \copyright 2005-2010 EDF - EADS - PhiMeca} \lfoot{}
+
+% package url is used in the bibliography for URL layout
+\usepackage{url}
+
+% fonts for the table and figure captions
+\usepackage[small,bf,up]{caption}
+\renewcommand{\captionfont}{\small\itshape}
+
+% depth of the TOC
+\setcounter{tocdepth}{4}
+
+% macros used in the document
+\newcommand{\OT} {Open TURNS}
+\def\R{\mathbb{R}}
+
+% index
+\usepackage{makeidx}
+\makeindex
+
+\begin{document}
+
+\begin{titlepage}
+  \vspace*{2cm}
+  \begin{center}
+    {\huge \bf Coupling mechanisms between the Open TURNS platform and computational codes}
+    % \input{GenericInformation.tex}
+  \end{center}
+\end{titlepage}
+
+\newpage
+\input{summary}
+
+\cleardoublepage
+\tableofcontents
+\cleardoublepage
+
+
+\cleardoublepage
+
+\chapter{Introduction}
+\input{introduction}
+\cleardoublepage
+
+\chapter{The different types of functions}
+\input{functiontypes}
+\cleardoublepage
+
+\chapter{The wrapper}
+\input{wrapper}
+\cleardoublepage
+
+\chapter{The structure of a wrapper}
+\input{wrapperstructure}
+\cleardoublepage
+
+\chapter{The wrapper as interface for the external code}
+\input{extcodeitf}
+\cleardoublepage
+
+\chapter{Future developments}
+\input{futuredev}
+\cleardoublepage
+
+\appendix
+\chapter{Functions from the WrapperCommon library}
+\input{appendix1}
+\cleardoublepage
+
+\chapter{Macros from the WrapperMacros library}
+\input{appendix2}
+\cleardoublepage
+
+\chapter{Description of the wrapper's development structures}
+\input{appendix3}
+\cleardoublepage
+
+\chapter{DTD for the wrapper's description file}
+\input{appendix4}
+\cleardoublepage
+
+\printindex
+
+\end{document}

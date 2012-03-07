@@ -1,0 +1,59 @@
+% Copyright (c)  2005-2010 EDF-EADS-PHIMECA.
+% Permission is granted to copy, distribute and/or modify this document
+% under the terms of the GNU Free Documentation License, Version 1.2
+% or any later version published by the Free Software Foundation;
+% with no Invariant Sections, no Front-Cover Texts, and no Back-Cover
+% Texts.  A copy of the license is included in the section entitled "GNU
+% Free Documentation License".
+\renewcommand{\filename}{docUC_MinMax_ExpPlaneDrawing.tex}
+\renewcommand{\filetitle}{UC : Drawing an experiment plane in dimension 2 }
+
+% \HeaderNNIILevel
+% \HeaderIILevel
+\HeaderIIILevel
+
+\index{Experiment Plane!Drawing}
+\index{Graph Manipulation!ViewImage}
+\index{Graph Manipulation!Show}
+
+
+
+
+The objective of this Use Case is to draw an experiment plane in dimension 2.\\
+
+
+Details on each object may be found in the User Manual  (\href{OpenTURNS_UserManual_TUI.pdf}{see User Manual - Graphs / Cloud}).\\
+
+
+\requirements{
+  \begin{description}
+  \item[$\bullet$] the points of an experiment plane : {\itshape mySample}
+  \item[type:] a NumericalSample
+  \end{description}
+}
+{
+  \begin{description}
+  \item[$\bullet$] the files containing the graph, in format .EPS, .FIG, .PNG : {\itshape experimentPlane}
+  \item[type:] -
+  \end{description}
+}
+
+\textspace\\
+Python script for this UseCase :
+
+
+\begin{lstlisting}
+  # Draw it
+  mySampleDrawable = Cloud(mySample, "blue", "square", "My experiment Plane")
+  graph = Graph("My experiment Plane", "x", "y", True)
+  graph.addDrawable(mySampleDrawable)
+  graph.draw("experimentPlane")
+  ViewImage(graph.getBitmap())
+
+  # In order to see the drawable without creating the associated files
+  # CARE : it requires to have created the graph structure before
+  Show(mySampleDrawable)
+  # or to see the graph without creating the associated files
+  Show(graph)
+\end{lstlisting}
+

@@ -1,0 +1,2781 @@
+% Copyright (c)  2005-2010 EDF-EADS-PHIMECA.
+% Permission is granted to copy, distribute and/or modify this document
+% under the terms of the GNU Free Documentation License, Version 1.2
+% or any later version published by the Free Software Foundation;
+% with no Invariant Sections, no Front-Cover Texts, and no Back-Cover
+% Texts.  A copy of the license is included in the section entitled "GNU
+% Free Documentation License".
+\newpage\section{Stochastic process}
+
+In this section a description of all general objects is given. \\
+The notion of stochastic process induces many classes. This part is organized as following :
+\begin{itemize}
+\item we focuse on the presentation of both the $Process$, $RegularGrid$, $TimeSeries$ and $ProcessSample$ class.
+These objects are used in the different following sections.
+\item We quickly present the $CompositeProcess$ class,
+\item We present the $ARMA$ class and its specific objects,
+\item The $NormalProcess$ is presented both with its specific objects and its two variantes ($TemporalNormalProcess$ and $SpectralNormalProcess$).
+\item The $WhiteNoise$ is presented. \\
+\item Finally the $RandomWalk$ is presented. \\
+\end{itemize}
+
+Be aware of the fact that for some uses in the TUI, it is necessary to explicitely cast a given process into the general $Process$ class.
+
+% ===================================================================
+
+\newpage \subsection{General common objects}
+
+\subsubsection{Process}
+
+
+\begin{description}     
+                        
+\item[Usage :] \rule{0pt}{1em}
+  \begin{description}
+  \item $Process(process)$
+  \end{description}
+  \bigskip
+
+\item[Arguments :]  \rule{0pt}{1em}
+  \begin{description}
+  \item $process$ : a ProcessImplementation (which is a particular Process) 
+  \end{description} 
+  \bigskip          
+
+\item[Value :] a Process
+  \rule{0pt}{1em}
+  \begin{description}
+  \item This class enables to modelize a stochastic process. 
+  \end{description}
+  \bigskip
+
+\item[Some methods :]  \rule{0pt}{1em}
+
+  \begin{description}
+
+  \item $getDescription$
+    \begin{description}
+    \item[Usage :] $getDescription()$
+    \item[Arguments :] none
+    \item[Value :] a string, the description of the process
+    \end{description}
+    \bigskip
+
+  \item $getDimension$
+    \begin{description}
+    \item[Usage :] $getDimension()$
+    \item[Arguments :] none
+    \item[Value :] an integer, the dimension of the stochastic process
+    \end{description}
+    \bigskip
+
+  \item $getName$
+    \begin{description}
+    \item[Usage :] $getName()$
+    \item[Arguments :] none
+    \item[Value :] a string, the name of the Process
+    \end{description}
+    \bigskip
+
+  \item $getRealization$
+    \begin{description}
+    \item[Usage :] $getRealization()$
+    \item[Arguments :] none
+    \item[Value :] a TimeSeries, one realization of the considered random process
+    \end{description}
+    \bigskip
+
+ \item $getMarginalProcess$
+    \begin{description}
+    \item[Usage :] $getMarginalProcess(k)$
+    \item[Arguments :] $k$, an integer
+    \item[Value :] a Process, the $k-th$ marginal of the random process
+    \end{description}
+    \bigskip
+
+  \item $getSample$
+    \begin{description}
+    \item[Usage :] $getSample(n)$
+    \item[Arguments :] $n$, an integer
+    \item[Value :] a ProcessSample , $n$ realizations of the random process
+    \end{description}
+    \bigskip
+
+  \item $getTimeGrid$
+    \begin{description}
+    \item[Usage :] $getTimeGrid()$
+    \item[Arguments :] none
+    \item[Value :] a RegularGrid, the timeGrid over which the process is observed
+    \end{description}
+    \bigskip
+
+ \item $isComposite$
+    \begin{description}
+    \item[Usage :] $isComposite()$
+    \item[Arguments :] none
+    \item[Value :] a boolean. Tells if the process is composite (built upon a function and a process).
+    \end{description}
+    \bigskip
+
+ \item $isStationary$
+    \begin{description}
+    \item[Usage :] $isStationary()$
+    \item[Arguments :] none
+    \item[Value :] a boolean, $true$ if the process is stationary, $false$ otherwise
+    \end{description}
+    \bigskip
+
+ \item $isNormal$
+    \begin{description}
+    \item[Usage :] $isNormal()$
+    \item[Arguments :] none
+    \item[Value :] a boolean, $true$ if the process is Normal, $false$ otherwise
+    \end{description}
+    \bigskip
+
+  \item $setDescription$
+    \begin{description}
+    \item[Usage :] $setDescription(description)$
+    \item[Arguments :] $description$, a Description
+    \item[Value :] none. Set a description to the process
+    \end{description}
+    \bigskip
+
+  \item $setName$
+    \begin{description}
+    \item[Usage :] $setName(name)$
+    \item[Arguments :] name : a string
+    \item[Value :] the Process is named $name$
+    \end{description}
+    \bigskip
+
+ \item $setTimeGrid$
+    \begin{description}
+    \item[Usage :] $setTimeGrid(timeGrid)$
+    \item[Arguments :] $timeGrid$, a RegularGrid
+    \item[Value :] Fix the time grid of observation of the process 
+    \end{description}
+    \bigskip
+
+  \end{description}
+
+\end{description}
+
+%===================================================
+\newpage \subsubsection{RegularGrid}
+
+\begin{description}
+
+\item[Usage :] \rule{0pt}{1em}
+  \begin{description}
+  \item $RegularGrid()$
+  \item $RegularGrid(t_{Min}, \Delta t, N)$
+  \end{description}
+
+\item[Arguments :]  \rule{0pt}{1em}
+  \begin{description}
+  \item $t_{Min}$  :        a NumericalScalar, the initial time
+  \item $N$        :        an integer, the number of time stamps
+  \item $\Delta t$ :        a NumericalScalar, the step of the regular grid such as the $k-th$ time stamp of the time grid is $t_k$ = $t_{Min}$ + $ k * \Delta $
+  \end{description}
+
+\item[Value :] RegularGrid
+  \begin{description}
+  \item the RegularGrid is filled by fixing the step $\Delta T$; the final time corresponds to $t_{Min}$ + $ (N-1) * \Delta $
+  \end{description}
+
+\item[Some methods :]  \rule{0pt}{1em}
+
+  \begin{description}
+
+  \item $getN$
+    \begin{description}
+    \item[Usage :] $getN()$
+    \item[Arguments :] none
+    \item[Value :] an integer : the number of time stamps 
+    \end{description}
+    \bigskip
+
+  \item $getStart$
+    \begin{description}
+    \item[Usage :] $getStart()$
+    \item[Arguments :] none
+    \item[Value :] a NumericalScalar : the initial time of the RegularGrid
+    \end{description}
+    \bigskip
+
+  \item $getEnd$
+    \begin{description}
+    \item[Usage :] $getEnd()$
+    \item[Arguments :] none
+    \item[Value :] a NumericalScalar : the first time stamp out of the RegularGrid
+    \end{description}
+    \bigskip
+
+  \item $getStep$
+    \begin{description}
+    \item[Usage :] $getStep()$
+    \item[Arguments :] none
+    \item[Value :] a NumericalScalar : the time step of the RegularGrid
+    \end{description}
+    \bigskip
+
+  \item $getName$
+    \begin{description}
+    \item[Usage :] $getName()$
+    \item[Arguments :] none
+    \item[Value :] a string, the name of the RegularGrid
+    \end{description}
+    \bigskip
+
+  \item $setName$
+    \begin{description}
+    \item[Usage :] $setName(name)$
+    \item[Arguments :] name : a string
+    \item[Value :] the time grid is named $name$
+    \end{description}
+    \bigskip
+
+  \end{description}
+
+\end{description}
+
+% ===================================================================
+\newpage \subsubsection{TimeSeries}
+
+\begin{description}
+
+\item[Usage :] \rule{0pt}{1em}
+  \begin{description}
+  \item $TimeSeries()$
+  \item $TimeSeries(timeGrid, sample)$
+  \end{description}
+
+\item[Arguments :]  \rule{0pt}{1em}
+  \begin{description}
+  \item $timeGrid$  :        a RegularGrid, the time values on which the realizations are observed
+  \item $sample$    :        a NumericalSample, the data values
+  \end{description}
+
+\item[Value :] TimeSeries
+  \begin{description}
+  \item the TimeSeries is filled with a time values issued by $timeGrid$ and a values issued from $sample$
+  \end{description}
+
+\item[Some methods :]  \rule{0pt}{1em}
+
+  \begin{description}
+
+
+  \item $drawMarginal$
+    \begin{description}
+    \item[Usage :] $drawMarginal(i)$
+    \item[Arguments :] an integer
+    \item[Value :] a Graph of the $i-th$ marginal as function of time
+    \end{description}
+    \bigskip
+
+  \item $getDimension$
+    \begin{description}
+    \item[Usage :] $getDimension()$
+    \item[Arguments :] none
+    \item[Value :] an integer : the dimension of the TimeSeries
+    \end{description}
+    \bigskip
+
+  \item $getTemporalMean$
+    \begin{description}
+    \item[Usage :] $getTemporalMean()$
+    \item[Arguments :] none
+    \item[Value :] a NumericalPoint : compute the temporal mean which corresponds to the mean of its values
+    \end{description}
+    \bigskip
+
+  \item $getTimeGrid$
+    \begin{description}
+    \item[Usage :] $getTimeGrid()$
+    \item[Arguments :] none
+    \item[Value :] a RegularGrid : the time stamps of observation
+    \end{description}
+    \bigskip
+
+  \item $getValueAtIndex$
+    \begin{description}
+    \item[Usage :] $getValueAtIndex(k)$
+    \item[Arguments :] an integer
+    \item[Value :] a NumericalPoint : the $k-th$ value of the TimeSeries
+    \end{description}
+    \bigskip
+
+  \item $getValueAtNearestTime$
+    \begin{description}
+    \item[Usage :] $getValueAtNearestTime(t)$
+    \item[Arguments :] a NumericalScalar
+    \item[Value :] a NumericalPoint : the value of the TimeSeries observed at time $t$
+    \end{description}
+    \bigskip
+
+  \item $getNumericalSample$
+    \begin{description}
+    \item[Usage :] $getNumericalSample()$
+    \item[Arguments :] none
+    \item[Value :] a NumericalSample : the data of the TimeSeries
+    \end{description}
+    \bigskip
+
+  \item $getName$
+    \begin{description}
+    \item[Usage :] $getName()$
+    \item[Arguments :] none
+    \item[Value :] a string, the name of the TimeSeries
+    \end{description}
+    \bigskip
+
+  \item $setValueAtIndex$
+    \begin{description}
+    \item[Usage :] $setValueAtIndex(i, np)$
+    \item[Arguments :] an integer, a NumericalPoint
+    \item[Value :] None ; the value $np$ is set at the index $i$
+    \end{description}
+    \bigskip
+
+  \item $setValueAtNearestTime$
+    \begin{description}
+    \item[Usage :] $setValueAtNearestTime(t, np)$
+    \item[Arguments :] a NumericalScalar, a NumericalPoint
+    \item[Value :] None ; the value $np$ is set at the index which corresponds to the nearest time $t$
+    \end{description}
+    \bigskip
+
+  \item $setName$
+    \begin{description}
+    \item[Usage :] $setName(name)$
+    \item[Arguments :] name : a string
+    \item[Value :] the TimeSeries is named $name$
+    \end{description}
+    \bigskip
+
+
+
+  \end{description}
+
+\end{description}
+
+% ===================================================================
+
+\newpage \subsubsection{ProcessSample}
+
+\begin{description}
+
+\item[Usage :] \rule{0pt}{1em}
+  \begin{description}
+  \item $ProcessSample()$
+  \item $ProcessSample(timeGrid, size, dimension)$
+  \item $ProcessSample(size, timeSeries)$ 
+  \item $ProcessSample(collection)$ 
+
+  \end{description}
+
+
+ 
+\item[Arguments :]  \rule{0pt}{1em}
+  \begin{description}
+  \item $timeGrid$   :      a RegularGrid
+  \item $size$       :      an integer, size of the ProcessSample
+  \item $dimension$  :      an integer, dimension of the ProcessSample
+  \item $collection$ :      a TimeSeriesCollection, collection of TimeSeries with the same timeGrid
+  \end{description}
+
+\item[Value :] ProcessSample
+  \begin{description}
+  \item while using the second parameters set, the ProcessSample has timeGrid as grid of time stamps, its size and dimension are fixed (sample is filled with values are zero)
+  \item while using the third parameters set, the ProcessSample is filled with $size$ copies of the TimeSeries $timeSeries$
+  \item while using the fourth parameters set, the ProcessSample is filled with the collection of TimeSeries (with common RegularGrid)
+  \end{description}
+
+\item[Some methods :]  \rule{0pt}{1em}
+
+  \begin{description}
+
+
+  \item $drawMarginal$
+    \begin{description}
+    \item[Usage :] $drawMarginal(i)$
+    \item[Arguments :] an integer
+    \item[Value :] a Graph of the $i-th$ marginals as function of time
+    \end{description}
+    \bigskip
+
+  \item $getDimension$
+    \begin{description}
+    \item[Usage :] $getDimension()$
+    \item[Arguments :] none
+    \item[Value :] an integer : the dimension of the ProcessSample
+    \end{description}
+    \bigskip
+
+  \item $getSize$
+    \begin{description}
+    \item[Usage :] $getSize()$
+    \item[Arguments :] none
+    \item[Value :] an integer : the size of the ProcessSample
+    \end{description}
+    \bigskip
+
+  \item $getTimeGrid$
+    \begin{description}
+    \item[Usage :] $getTimeGrid()$
+    \item[Arguments :] none
+    \item[Value :] a RegularGrid : the time stamps of observation of the ProcessSample
+    \end{description}
+    \bigskip
+
+
+  \item $add$
+    \begin{description}
+    \item[Usage :] $add(timeSeries)$
+    \item[Arguments :] $timeSeries$, a TimeSeries
+    \item[Value :] Extend the ProcessSample by adding timeSeries to the collection (the TimeSeries should have the same time grid as the ProcessSample). The new size of the sample
+ is updated
+    \end{description}
+    \bigskip
+
+  \item $computeMean$
+    \begin{description}
+    \item[Usage :] $computeMean()$
+    \item[Arguments :] none
+    \item[Value :] a TimeSeries : the mean of the ProcessSample. Its $k-th$ time stamp is the mean value of the $k-th$ time stamp of all its TimeSeries
+    \end{description}
+    \bigskip
+
+  \item $computeQuantilePerComponent$
+    \begin{description}
+    \item[Usage :] $computeQuantilePerComponent(prob)$
+    \item[Arguments :] prob: a real value in $(0, 1)$.
+    \item[Value :] a TimeSeries with size and dimension parameters the same as the ProcessSample's ones. The values at a given time index are component-wise estimates of the quantiles of level prob of the underlying process at this time value, using the empirical quantile.
+    \end{description}
+    \bigskip
+
+  \item $computeTemporalMean$
+    \begin{description}
+    \item[Usage :] $computeTemporalMean()$
+    \item[Arguments :] none
+    \item[Value :] a NumericalSample with size and dimension parameters the same as the ProcessSample's ones. 
+  The $k-th$ value corresponds to the temporal mean of the $k-th$ TimeSeries of the ProcessSample 
+    \end{description}
+    \bigskip
+
+  \item $getName$
+    \begin{description}
+    \item[Usage :] $getName()$
+    \item[Arguments :] none
+    \item[Value :] a string, the name of the ProcessSample
+    \end{description}
+    \bigskip
+
+  \item $setName$
+    \begin{description}
+    \item[Usage :] $setName(name)$
+    \item[Arguments :] name : a string
+    \item[Value :] the ProcessSample is named $name$
+    \end{description}
+    \bigskip
+
+
+  \end{description}
+
+\end{description}
+
+
+% =====================================================
+\newpage \subsubsection{TimeSeriesCollection}
+
+\begin{description}
+
+\item[Usage :] \rule{0pt}{1em}
+  \begin{description}
+  \item $TimeSeriesCollection()$
+  \item $TimeSeriesCollection(size)$
+  \item $TimeSeriesCollection(size, ts)$
+  \end{description}
+
+\item[Arguments :]  \rule{0pt}{1em}
+  \begin{description}
+  \item $size$  : an integer, the size of the collection (number of elements that it contains)
+  \item $ts$ :  a TimeSeries
+  \end{description}
+
+\item[Value :] a TimeSeriesCollection, collection of TimeSeries
+  \begin{description}
+  \item while using the second parameters set, the TimeSeriesCollection is filled with $size$ copy of the TimeSeries $ts$
+  \end{description}
+
+\item[Some methods :]  \rule{0pt}{1em}
+
+  \begin{description}
+
+  \item $add$
+    \begin{description}
+    \item[Usage :] $add(ts)$
+    \item[Arguments :] TimeSeries
+    \item[Value :] Add $ts$ to the collection of TimeSeries
+    \end{description}
+    \bigskip
+
+  \item $clear$
+    \begin{description}
+    \item[Usage :] $clear()$
+    \item[Arguments :] None
+    \item[Value :] Remove all elements of the collection. The new size is $0$
+    \end{description}
+    \bigskip
+
+  \item $getSize$
+    \begin{description}
+    \item[Usage :] $getSize()$
+    \item[Arguments :] none
+    \item[Value :] an integer : the size of the collection
+    \end{description}
+    \bigskip
+
+
+  \item $resize$
+    \begin{description}
+    \item[Usage :] $resize(n)$
+    \item[Arguments :] an integer
+    \item[Value :] Fix the new size of the collection
+    \end{description}
+    \bigskip
+
+  \end{description}
+
+\end{description}
+
+
+
+
+%================================================================================================================
+
+
+\newpage \subsection{Temporal information}
+
+
+\subsubsection{CovarianceModel}
+
+This class is the interface of $CovarianceModelImplementation$. 
+
+\begin{description}
+
+\item[Usage :] $CovarianceModel(myCovarianceModelImplementation)$
+  \bigskip
+
+\item[Arguments :] $myCovarianceModelImplementation$ : the implementation of a covariance model. For example, a stationary covariance model, as the Exponential one.
+
+  \bigskip
+
+\item[Value :] a CovarianceModel
+  \bigskip
+
+\item[Some methods :]  \rule{0pt}{1em}
+
+  \begin{description}
+
+    \item $getDimension$
+    \begin{description}
+    \item[Usage :] $getDimension()$
+    \item[Arguments :] none
+    \item[Value :]   an integer, the dimension of the model $d$
+    \end{description}
+    \bigskip
+
+  \item $isStationary$
+    \begin{description}
+    \item[Usage :] $isStationary()$
+    \item[Arguments :] none
+    \item[Value :] a boolean, $true$ if the model is stationary
+    \end{description}
+    \bigskip
+
+  \item $computeCovariance$
+    \begin{description}
+       \item[Usage :] \rule{0pt}{1em}
+         \begin{description}
+               \item $computeCovariance(t, s)$
+               \item $computeCovariance(\tau)$
+         \end{description}
+        \item[Arguments :]
+         \begin{description}
+            \item $t, s$ : NumericalScalar
+            \item $\tau$ : NumericalScalar
+          \end{description}] 
+       \item[Value :] a CovarianceMatrix $\in\mathcal{M}_{d\times d}(\mathbb{R})$ that evaluates the covariance model between time stamps $t$ and $s$ : 
+$$
+\mat{C}(s, t)=\mathbb{E}[(\vect{X}_s-\vect{m}(s))(\vect{X}_t-\vect{m}(t))^t]
+$$
+where $\vect{m}$ is the mean fucntion defined for all $t>0$ by $\vect{m}(t)= E[\vect{X}_t]$.\\
+In the second usage, the covariance model must be stationary.
+    \end{description}
+    \bigskip
+
+  \item $discretizeCovariance$
+    \begin{description}
+    \item[Usage :] $discretizeCovariance(tg)$
+    \item[Arguments :] $tg$ :  a RegularGrid, the time grid $(t_0, \dots, t_{n-1})$ of size $n$
+    \item[Value :] a CovarianceMatrix $\in\mathcal{M}_{nd\times nd}(\mathbb{R})$ (if the process is of dimension $d$) makes a discretization of the model on the time grid $tg$ and returns the covariance matrix  :  
+\begin{equation}\label{covMatrix}
+\mat{C}_{1,\dots,k} = \left(
+\begin{array}{cccc}
+  \mat{C}(t_0, t_0) & \mat{C}(t_0, t_1) & \hdots & \mat{C}(t_0, t_{n-1}) \\
+   \hdots &\mat{C}(t_1, t_1)  & \hdots & \mat{C}(t_1, t_{n-1}) \\
+  \hdots & \hdots & \hdots & \hdots \\
+   \hdots & \hdots & \hdots & \mat{C}(t_{n-1}, t_{n-1}) 
+\end{array} 
+\right)
+\end{equation}
+
+    \end{description}
+    \bigskip
+
+  \item $getName$
+    \begin{description}
+    \item[Usage :] $getName()$
+    \item[Arguments :] none
+    \item[Value :] a string, the name of the CovarianceModel
+    \end{description}
+    \bigskip
+
+  \item $setName$
+    \begin{description}
+    \item[Usage :] $setName(name)$
+    \item[Arguments :] name : a string
+    \item[Value :] the CovarianceModel, named $name$
+    \end{description}
+    \bigskip
+
+
+  \end{description}
+
+\end{description}
+
+
+% =====================================================
+\newpage \subsubsection{StationaryCovarianceModel}
+
+This class inherits from CovarianceModel. This class is not used alone.\\
+
+\begin{description}
+
+\item[Usage :] $StationaryCovarianceModel()$
+  \bigskip
+
+\item[Arguments :]  none.
+  \bigskip
+
+\item[Value :] a StationaryCovarianceModel. For example, the Exponential one. 
+  \bigskip
+
+\item[description :]  
+
+The covariance matrix $ \mat{C}(s,t)$ is stationnary when it only depends on $t-s$ : 
+\begin{eqnarray}\label{covStat}
+ \forall (s,t,h) >0,  &  \mat{C}(s,s+h)  = \mat{C}(t,t+h)
+\end{eqnarray}
+\end{description}
+
+
+
+
+
+%==================================================================================================
+\newpage \subsubsection{ExponentialModel}
+
+\label{expModel}
+
+This class inherits from $StationaryCovarianceModel$ class. The Exponential model defines the covariance function   $\mat{C}^{stat}(\tau)$ such that :
+\begin{equation}
+\label{fullMultivariateExponential2}
+\forall \tau\in\mathbb{R},\quad \mat{C}^{stat}(\tau)=\sqrt{\mat{\Delta}(\tau)}\,\mat{R}\sqrt{\mat{\Delta}(\tau)}
+\end{equation}
+where
+\begin{equation}
+\sqrt{\mat{\Delta}(\tau)}=
+\begin{pmatrix}
+  a_1e^{-\lambda_1|\tau|/2} & & & \\
+                       &\ddots & & \text{\Huge{0}}\\
+  \text{\Huge{0}}      & & & a_de^{-\lambda_d|\tau|/2}
+\end{pmatrix}
+\end{equation}
+and $\mat{R}$ a \emph{spatial} correlation matrix such that : 
+\begin{equation}
+\label{fullMultivariateExponential1}
+\forall t\in\mathbb{R},\quad\mat{\text{Cor}}(\vect{X}(t))=\mat{R}
+\end{equation}
+where $\lambda_i>0$ and $a_i>0$ for all $i$.\\
+
+It is possible to define the exponential model from the spatial covariance function $\mat{C}^s(\tau)$ defined in 
+\begin{equation}
+  \forall t\in\mathbb{R},\quad\mat{\mathbb{E}}[\vect{X}(t)\vect{X}^t(t)]=\mat{C}^s
+\end{equation}
+since we have the relation :
+\begin{equation}\label{RClinkUM}
+\mat{C}^s=\mat{A}\,\mat{R}\mat{A}
+\end{equation}
+where
+\begin{equation}
+\mat{A}=
+\begin{pmatrix}
+  a_1 & & & \\
+                       &\ddots & & \text{\Huge{0}}\\
+  \text{\Huge{0}}      & & & a_d
+\end{pmatrix}
+\end{equation}
+
+The spectral model associated is the Cauchy model (\ref{cauchyMod}).
+
+\begin{description}
+
+\item[Usage :] \rule{0pt}{1em}
+  \begin{description}
+  \item $ExponentialModel()$
+  \item $ExponentialModel(amplitude, scale)$
+  \item $ExponentialModel(amplitude, scale, spatialCorrelation)$
+  \item $ExponentialModel(amplitude, scale, spatialCovariance)$
+  \end{description}
+  \bigskip
+
+\item[Arguments :]  \rule{0pt}{1em}
+  \begin{description}
+  \item $amplitude$ : a NumericalPoint of dimension $d$, the amplitude $\vect{a}$ of the model,
+  \item $scale$ : a NumericalPoint of size $d$, the scale $\vect{\lambda}$ of the model,
+  \item $spatialCorrelation$ : a CorrelationeMatrix of dimension $d \ \times \  d$, the correlation matrix  $\mat{R}$,
+  \item $spatialCovariance$ : a CovarianceMatrix of dimension $d \ \times \  d$, the correlation matrix  $\mat{C}^s$.
+  \end{description}
+  \bigskip
+
+\item[Value :] an ExponentialModel
+  \rule{0pt}{1em}
+  \begin{description}
+  \item in the first usage, we fix dimension to 1, scale, amplitude and spatialCorrelation to 1.0
+  \item in the second usage, we fix the scale  $\vect{a}$ and the amplitude  $\vect{\lambda}$. By default, the spatial correlation matrix  $\mat{R}$ is $Id(d)$. The dimension $d$ is deduced.
+  \item in the third usage, we fix the scale  $\vect{a}$, the amplitude  $\vect{\lambda}$ and the spatial correlation matrix  $\mat{R}$ . The dimension $d$ is deduced.
+  \item in the last usage, we fix the scale  $\vect{a}$, the amplitude  $\vect{\lambda}$ and the spatial covariance matrix  $\mat{C}^s$ . The dimension $d$ is deduced.
+  \end{description}
+  \bigskip
+
+\item[Some methods :]  \rule{0pt}{1em}
+
+  \begin{description}
+
+     \item $getAmplitude$
+    \begin{description}
+    \item[Usage :] $getAmplitude()$
+    \item[Arguments :] none
+    \item[Value :]   a NumericalPoint, the amplitude $\vect{a}$ of the Exponential model.
+    \end{description}
+    \bigskip
+
+    \item $getScale$
+    \begin{description}
+    \item[Usage :] $getScale()$
+    \item[Arguments :] none
+    \item[Value :]   a NumericalPoint, the scale $\vect{\lambda}$ of the Exponential model.
+    \end{description}
+    \bigskip
+
+    \item $getSpatialCorrelation$
+    \begin{description}
+    \item[Usage :] $getSpatialCorrelation()$
+    \item[Arguments :] none
+    \item[Value :]   a CorrelationeMatrix, the spatial correlation matix $\mat{R}$ which gives the correlation between the i-th and j-th components at each instant $t$. 
+    \end{description}
+    \bigskip
+
+  \end{description}
+
+\end{description}
+
+%==================================================================================================
+ 
+\newpage \subsection{Spectral information}
+
+
+
+We recall that If $\vect{X}(\omega,t)$  is a stationary process, we  define the \emph{ bilateral spectral density function} $\mat{S}(f) \in \mathcal{M}(\mathbb{R}^d \times \mathbb{R}^n)$ as the Fourier transform of the covariance function $\mat{C}^{stat}$ :
+\begin{equation} \label{specdensFunc}
+  \forall f \in \mathbb{R}, \, \mat{S}(f) = \int_{\mathbb{R}}\exp\left\{  -2i\pi f \tau \right\} \mat{C}^{stat}(\tau)\, d\tau
+\end{equation}
+and the  \emph{ unilateral spectral density function} $\mat{G}(f)$ defined by : 
+\begin{equation}\label{univG}
+  \forall f \geq 0, \mat{G}(f) = 2\mat{S}(f)
+\end{equation}
+
+Inversely, the  covariance function $\mat{C}^{stat}$ may be evaluated from the spectral density function $\mat{S}(f)$  if $\mat{S}$ is $L^1(\mathcal{M}_{dd}(\mathbb{C}))$ as follows :
+\begin{equation} \label{cspectransform}
+  \mat{C}^{stat}(\tau)  = \int_{\mathbb{R}}\exp\left\{  2i\pi f \tau \right\} \mat{S}(f)\, df
+\end{equation}
+
+
+% =====================================================
+ \subsubsection{SpectralModel}
+
+This class is the interface of SpectralModelImplementation. \\
+\begin{description}
+
+\item[Usage :]  $SpectralModel(mySpectralModelImplementation)$
+  \bigskip
+
+\item[Arguments :] $mySpectralModelImplementation$ : the implementation of a spectral model. For example, the Cauchy model.
+
+  \bigskip
+
+
+\item[Value :] a SpectralModel
+  \bigskip
+
+\item[Some methods :]  \rule{0pt}{1em}
+
+  \begin{description}
+
+   \item $getDimension$
+    \begin{description}
+    \item[Usage :] $getDimension()$
+    \item[Arguments :] none
+    \item[Value :]   an integer, the dimension of the model $d$
+    \end{description}
+    \bigskip
+
+ \item $computeSpectralDensity$
+    \begin{description}
+    \item[Usage :] $computeSpectralDensity(f)$
+    \item[Arguments :] $f$,  a NumericalScalar
+    \item[Value :] an HermitianMatrix of size $d$, computes the unilateral spectral function $\mat{G}(f)$ at the frequency $f$ ($f \geq 0$)
+    \end{description}
+    \bigskip
+
+  \item $getName$
+    \begin{description}
+    \item[Usage :] $getName()$
+    \item[Arguments :] none
+    \item[Value :] a string, the name of the SpectralModel
+    \end{description}
+    \bigskip
+
+  \item $setName$
+    \begin{description}
+    \item[Usage :] $setName(name)$
+    \item[Arguments :] name : a string
+    \item[Value :] the SpectralModel, named $name$
+    \end{description}
+    \bigskip
+
+  \end{description}
+
+\end{description}
+
+%==================================================================================================
+\newpage \subsubsection{CauchyModel}
+\label{cauchyMod}
+
+This class inherit from SpectralModel class. It implements the spectral model associated to the Exponential covariance model detailed in (\ref{expModel}). The spectral density fucntion is defined by : 
+\begin{equation}\label{cauchyModelUM}
+  S_{ij}(f) = \displaystyle \frac{4R_{ij}a_ia_j(\lambda_i+ \lambda_j)}{(\lambda_i+ \lambda_j)^2 + (4\pi f)^2}
+\end{equation}
+where $\mat{R}$, $\vect{a}$ and $\vect{\lambda}$ are the parameters of the Exponential covariance model. The relation (\ref{cauchyModel}) can be explicited with the spatial covariance function  $\mat{C}^{stat}(\tau)$ defined in (\ref{RClinkUM}).
+ 
+
+\begin{description}
+
+\item[Usage :] \rule{0pt}{1em}
+  \begin{description}
+  \item $CauchyModel()$
+  \item $CauchyModel(amplitude, scale)$
+  \item $CauchyModel(amplitude, scale, spatialCorrelation)$
+  \item $CauchyModel(amplitude, scale, spatialCovariance)$
+  \end{description}
+  \bigskip
+
+\item[Arguments :]  \rule{0pt}{1em}
+  \begin{description}
+  \item $amplitude$ : a NumericalPoint of size $d$, the amplitude of the model in each dimension,
+  \item $scale$ : a NumericalPoint of size $d$, the scale of the model in each dimension, 
+  \item $spatialCorrelation$ : a CorrelationeMatrix of size $d \ \times \  $d, the correlation between $i-th$ and $j-th$ dimension,
+  \item $spatialCovariance$ : a CovarianceMatrix of dimension $d \ \times \  d$, the correlation matrix  $\mat{C}^s$.
+  \end{description}
+
+  \bigskip
+
+\item[Value :] an CauchyModel
+  \rule{0pt}{1em}
+  \begin{description}
+  \item in the first usage, we fix dimension to 1, scale, amplitude and spatialCorrelation to 1.0
+  \item in the second usage, we fix the dimension $d$, scale and amplitude values. Correlation used here is IdentityMatrix(d)
+  \item in the third usage, we fix the dimension, scale, amplitude and correlation.
+  \item in the last usage, we fix the scale  $\vect{a}$, the amplitude  $\vect{\lambda}$ and the spatial covariance matrix  $\mat{C}^s$ . The dimension $d$ is deduced.
+  \end{description}
+  \bigskip
+
+\item[Some methods :]  \rule{0pt}{1em}
+
+  \begin{description}
+    \item $getAmplitude$
+    \begin{description}
+    \item[Usage :] $getAmplitude()$
+    \item[Arguments :] none
+    \item[Value :]   a NumericalPoint, the amplitude of the Cauchy model in each dimension
+    \end{description}
+    \bigskip
+
+    \item $getScale$
+    \begin{description}
+    \item[Usage :] $getScale()$
+    \item[Arguments :] none
+    \item[Value :]   a NumericalPoint, the scale of the model in each dimension
+    \end{description}
+    \bigskip
+
+     \item $getSpatialCorrelation$
+    \begin{description}
+    \item[Usage :] $getSpatialCorrelation()$
+    \item[Arguments :] none
+    \item[Value :]   a CorrelationeMatrix, the correlation between the i-th and j-th dimension
+    \end{description}
+    \bigskip
+
+
+  \end{description}
+
+\end{description}
+
+
+% =====================================================
+\newpage \subsubsection{UserDefinedSpectralModel}
+This class inherits from SpectralModel.\\
+
+\begin{description}
+
+\item[Usage :] \rule{0pt}{1em}
+  \begin{description}
+  \item $UserDefinedSpectralModel()$
+  \item $UserDefinedSpectralModel(frequency, densityCollectionFunction)$
+  \end{description}
+  \bigskip
+
+\item[Arguments :]  \rule{0pt}{1em}
+  \begin{description}
+  \item $frequency$ : a RegularGrid which containing the frequency values on which the model has been built;
+  \item $densityCollectionFunction$ : a collection of $HermitianMatrix$ of size $d$, the density functions of the $SpectralModel$
+
+  \end{description}
+
+  \bigskip
+
+\item[Value :] a UserDefinedSpectralModel
+  \rule{0pt}{1em}
+  \begin{description}
+  \item in the second usage, we fix the spectral density function over the frequency grid $frequency$
+  \end{description}
+  \bigskip
+
+\item[Description :]  \rule{0pt}{1em}
+The class enables user to quickly implement a $SpectralModel$ from retrn of experience in their area by fixing a regular frequency grid and matrices collection.\\
+This class is also used for the estimation of a $SpectralModel$
+
+
+\end{description}
+
+% =====================================================
+\subsubsection{SpectralModelFactory}
+
+\begin{description}
+
+\item[Usage :] \rule{0pt}{1em}
+  \begin{description}
+  \item $SpectralModelFactory()$
+  \end{description}
+  \bigskip
+
+\item[Value :] a SpectralModelFactory
+  \rule{0pt}{1em}
+  \begin{description}
+  \item The default implementation refers to the $WelchFactory$ class
+  \end{description}
+  \bigskip
+
+\item[Some methods :]  \rule{0pt}{1em}
+
+  \begin{description}
+
+    \item $getFFTAlgorithm$
+    \begin{description}
+    \item[Usage :] $getFFTAlgorithm()$
+    \item[Arguments :] none
+    \item[Value :]   a FFT, the used FFT algorithm for the Fourier transform
+    \end{description}
+    \bigskip
+
+    \item $setFFTAlgorithm$
+    \begin{description}
+    \item[Usage :] $setFFTAlgorithm(fft)$
+    \item[Arguments :] an FFT 
+    \item[Value :]   set $fft$ as the algorithm for the Fourier transform
+    \end{description}
+    \bigskip
+
+    \item $build$
+    \begin{description}
+    \item[Usage :] $build(sample)$
+    \item[Arguments :] a ProcessSample
+    \item[Value :]   a SpectralModel. Build an estimation of a SpectralModel on the sample.
+    \end{description}
+    \bigskip
+
+    \item $build$
+    \begin{description}
+    \item[Usage :] $build(timeSerie)$
+    \item[Arguments :] a TimeSeries
+    \item[Value :]  a SpectralModel. Build an estimation of a SpectralModel on the timeSerie.
+    \end{description}
+    \bigskip
+
+
+  \end{description}
+
+
+\end{description}
+
+%==================================================================================================
+\newpage \subsubsection{WelchFactory}
+
+This class inherits from $SpectralModelFactory$.
+It implements the $Welch$ method.
+\begin{description}
+
+\item[Usage :] \rule{0pt}{1em}
+  \begin{description}
+  \item $WelchFactory()$
+  \item $WelchFactory(window, bloc, overlap)$
+  \end{description}
+  \bigskip
+
+\item[Value :] a WelchFactory
+  \rule{0pt}{1em}
+  \begin{description}
+  \item With the first usage, the Hanning is fixed as the window, the number of blocs is 1 and overlap = 0
+  \item In the second usage, we fix the filtering window, the number of blocs and the overlap parameter
+  \end{description}
+  \bigskip
+
+\item[Some methods :]  \rule{0pt}{1em}
+
+  \begin{description}
+
+
+    \item $getFilteringWindows$
+    \begin{description}
+    \item[Usage :] $getFilteringWindows()$
+    \item[Arguments :] none
+    \item[Value :]  a FilteringWindows. The used window algorithm 
+    \end{description}
+    \bigskip
+
+    \item $setFilteringWindows$
+    \begin{description}
+    \item[Usage :] $setFilteringWindows(window)$
+    \item[Arguments :] window, a FilteringWindows
+    \item[Value :]    Set window as the FilteringWindows
+    \end{description}
+    \bigskip
+
+    \item $getBloc$
+    \begin{description}
+    \item[Usage :] $getBloc()$
+    \item[Arguments :] none
+    \item[Value :]  an integer. The number of blocs of the Welch method
+    \end{description}
+    \bigskip
+
+    \item $setBloc$
+    \begin{description}
+    \item[Usage :] $setBloc(bloc)$
+    \item[Arguments :] bloc, an integer
+    \item[Value :]  Set the number of blocs
+    \end{description}
+    \bigskip
+
+    \item $getOverlap$
+    \begin{description}
+    \item[Usage :] $getOverlap()$
+    \item[Arguments :] none
+    \item[Value :]  an integer. The size of overlap within the Welch method
+    \end{description}
+    \bigskip
+
+    \item $setOverlap$
+    \begin{description}
+    \item[Usage :] $setOverlap(overlap)$
+    \item[Arguments :] overlap, an integer
+    \item[Value :]  Set the size of the overlap
+    \end{description}
+    \bigskip
+
+  \end{description}
+
+
+\end{description}
+
+
+% =====================================================
+\newpage \subsubsection{FilteringWindows}
+
+
+\begin{description}
+
+\item[Usage :] \rule{0pt}{1em}
+  \begin{description}
+  \item $FilteringWindows()$
+  \end{description}
+  \bigskip
+
+
+\item[Value :] a FilteringWindows
+  \rule{0pt}{1em}
+  \begin{description}
+  \item The FilteringWindows is built over the interval $[0, 1]$. This class is the interface of $FilteringWindowsImplementation$
+  \end{description}
+  \bigskip
+
+\item[Some methods :]  \rule{0pt}{1em}
+
+  \begin{description}
+
+    \item $()$ operand
+    \begin{description}
+    \item[Usage :] $(\alpha)$
+    \item[Arguments :] $\alpha$, a NumericalScalar
+    \item[Value :]  a NumericalScalar, the evaluation of the filtering windows on $\alpha$
+    \end{description}
+    \bigskip
+
+    \item $getName$
+    \begin{description}
+    \item[Usage :] $getName()$
+    \item[Arguments :] none
+    \item[Value :]  a string, the name of the filtering windows
+    \end{description}
+    \bigskip
+
+    \item $setName$
+    \begin{description}
+    \item[Usage :] $setName(name)$
+    \item[Arguments :] name, a string
+    \item[Value :]  the filtering windows is named $name$
+    \end{description}
+    \bigskip
+
+  \end{description}
+
+
+\end{description}
+
+% =====================================================
+\newpage \subsubsection{Hanning}
+
+The Hanning filtering windows inherits from the FilteringWindows class
+
+\begin{description}
+
+\item[Usage :] \rule{0pt}{1em}
+  \begin{description}
+  \item $Hanning()$
+  \end{description}
+  \bigskip
+
+
+\item[Value :] a Hanning 
+  \rule{0pt}{1em}
+  \bigskip
+
+\item[Description :]  \rule{0pt}{1em}
+
+The Hanning windows is implemented using the formula $w(t) =  \sqrt{\frac{8}{3}} * sin(\pi t)^2$ for $t\ \in \ [0,1]$, $0$ otherwise.
+
+\end{description}
+
+
+% =====================================================
+\newpage \subsubsection{Hamming}
+The Hamming filtering windows inherits from the FilteringWindows class
+
+\begin{description}
+
+\item[Usage :] \rule{0pt}{1em}
+  \begin{description}
+  \item $Hamming()$
+  \end{description}
+  \bigskip
+
+
+\item[Value :] a Hamming 
+  \rule{0pt}{1em}
+  \bigskip
+
+\item[Description :]  \rule{0pt}{1em}
+
+The Hamming windows is implemented using the formula : \\ $w(t) =  C * (0.54 - 0.46 * cos(2.0 \pi t))$ with $C = \frac{1.0}{0.54^2 + 0.5 * 0.46^2}$. \\
+The formula is available for $t\ \in \ [0,1]$. Otherwise, the filtering windows is zero.\\
+The normalization $C$ is done such as $\int_{0}^{1} w(t)^2 dt = 1 $
+    
+
+\end{description}
+
+
+
+% =====================================================
+\newpage \subsection{Link Temporal - Spectral information}
+
+ \subsubsection{SecondOrderModel}
+
+The class is the interface of SecondOrderModelImplementation. \\
+This aims at regrouping a $StationaryCovarianceModel$ and a $SpectralModel$ that are in correspondence.\\
+The issued SecondOrderModel both has spectral and covariance functions. \\ \\
+
+\begin{description}
+
+\item[Usage :] \rule{0pt}{1em}
+  \begin{description}  
+  \item $SecondOrderModel()$
+  \item $SecondOrderModel(stationaryCovarianceModel, spectralModel)$
+  \end{description}
+  \bigskip
+
+\item[Arguments :]  \rule{0pt}{1em}
+
+  \bigskip
+
+\item[Value :] a SecondOrderModel
+  \bigskip
+
+\item[Some methods :]  \rule{0pt}{1em}
+
+The methods of the SecondOrderModel are both those implemented for StationaryCovarianceModel and SpectralModel.
+
+   \item $getDimension$
+    \begin{description}
+    \item[Usage :] $getDimension()$
+    \item[Arguments :] none
+    \item[Value :]   an integer, the dimension of the model $d$
+    \end{description}
+    \bigskip
+
+  \item $computeCovariance$
+    \begin{description}
+    \item[Usage :] $computeCovariance(tau)$
+    \item[Arguments :] $t$ : NumericalScalar
+    \item[Value :] a CovarianceMatrix of size $d\times d$, computes the covariance function for different $tau$
+    \end{description}
+    \bigskip
+
+  \item $discretizeCovariance$
+    \begin{description}
+    \item[Usage :] $discretizeCovariance(tg)$
+    \item[Arguments :] $tg$ :  a RegularGrid
+    \item[Value :] a CovarianceMatrix (of size $d\times  n$), with $n$ the size of the time grid,
+    which is the discretization of the covariance fucntion on the time grid $tg$.
+    \end{description}
+    \bigskip
+
+   \item $computeSpectralDensity$
+    \begin{description}
+    \item[Usage :] $computeSpectralDensity(f)$
+    \item[Arguments :] $f$,  a NumericalScalar
+    \item[Value :] an HermitianMatrix of size $d \times d$, computes the unilateral spectral density model $\mat{G}$ at the frequency $f$ ($f \geq 0$)
+    \end{description}
+    \bigskip
+
+  \item $getSpectralModel$
+    \begin{description}
+    \item[Usage :] $getSpectralModel()$
+    \item[Arguments :] none
+    \item[Value :] a SpectralModel, the spectral model of the SecondOrderModel
+    \end{description}
+    \bigskip
+
+  \item $setSpectralModel$
+    \begin{description}
+    \item[Usage :] $setSpectralModel(spectralModel)$
+    \item[Arguments :] a SpectralModel
+    \item[Value :] set $spectralModel$ as the spectral model  of the SecondOrderModel
+    \end{description}
+    \bigskip
+
+  \item $getStationaryCovarianceModel$
+    \begin{description}
+    \item[Usage :] $getStationaryCovarianceModel()$
+    \item[Arguments :] none
+    \item[Value :] a StationaryCovarianceModel, the covariance function of the SecondOrderModel
+    \end{description}
+    \bigskip
+
+  \item $setStationaryCovarianceModel$
+    \begin{description}
+    \item[Usage :] $setStationaryCovarianceModel(covarianceModel)$
+    \item[Arguments :] a StationaryCovarianceModel
+    \item[Value :] sets $covarianceModel$ as the covariance function of the SecondOrderModel
+    \end{description}
+    \bigskip
+
+  \item $getName$
+    \begin{description}
+    \item[Usage :] $getName()$
+    \item[Arguments :] none
+    \item[Value :] a string, the name of the SecondOrderModel
+    \end{description}
+    \bigskip
+
+  \item $setName$
+    \begin{description}
+    \item[Usage :] $setName(name)$
+    \item[Arguments :] name : a string
+    \item[Value :] the SecondOrderModel, named $name$
+    \end{description}
+    \bigskip
+
+
+\end{description}
+
+
+%==================================================================================================
+\newpage \subsubsection{ExponentialCauchy}
+
+This class inherit from SecondOrderModel class.\\
+It aims at regrouping the Exponential Model of the covariance fucntion defined in (\ref{expModel}) and the Cauchy Model for the spectral density fucntion defined in (\ref{cauchyMod}). 
+
+
+
+\begin{description}
+
+\item[Usage :] \rule{0pt}{1em}
+  \begin{description}
+  \item $ExponentialCauchy()$
+  \item $ExponentialCauchy(amplitude, scale)$
+  \item $ExponentialCauchy(amplitude, scale, spatialCorrelation)$
+  \item $ExponentialCauchy(amplitude, scale, spatialCovariance)$
+  \end{description}
+  \bigskip
+
+\item[Arguments :]  \rule{0pt}{1em}
+  \begin{description}
+  \item $amplitude$ : a NumericalPoint of size $d$, the amplitude of the model in each dimension. 
+  \item $scale$ : a NumericalPoint of size $d$, the scale of the model in each dimension. 
+  \item $spatialCorrelation$ : a CorrelationeMatrix of size $d \ \times \  $d, the correlation between the $i-th$ and $j-th$ dimension. 
+  \item $spatialCovariance$ : a CovarianceMatrix of dimension $d \ \times \  d$, the correlation matrix  $\mat{C}^s$.
+  \end{description}
+
+  \bigskip
+
+\item[Value :] an ExponentialCauchy
+  \rule{0pt}{1em}
+  \begin{description}
+  \item in the first usage, we fix dimension to $1$, scale amplitude and spatialCorrelation to 1.0
+  \item in the second usage, we fix the dimension, scale and amplitude values. spatialCorrelation here is IdentityMatrix(d)
+  \item in the third usage, we fix the dimension, scale, amplitude and correlation.
+  \item in the last usage, we fix the scale  $\vect{a}$, the amplitude  $\vect{\lambda}$ and the spatial covariance matrix  $\mat{C}^s$ . The dimension $d$ is deduced.
+  \end{description}
+  \bigskip
+
+\item[Some methods :]  \rule{0pt}{1em}
+
+  \begin{description}
+
+     \item $getAmplitude$
+    \begin{description}
+    \item[Usage :] $getAmplitude()$
+    \item[Arguments :] none
+    \item[Value :]   a NumericalPoint, the amplitude of the Exponential model in each dimension
+    \end{description}
+    \bigskip
+
+    \item $getScale$
+    \begin{description}
+    \item[Usage :] $getScale()$
+    \item[Arguments :] none
+    \item[Value :]   a NumericalPoint, the scale of the Exponential model in each dimension
+    \end{description}
+    \bigskip
+
+     \item $getSpatialCorrelation$
+    \begin{description}
+    \item[Usage :] $getSpatialCorrelation()$
+    \item[Arguments :] none
+    \item[Value :]   a CorrelationeMatrix, the correlation between the i-th and j-th dimension
+    \end{description}
+    \bigskip
+
+  \end{description}
+
+\item[Remark :]  \rule{0pt}{1em}
+
+The class regroups the $ExponentialModel$ and $CauchyModel$ of same parameters.\\
+The density function is, from a mathematical point of view, the Fourier transform of the CovarianceModel.
+
+\end{description}
+
+%================================================================================================================
+
+\newpage \subsection{Normal process}
+
+The class $NormalProcess$ inherits form $Process$
+
+
+
+%==================================================================================================
+\subsubsection{NormalProcess}
+
+
+
+\begin{description}
+
+\item[Usage :] $NormalProcess(timeGrid, model)$ 
+  \bigskip
+
+\item[Arguments :]  \rule{0pt}{1em}
+  \begin{description}
+  \item $timeGrid$ : a RegularGrid, the time grid over which the process is implemented
+  \item $modes$ : a SecondOrderModel 
+  \end{description}
+  \bigskip
+
+\item[Value :] a NormalProcess process, parametered by the given time grid and the given second order model (which contains the covariance information and the spectral one).
+  \bigskip
+
+\item[Nota :]   This class enables to group the models which are based on temporal and spectral domains.
+  \bigskip
+\item[Some methods :]  \rule{0pt}{1em}
+
+  \begin{description}
+
+     \item $getSecondOrderModel$
+    \begin{description}
+    \item[Usage :] $getSecondOrderModel()$
+    \item[Arguments :] none
+    \item[Value :]   a SecondOrderModel, if the process has been created from a second order used by the NormalProcess.
+    \end{description}
+
+
+  \end{description}
+
+\end{description}
+
+
+% =====================================================
+
+\newpage \subsubsection{SpectralNormalProcess}
+\begin{description}
+
+\item[Usage :] \rule{0pt}{1em}
+  \begin{description}
+  \item $SpectralNormalProcess()$
+  \item $SpectralNormalProcess(model, timeGrid)$ 
+  \item $SpectralNormalProcess(model, maximalFrequency, N)$ 
+  \item $SpectralNormalProcess(spectralModel, timeGrid)$ 
+  \item $SpectralNormalProcess(spectralModel, maximalFrequency, N)$ 
+
+  \end{description}
+  \bigskip
+
+\item[Arguments :]  \rule{0pt}{1em}
+  \begin{description}
+  \item $spectralModel$ : a SpectralModel 
+  \item $model$ : a SecondOrderModel 
+  \item $timeGrid$ : a RegularGrid; the time grid over which the process is implemented
+  \item $maximalFrequency$ : a NumericalScalar; the maximal frequency 
+  \item $N$ : an integer; the size of discretization of the frequency domain
+  \end{description}
+  \bigskip
+
+\item[Value :] a SpectralNormalProcess process
+  \rule{0pt}{1em}
+  \begin{description}
+  \item in the second usage, we fix the time grid and the second order model (spectral density model) which implements the process; Frequency values are induced by the time values.
+  \item in the third usage, conversely to the previous usage, the process is fixed in the frequency domain. $maximalFrequency$ value and $N$ induce the time grid.\\
+ Be aware that the maximal frequency used in the computation is not $maximalFrequency$ but $\displaystyle \frac{maximalFrequency*(N-1)}{N}$.
+  \item in the fouth usage (respectively the fifth usage), the spectral model is given instead of a complet second order model and the other arguments are the same 
+as the second (respectively the third) usage.
+  \end{description}
+  \bigskip
+
+\item[Comments :] 
+\rule{0pt}{1em}
+
+The SpectralNormalProcess enables to model the normal processes in the spectral domain.
+This class inherits from the NormalProcess class.  \\
+The first call of $getRealization$ might be time consuming because it computes $N$ hermitian matrices of size $d \times \ d$, where $d$ is the dimension of the spectral model. 
+These matrices are factorized and stored in order to be used for each call of the $getRealization$ method. 
+
+\item[Some methods :]  \rule{0pt}{1em}
+
+  \begin{description}
+
+  \item $getFrequentialGrid$
+    \begin{description}
+    \item[Usage :] $getFrequentialGrid()$
+    \item[Arguments :] none
+    \item[Value :] a  $RegularGrid$, the frequencies used in the computation.
+    \end{description}
+    \bigskip
+
+  \end{description}
+
+\end{description}
+
+
+\newpage \subsubsection{TemporalNormalProcess}
+\begin{description}
+
+\item[Usage :] \rule{0pt}{1em}
+  \begin{description}
+  \item $TemporalNormalProcess()$
+  \item $TemporalNormalProcess(model, timeGrid)$ 
+  \item $TemporalNormalProcess(covarianceModel, timeGrid)$ 
+  \end{description}
+  \bigskip
+
+\item[Arguments :]  \rule{0pt}{1em}
+  \begin{description}
+  \item $covarianceModel$ : a StationaryCovarianceModel 
+  \item $model$ : a SecondOrderModel 
+  \item $timeGrid$ : a $RegularGrid$; the time grid over which the process is implemented
+  \end{description}
+  \bigskip
+
+\item[Value :] a TemporalNormalProcess process
+  \rule{0pt}{1em}
+  \begin{description}
+  \item in the second usage, we fix the time grid and the model of second order (the associated temporal covariance model and  spectral one) 
+   \item in the third usage, we only give the temporal covariance model.
+ \end{description}
+  \bigskip
+
+\item[Comments :] 
+\rule{0pt}{1em}
+This class inherits from the NormalProcess class. The initialization stores the second model in order to reuse it for the realizations. \\
+When calling the getRealization method, the first call might be time consuming because it calls the discretize method of the covariance model  in order to compute the covariance model on the time grid and get its Cholesky factor. This is done once only.
+
+\end{description}
+
+
+
+% =====================================================
+\newpage \subsection{ARMA}
+
+
+We suppose that the stochastic process $(\vect{X}_t)_t$ follows the linear recurrence :
+\begin{equation}\label{dimnUM}
+ \vect{X}_t + \mat{A}_{\, 1}   \,  \vect{X}_{t-1} + \hdots +  \mat{A}_{\, p} \,   \vect{X}_{t-p} = 
+   \vect{\varepsilon}_{t}+  \mat{B}_ {\, 1} \,   \vect{\varepsilon}_{t-1}+   \hdots + \mat{B}_{\, q}  \,  \vect{\varepsilon}_{t-q}
+\end{equation}
+that writes in dimension 1 :
+
+\begin{equation}\label{dim1UM}
+X_t +a_1  X_{t-1} + \hdots +  a_p X_{t-p} = 
+  \varepsilon_{t}+  b_1 \varepsilon_{t-1}+   \hdots +b_q \varepsilon_{t-q}
+\end{equation}
+where $(a_i,b_i) \in \mathbb{R}$.\\
+
+This class inherits from $Process$
+\subsubsection{ARMA}
+\begin{description}
+
+\item[Usage :] \rule{0pt}{1em}
+  \begin{description}
+  \item $ARMA()$
+  \item $ARMA(ARCoefficients, MACoefficients, whiteNoise)$ 
+  \item $ARMA(ARCoefficients, MACoefficients, whiteNoise, state)$
+
+  \end{description}
+  \bigskip
+
+\item[Arguments :]  \rule{0pt}{1em}
+  \begin{description}
+  \item $ARCoefficients$ : an ARMACoefficients , the coefficients of the AR part of the recurrence : $(a_1, \hdots, a_p)$ of (\ref{dim1UM}) and $( \mat{A}_{\, 1}, \hdots, \mat{A}{\, _p})$ of  (\ref{dimnUM}).
+  \item $MACoefficients$ : an ARMACoefficients , the coefficients of the MA part of the recurrence : $(b_1, \hdots, b_q)$  of (\ref{dim1UM}) and $( \mat{B}_{\, 1}, \hdots, \mat{B}{\, _q})$ of  (\ref{dimnUM}).
+  \item $whiteNoise$ : a WhiteNoise, the white noise used for the random noise $\varepsilon$.
+  \item $state$ : an ARMAState , the state of the ARMA process ie the last values pf the process.
+  \end{description}
+  \bigskip
+
+\item[Value :] an ARMA process
+  \rule{0pt}{1em}
+  \begin{description}
+  \item in the first usage, an $ARMA(0,0)$  is built with default options : the time grid is $\{0,1\}$, and the  $\varepsilon$ distribution is $\mathcal{N}(0,1)$.
+  \item in the second usage, we fix the coefficients of the linear recurrence (and the dimension of the process is deduced) and the distribution of the  random noise $\varepsilon$.
+  \item in the third usage, we  also fix the initial state which is the last  $p$ values of the process and the last $q$ values of the noise.
+  \end{description}
+  \bigskip
+
+\item[Some methods :]  \rule{0pt}{1em} 
+
+  \begin{description}
+
+  \item $getARCoefficients$
+    \begin{description}
+    \item[Usage :] $getARCoefficients()$
+    \item[Arguments :] none
+    \item[Value :] an ARMACoefficients, the coefficients of the linear recurrence.
+    \end{description}
+    \bigskip
+
+  \item $getMACoefficients$
+    \begin{description}
+    \item[Usage :] $getMACoefficients()$
+    \item[Arguments :] none
+    \item[Value :] an ARMACoefficients, the coefficients of the linear recurrence.
+    \end{description}
+    \bigskip
+
+
+  \item $getFuture$
+    \begin{description}
+    \item[Usage :] \rule{0pt}{1em}
+       \begin{description}
+          \item $getFuture(N_{it})$
+          \item $getFuture(N_{it},N_{real})$
+       \end{description}
+    \item[Arguments :] \rule{0pt}{1em}
+       \begin{description}
+          \item $N_{it}$ : an integer, the number of future instants where the process is extended
+          \item $N_{real}$ : an integer, the number of futures that are evaluated
+       \end{description}
+    \item[Value :]\rule{0pt}{1em}
+       \begin{description}
+          \item   in the first usage, a TimeSeries, which is one possible realization of the future using the current state of the process over the $N_{it}$ next instants. 
+          \item in the second usage, a ProcessSample, which contains $N_{real}$ possible realizations of the future of the process on the $N_{it}$ next instants. Note that the time grid of each possible future begins at the last instant of the time grid associated to the time series which is extended.
+       \end{description}
+    \end{description}
+    \bigskip
+
+
+  \item $getState$
+    \begin{description}
+    \item[Usage :] $getState()$
+    \item[Arguments :] none
+    \item[Value :] an ARMAState, the state of the ARMA  which is the last  $p$ values of the process and the last $q$ values of the  random noise $\varepsilon$.
+    \end{description}
+    \bigskip
+
+  \item $getWhiteNoise$
+    \begin{description}
+    \item[Usage :] $getWhiteNoise()$
+    \item[Arguments :] none
+    \item[Value :] a WhiteNoise,  the white noise $\varepsilon$ of (\ref{dimnUM}).
+    \end{description}
+    \bigskip
+
+  \item $setWhiteNoise$
+    \begin{description}
+    \item[Usage :] $setWhiteNoise(whiteNoise)$
+    \item[Arguments :] $whiteNoise$, a WhiteNoise
+    \item[Value :] Fix the white noise $\varepsilon$ of (\ref{dimnUM}).
+    \end{description}
+    \bigskip
+
+  \item $computeNThermalization$
+    \begin{description}
+    \item[Usage :] $computeNThermalization(\epsilon)$
+    \item[Arguments :] $\epsilon$, a positive real 
+    \item[Value :] an integer, the number of iterations of the ARMA process before being stationary and independent of its current state evaluated with the precision $\epsilon$ : 
+\begin{equation}\label{nTher}
+   N_{ther} > E[ \displaystyle \frac{\ln  \varepsilon}{\ln \max_{i,j} |r_{ij}|}]
+\end{equation}
+where  $E[]$ is the integer part and the $r_i$ are the roots of the polynomials (given here ion dimension 1) :
+\begin{equation}\label{PolPhi}
+\Phi(\vect{r}) = \vect{r}^p + \sum_{i=1}^p a_i\vect{r}^{p-i} 
+\end{equation}
+
+
+    \end{description}
+    \bigskip
+
+  \item $getNThermalization$
+    \begin{description}
+    \item[Usage :] $getNThermalization()$
+    \item[Arguments :] none
+    \item[Value :] an integer, the number of iterations that the ARMA process uses before being independent from its actual state evaluated with the default precision  $\epsilon = 2^{-53} \equiv 10^{-16}$.
+    \end{description}
+    \bigskip
+
+  \item $setNThermalization$
+    \begin{description}
+    \item[Usage :] $setNThermalization(n)$
+    \item[Arguments :] $n$, an intger
+    \item[Value :] Set the number of iterations of initialization for the ARMA process
+    \end{description}
+    \bigskip
+
+  \end{description}
+
+\end{description}
+
+
+% =====================================================
+\newpage \subsubsection{ARMACoefficients}
+
+
+\begin{description}
+
+\item[Usage :] \rule{0pt}{1em}
+  \begin{description}  
+  \item $ARMACoefficients(size, dimension)$
+  \item $ARMACoefficients(point)$
+  \item $ARMACoefficients(collection)$
+  \end{description}
+  \bigskip
+
+\item[Arguments :]  \rule{0pt}{1em}
+  \begin{description}
+  \item $size$ : a integer, the number of elements of the ARMACoefficients class 
+  \item $dimension$ : an integer, the dimension of each coefficient
+  \item $point$ : a NumericalPoint, the coefficients of the recurrence (in dimension 1)
+  \item $collection$ : a SquareMatrixCollection which contains SquareMatrix of same dimension
+  \end{description}
+  \bigskip
+
+\item[Value :] an ARMACoefficients
+  \rule{0pt}{1em}
+  \begin{description}
+  \item in the first usage, we fix the dimension and the number of elements.
+  \item in the second usage, we fix the dimension to 1 and we get the coefficients of the recurrence  
+  \item in the third usage, we get the coefficients of the recurrence as matrix (and so the dimension)
+  \end{description}
+  \bigskip
+
+\item[Some methods :]  \rule{0pt}{1em}
+
+  \begin{description}
+
+   \item $getSize$
+    \begin{description}
+    \item[Usage :] $getSize()$
+    \item[Arguments :] none
+    \item[Value :]   an integer, the size of the ARMACoefficients (number of coefficients)
+    \end{description}
+    \bigskip
+
+   \item $getDimension$
+    \begin{description}
+    \item[Usage :] $getDimension()$
+    \item[Arguments :] none
+    \item[Value :]   an integer, the dimension each coefficients
+    \end{description}
+    \bigskip
+
+   \item $add$
+    \begin{description}
+    \item[Usage :] $add(coefficient)$
+    \item[Arguments :] $coefficient$ : a SquareMatrix
+    \item[Value :]    an ARMACoefficients of size  $size +1$
+    \end{description}
+    \bigskip
+
+  \item $getName$
+    \begin{description}
+    \item[Usage :] $getName()$
+    \item[Arguments :] none
+    \item[Value :] a string, the name of the ARMACoefficients
+    \end{description}
+    \bigskip
+
+  \item $setName$
+    \begin{description}
+    \item[Usage :] $setName(name)$
+    \item[Arguments :] name : a string
+    \item[Value :] the ARMACoefficients is named $name$
+    \end{description}
+    \bigskip
+
+
+  \end{description}
+
+\end{description}
+
+
+
+% =====================================================
+\newpage \subsubsection{ARMAState}
+
+
+\begin{description}
+
+\item[Usage :] \rule{0pt}{1em}
+  \begin{description}  
+  \item $ARMAState(values, noise)$
+  \end{description}
+  \bigskip
+
+\item[Arguments :]  \rule{0pt}{1em}
+  \begin{description}
+  \item $values$ : a NumericalSample, last observations of an ARMA process
+  \item $noise$  : a NumericalSample, last observations of a random noise
+  \end{description}
+  \bigskip
+
+\item[Value :] an ARMAState
+  \bigskip
+
+\item[Some methods :]  \rule{0pt}{1em}
+
+  \begin{description}
+
+   \item $getSize$
+    \begin{description}
+    \item[Usage :] $getSize()$
+    \item[Arguments :] none
+    \item[Value :]   an integer, the size of the ARMACoefficients (number of coefficients)
+    \end{description}
+    \bigskip
+
+   \item $getDimension$
+    \begin{description}
+    \item[Usage :] $getDimension()$
+    \item[Arguments :] none
+    \item[Value :]   an integer, the dimension of the state (and thus of the process)
+    \end{description}
+    \bigskip
+
+   \item $getX$
+    \begin{description}
+    \item[Usage :] $getX()$
+    \item[Arguments :] none
+    \item[Value :] a NumericalSample (of size $p$), the last $p$ values of the ARMA
+    \end{description}
+    \bigskip
+
+  \item $getEpsilon$
+    \begin{description}
+    \item[Usage :] $getEpsilon()$
+    \item[Arguments :] none
+    \item[Value :] a NumericalSample (of size $q$), the last $q$ noise values of the ARMA
+    \end{description}
+    \bigskip
+
+   \item $setX$
+    \begin{description}
+    \item[Usage :] $setX(myLastProcessValues)$
+    \item[Arguments :] $myLastValues$, a NumericalSample of size $p$
+    \item[Value :] None. We fix the last $p$ values of the process
+    \end{description}
+    \bigskip
+
+   \item $setEpsilon$
+    \begin{description}
+    \item[Usage :] $setEpsilon(myLastNoiseValues)$
+    \item[Arguments :] $myLastNoiseValues$, a NumericalSample of size $q$
+    \item[Value :] None. We fix the last $q$ values of the random noise
+    \end{description}
+    \bigskip
+
+  \item $getName$
+    \begin{description}
+    \item[Usage :] $getName()$
+    \item[Arguments :] none
+    \item[Value :] a string, the name of the ARMAState
+    \end{description}
+    \bigskip
+
+  \item $setName$
+    \begin{description}
+    \item[Usage :] $setName(name)$
+    \item[Arguments :] name : a string
+    \item[Value :] the ARMAState is named $name$
+    \end{description}
+
+  \end{description}
+
+\end{description}
+
+% =====================================================
+\newpage \subsubsection{BoxCoxFactory}
+
+\begin{description}
+
+\item[Usage :] \rule{0pt}{1em}
+  \begin{description}  
+  \item $BoxCoxFactory()$
+  \item $BoxCoxFactory(alpha)$
+  \end{description}
+  \bigskip
+
+\item[Arguments :]  \rule{0pt}{1em}
+  \begin{description}
+  \item $alpha$ : a NumericalScalar. The value to be fixed by user to ensure positive character of all values
+  \end{description}
+  \bigskip
+
+\item[Value :] a BoxCoxFactory
+  \rule{0pt}{1em}
+  \begin{description}
+  \item in the first usage, the used value is $0$ 
+  \item in the second usage, the user fix the "translate" value
+  \end{description}
+  \bigskip
+
+\item[Some methods :]  \rule{0pt}{1em}
+
+  \begin{description}
+
+   \item $build$
+    \begin{description}
+    \item[Usage :] $build(inTS)$
+    \item[Arguments :] $inTS$ : a TimeSeries , the time series from which the Box Cox transformation parameter is estimated
+    \item[Value :]  a BoxCoxTransform which enables to transform the time series  $\vect{Y}_t$ into $h_\lambda(\vect{Y}_t)$ such that  $\mathbb{V}\left(h_\lambda(\vect{Y}_t)\right)$ is constant  with respect to the time. In the scalar case, we note $h_\lambda$ is parametered by a scalar $\lambda$ :
+\begin{eqnarray}
+ \label{BoxCoxModel}
+ h_\lambda(y) & = &
+\left\{
+\begin{array}{ll}
+\frac{y^\lambda-1}{\lambda} & \lambda \neq 0 \\
+\log(y) 			   & \lambda = 0
+\end{array}
+\right.
+\end{eqnarray}\\
+For time series of dimension $p>1$, we operate component by component as in (\ref{BoxCoxModel}).
+    \end{description}
+    \bigskip
+
+
+  \item $getName$
+    \begin{description}
+    \item[Usage :] $getName()$
+    \item[Arguments :] none
+    \item[Value :] a string, the name of the BoxCoxFactory
+    \end{description}
+    \bigskip
+
+  \item $setName$
+    \begin{description}
+    \item[Usage :] $setName(name)$
+    \item[Arguments :] name : a string
+    \item[Value :] the BoxCoxFactory is named $name$
+    \end{description}
+    \bigskip
+
+
+  \end{description}
+
+\end{description}
+
+
+% =====================================================
+\newpage \subsubsection{BoxCoxTransform}
+
+This class inherits from $SpatialFunction$. The Box Cox transformation is defined as following.\\
+In the scalar case, we note $h_\lambda$,  parametered by a scalar $\lambda$ :
+\begin{eqnarray}
+ \label{BoxCoxModel}
+ h_\lambda(y) & = &
+\left\{
+\begin{array}{ll}
+\frac{y^\lambda-1}{\lambda} & \lambda \neq 0 \\
+\log(y) 			   & \lambda = 0
+\end{array}
+\right.
+\end{eqnarray}\\
+For time series of dimension $p>1$, we operate component by component as in (\ref{BoxCoxModel}), which defines the parameter $\vect{\lambda}$.
+
+\begin{description}
+
+\item[Usage :] \rule{0pt}{1em}
+  \begin{description}  
+  \item $BoxCoxTransform()$
+  \item $BoxCoxTransform(lambdaPoint)$
+  \item $BoxCoxTransform(lambdaCollection)$
+  \item $BoxCoxTransform(lambdaScalar)$
+  \end{description}
+  \bigskip
+
+
+
+\item[Arguments :]  $\lambda$  : the parameter of the Box Cox transformation $h_{\vect{\lambda}}$. This last one might be : \rule{0pt}{1em}
+  \begin{description}
+  \item $lambdaPoint$ : a NumericalPoint. 
+  \item $lambdaCollection$ : a NumericalScalarCollection.
+  \item $lambdaCollection$ : a NumericalScalar.
+  \end{description}
+  \bigskip
+
+\item[Value :] a BoxCoxTransform that contains the Box Cox transformation ant its inverse.
+  \rule{0pt}{1em}
+  \begin{description}
+  \item in the second and third usages, we fix the dimension and the value of $\vect{\lambda}$.
+  \item in the fourth usage, the dimension is one.
+  \end{description}
+  \bigskip
+
+\item[Some methods :]  \rule{0pt}{1em}
+
+  \begin{description}
+
+   \item $()$
+    \begin{description}
+    \item[Usage :] $(y)$
+    \item[Arguments :] $y$ : a TimeSeries, the time series $(\vect{y}_{t_1}, \dots,\vect{y}_{t_N})$
+    \item[Value :]   a TimeSeries, the time series $(\vect{z}_{t_1}, \dots,\vect{z}_{t_N})$  with stabilized variance, such that for each instant $t_i$ we apply the function : 
+\begin{equation}
+\begin{array}{lcl}\label{Eval}
+  \mathbb{R}^{p+1} & \mapsto & \mathbb{R}^{p} \\
+  (t_i,\vect{y}_{t_i}) & \mapsto & h_{\vect{\lambda}}(\vect{y}_{t_i})
+\end{array}
+\end{equation}
+or 
+\begin{equation}
+\begin{array}{lcl}\label{Eval}
+  \mathbb{R}^{p+1} & \mapsto & \mathbb{R}^{p} \\
+  (t_i,\vect{y}_{t_i})  & \mapsto & h_{\vect{\lambda}}(\vect{y}_{t_i} + \vect{\alpha})
+\end{array}
+\end{equation}
+    \end{description}
+    \bigskip
+
+   \item $getInverse$
+    \begin{description}
+    \item[Usage :] $getInverse()$
+    \item[Arguments :] none
+    \item[Value :]   an InverseBoxCoxTransform, the inverse Box Cox transformation that enables to refind the initial time series $(\vect{y}_{t_1}, \dots,\vect{y}_{t_N})$ from the time series $(\vect{z}_{t_1}, \dots,\vect{z}_{t_N})$ such that : 
+\begin{equation}
+\begin{array}{lcl}\label{Inverse}
+  \mathbb{R}^{p+1} & \mapsto & \mathbb{R}^{p} \\
+  (t_i,\vect{z}_{t_i}) & \mapsto & h^{-1}_{\vect{\lambda}}(\vect{z}_{t_i} )
+\end{array}
+\end{equation}
+or 
+\begin{equation}
+\begin{array}{lcl}\label{Eval}
+  \mathbb{R}^{p+1} & \mapsto & \mathbb{R}^{p} \\
+  (t_i,\vect{z}_{t_i}) & \mapsto & h^{-1}_{\vect{\lambda}}(\vect{z}_{t_i} ) - \vect{\alpha}
+\end{array}
+\end{equation}
+    \end{description}
+    \bigskip
+
+   \item $getLambda$
+    \begin{description}
+    \item[Usage :] $getLambda()$
+    \item[Arguments :] none
+    \item[Value :]   a NumericalPoint. The parameter $\vect{\lambda}$  of $h_{\vect{\lambda}}$
+    \end{description}
+    \bigskip
+
+   \item $getInputDimension$
+    \begin{description}
+    \item[Usage :] $getInputDimension()$
+    \item[Arguments :] none
+    \item[Value :]   an integer, the input dimension e.g the dimension that should have the input $TimeSeries$
+    \end{description}
+    \bigskip
+
+   \item $getOutputDimension$
+    \begin{description}
+    \item[Usage :] $getOutputDimension()$
+    \item[Arguments :] none
+    \item[Value :]   an integer, the output dimension of the transform function. Its equal here to the input dimension.
+    \end{description}
+    \bigskip
+
+  \item $getName$
+    \begin{description}
+    \item[Usage :] $getName()$
+    \item[Arguments :] none
+    \item[Value :] a string, the name of the BoxCoxTransform
+    \end{description}
+    \bigskip
+
+  \item $setName$
+    \begin{description}
+    \item[Usage :] $setName(name)$
+    \item[Arguments :] name : a string
+    \item[Value :] the BoxCoxTransform is named $name$
+    \end{description}
+    \bigskip
+
+
+  \end{description}
+
+\end{description}
+
+% =====================================================
+\newpage \subsubsection{InverseBoxCoxTransform}
+
+
+This class inherits from $SpatialFunction$. \\
+The inverse of the Box Cox transformation is defined as following.\\
+In the scalar case, $h^{-1}_\lambda$ is parametered by a scalar $\lambda$ :
+\begin{eqnarray}
+ \label{InverseBoxCoxModel}
+ h^{-1}_\lambda(y) & = &
+\left\{
+\begin{array}{ll}
+\displaystyle (\lambda y + 1)^{\frac{1}{\lambda}} & \lambda \neq 0 \\
+\displaystyle \exp(y) 			   & \lambda = 0
+\end{array}
+\right.
+\end{eqnarray}
+
+For time series of dimension $p>1$, we operate component by component as in (\ref{InverseBoxCoxModel}), which defines the parameter $\vect{\lambda}$.
+
+
+
+\begin{description}
+
+\item[Usage :] \rule{0pt}{1em} Generally, it is obtained as the result of a $BoxCoxTransform.getInverse()$. But it is possible to directly define the inverse transformation.
+  \begin{description}  
+  \item $InverseBoxCoxTransform()$
+  \item $InverseBoxCoxTransform(lambdaPoint)$
+  \item $InverseBoxCoxTransform(lambdaCollection)$
+  \item $InverseBoxCoxTransform(lambdaScalar)$
+  \end{description}
+  \bigskip
+
+\item[Arguments :]  \rule{0pt}{1em}
+  \begin{description}
+  \item $lambdaPoint$ : a NumericalPoint. 
+  \item $lambdaCollection$ : a NumericalScalarCollection.
+  \item $lambdaCollection$ : a NumericalScalar. 
+  \end{description}
+  \bigskip
+
+\item[Value :] an InverseBoxCoxTransform, the inverse Box Cox transformation.
+  \rule{0pt}{1em}
+  \begin{description}
+  \item in the second and third usages, we fix the dimension and the value of $\vect{\lambda}$.
+  \item in the fourth usage, the dimension is one.
+  \end{description}
+
+  \bigskip
+
+\item[Some methods :]  \rule{0pt}{1em}
+
+  \begin{description}
+
+  \item $() $
+    \begin{description}
+    \item[Usage :] $(Z)$
+    \item[Arguments :] a $Z$ : $TimeSeries$, the time series  $(\vect{z}_{t_1}, \dots,\vect{z}_{t_N})$.
+    \item[Value :]   a TimeSeries, the time series  $(\vect{y}_{t_1}, \dots,\vect{y}_{t_N})$ such that for each instant $t_i$ we apply the function :
+\begin{equation}
+\begin{array}{lcl}\label{Eval}
+  \mathbb{R}^{p+1} & \mapsto & \mathbb{R}^{p} \\
+  (t_i,\vect{z}_{t_i}) & \mapsto & \vect{y}_{t_i} = h^{-1}_{\vect{\lambda}}(\vect{z}_{t_i})
+\end{array}
+\end{equation}
+    \end{description}
+    \bigskip
+
+
+   \item $getLambda$
+    \begin{description}
+    \item[Usage :] $getLambda()$
+    \item[Arguments :] none
+    \item[Value :]   a NumericalPoint. The lambda values of the transform
+    \end{description}
+    \bigskip
+
+   \item $getInputDimension$
+    \begin{description}
+    \item[Usage :] $getInputDimension()$
+    \item[Arguments :] none
+    \item[Value :]   an integer, the input dimension e.g the dimension $p$ of the associated times series.
+    \end{description}
+    \bigskip
+
+   \item $getOutputDimension$
+    \begin{description}
+    \item[Usage :] $getOutputDimension()$
+    \item[Arguments :] none
+    \item[Value :]   an integer, the output dimension of the transform function. Its equal here to the input dimension $p$ of the associated times series.
+    \end{description}
+    \bigskip
+
+ 
+
+  \item $getName$
+    \begin{description}
+    \item[Usage :] $getName()$
+    \item[Arguments :] none
+    \item[Value :] a string, the name of the InverseBoxCoxTransform
+    \end{description}
+    \bigskip
+
+  \item $setName$
+    \begin{description}
+    \item[Usage :] $setName(name)$
+    \item[Arguments :] name : a string
+    \item[Value :] the InverseBoxCoxTransform is named $name$
+    \end{description}
+    \bigskip
+
+  \end{description}
+
+\end{description}
+
+% =====================================================
+\newpage \subsubsection{TrendFactory}
+
+
+\begin{description}
+
+\item[Usage :] \rule{0pt}{1em}
+  \begin{description}  
+  \item $TrendFactory(basisSequence, fittingAlgorithm)$
+  \end{description}
+  \bigskip
+
+\item[Arguments :]  \rule{0pt}{1em}
+  \begin{description}
+    \item $myBasisSequenceFactory$ : a BasisSequenceFactory such as $LAR$ 
+  \item $myFittingAlgorithm$ : a FittingAlgorithm such as $KFold$ or $CorrectedLeaveOneOut$
+  \end{description}
+  \bigskip
+
+\item[Value :] a TrendFactory
+  \bigskip
+
+\item[Some methods :]  \rule{0pt}{1em}
+
+  \begin{description}
+   \item $build$
+    \begin{description}
+    \item[Usage :] $build(inTS, basis)$
+    \item[Arguments :] \rule{0pt}{1em} 
+      \begin{description}
+          \item  $inTS$: a TimeSeries, the time series on which the trend is built
+          \item  $inTS$ : a NumericalMathFunctionCollection, on which the trend is decompos          
+      \end{description}
+    \item[Value :]  a TrendTransform which contains the best dual combination of $basis$ in order to model the time series $inTS$, using the regression strategy  $myBasisSequenceFactory$ and the fitting algorithm $myFittingAlgorithm$.
+     \end{description}
+    \bigskip
+
+
+  \item $getBasisSequenceFactory$
+    \begin{description}
+    \item[Usage :] $getBasisSequenceFactory()$
+    \item[Arguments :] none
+    \item[Value :] a $BasisSequenceFactory$, the one used the TrendFactory.
+    \end{description}
+    \bigskip
+
+  \item $getFittingAlgorithm$
+    \begin{description}
+    \item[Usage :] $getFittingAlgorithm()$
+    \item[Arguments :] none
+    \item[Value :] a FittingAlgorithm, the algorithm used by the TrendFactory.
+    \end{description}
+    \bigskip
+
+  \item $setBasisSequenceFactory$
+    \begin{description}
+    \item[Usage :] $setBasisSequenceFactory(basis)$
+    \item[Arguments :]  $basis$ : a BasisSequenceFactory
+    \item[Value :] None. We fix the basis sequence factory.
+    \end{description}
+    \bigskip
+
+  \item $setFittingAlgorithm$
+    \begin{description}
+    \item[Usage :] $setFittingAlgorithm(fittingAlgorithm)$
+    \item[Arguments :] fittingAlgorithm, a FittingAlgorithm that estimates the empirical error on each sub-basis 
+    \item[Value :] None. We fix the fitting algorithm.
+    \end{description}
+    \bigskip
+
+  \item $getName$
+    \begin{description}
+    \item[Usage :] $getName()$
+    \item[Arguments :] none
+    \item[Value :] a string, the name of the TrendFactory.
+    \end{description}
+    \bigskip
+
+  \item $setName$
+    \begin{description}
+    \item[Usage :] $setName(name)$
+    \item[Arguments :] $name$ : a string
+    \item[Value :] None. The TrendFactory is named $name$.
+    \end{description}
+    \bigskip
+
+
+  \end{description}
+
+\end{description}
+
+
+% =====================================================
+\newpage \subsubsection{TrendTransform}
+
+This class inherits from $TemporalFunction$.
+Let  $(\vect{Y}_t)_t$ be a time series of dimension $p$ such that : 
+\begin{eqnarray}
+\label{tsDecomposition}
+\vect{Y}_t = \vect{f}(t) + \vect{X}_t
+\end{eqnarray}
+where $f : \mathbb{R} \longrightarrow \mathbb{R}^p$ is the trend function and  $\vect{X}_t$ is stationnary .
+\begin{description}
+
+\item[Usage :] $TrendTransform(f)$. Generally, it is obtained as the result of a $TrendFactory.build(...)$. But it is possible to directly fix the evaluation function to be used.
+  \bigskip
+
+\item[Arguments :]  \rule{0pt}{1em}
+  \begin{description}
+  \item $f$ : a NumericalMathFunction 
+  \end{description}
+  \bigskip
+
+\item[Value :] a TrendTransform, the trend function. 
+  \bigskip
+
+\item[Some methods :]  \rule{0pt}{1em}
+
+  \begin{description}
+
+   \item $()$
+    \begin{description}
+    \item[Usage :] $(X)$
+    \item[Arguments :] $X$ : TimeSeries, the time series  $(\vect{x}_{t_1}, \dots,\vect{x}_{t_N})$
+    \item[Value :]   a TimeSeries, the time series $(\vect{y}_{t_1}, \dots,\vect{y}_{t_N})$ such that :
+\begin{equation}
+\begin{array}{lcl}\label{Eval}
+  \mathbb{R}^{p+1} & \mapsto & \mathbb{R}^{p} \\
+  (t_i,\vect{x}_{t_i}) & \mapsto & \vect{y}_{t_i} = \vect{x}_{t_i} + \vect{f}(t_i)
+\end{array}
+\end{equation}
+    \end{description}
+    \bigskip
+
+   \item $getFunction$
+    \begin{description}
+    \item[Usage :] $getFunction()$
+    \item[Arguments :] none
+    \item[Value :]  a NumericalMathFunction, the function that evaluates the trend :
+\begin{equation}
+\begin{array}{lcl}\label{Function}
+  \mathbb{R} & \mapsto & \mathbb{R}^{p} \\
+  t & \mapsto & \vect{f}(t) = \sum_{j=1}^{k} \alpha_j \vect{f}_j(t)
+\end{array}
+\end{equation} 
+    \end{description}
+    \bigskip
+
+   \item $getInputDimension$
+    \begin{description}
+    \item[Usage :] $getInputDimension()$
+    \item[Arguments :] none
+    \item[Value :]   an integer, the input dimension of the trend function. As we consider a trend (time dependency), the input dimension of the function should be one. 
+    \end{description}
+    \bigskip
+
+   \item $getOutputDimension$
+    \begin{description}
+    \item[Usage :] $getOutputDimension()$
+    \item[Arguments :] none
+    \item[Value :]   an integer, the output dimension  $p$ of the trend function.
+    \end{description}
+    \bigskip
+
+  \item $getInverse$
+    \begin{description}
+    \item[Usage :] $getInverse()$
+    \item[Arguments :] none.
+    \item[Value :]   an InverseTrendTransform which contains the inverse trend function that can be used on a time series  $(\vect{y}_{t_1}, \dots,\vect{y}_{t_N})$ thanks to the operand  \emph{()}, in order to create the time series $(\vect{x}_{t_1}, \dots,\vect{x}_{t_N})$ such that :
+
+\begin{equation}
+\begin{array}{lcl}\label{Inverse}
+  \mathbb{R}^{p+1} & \mapsto & \mathbb{R}^{p} \\
+  (t,\vect{y}_{t_i}) & \mapsto & \vect{x}_{t_i} = \vect{y}_{t_i} - \vect{f}(t_i)
+\end{array}
+\end{equation} 
+    \end{description}
+    \bigskip
+
+  \item $getName$
+    \begin{description}
+    \item[Usage :] $getName()$
+    \item[Arguments :] none
+    \item[Value :] a string, the name of the TrendTransform.
+    \end{description}
+    \bigskip
+
+  \item $setName$
+    \begin{description}
+    \item[Usage :] $setName(name)$
+    \item[Arguments :] name : a string
+    \item[Value :] the TrendTransform is named $name$.
+    \end{description}
+    \bigskip
+
+
+  \end{description}
+
+\end{description}
+
+% =====================================================
+\newpage \subsubsection{InverseTrendTransform}
+
+This class inherits from $TemporalFunction$.
+
+\begin{description}
+
+\item[Usage :] Generally, it is obtained as the result of a $TrendTransform.getInverse()$. But it is possible to directly fix the evaluation function $f$ :  $InverseTrendTransform(f)$
+  \bigskip
+
+\item[Arguments :]  \rule{0pt}{1em}
+  \begin{description}
+  \item $f$ : a NumericalMathFunction 
+  \end{description}
+  \bigskip
+
+\item[Value :] an InverseTrendTransform, the inverse trend function.
+  \bigskip
+
+\item[Some methods :]  \rule{0pt}{1em}
+
+  \begin{description}
+
+   \item $()$
+    \begin{description}
+    \item[Usage :] $(X)$
+    \item[Arguments :] $X$ : TimeSeries, the time series  $(\vect{x}_{t_1}, \dots,\vect{x}_{t_N})$.
+    \item[Value :]   a TimeSeries, the time series $(\vect{y}_{t_1}, \dots,\vect{y}_{t_N})$ such that  for each instant $t_i$ we apply the function :
+\begin{equation}
+\begin{array}{lcl}\label{Eval}
+  \mathbb{R}^{p+1} & \mapsto & \mathbb{R}^{p} \\
+  (t_i,\vect{x}_{t_i}) & \mapsto & \vect{y}_{t_i} = \vect{x}_{t_i} - \vect{f}(t_i)
+\end{array}
+\end{equation}
+    \end{description}
+    \bigskip
+
+   \item $getInputDimension$
+    \begin{description}
+    \item[Usage :] $getInputDimension()$
+    \item[Arguments :] none
+    \item[Value :]   an integer, the input dimension of the trend function (here 1 as it is a time dependency).
+    \end{description}
+    \bigskip
+
+   \item $getOutputDimension$
+    \begin{description}
+    \item[Usage :] $getOutputDimension()$
+    \item[Arguments :] none.
+    \item[Value :]   an integer, the output dimension $p$ of the transform function. 
+    \end{description}
+    \bigskip
+
+  \item $getName$
+    \begin{description}
+    \item[Usage :] $getName()$
+    \item[Arguments :] none
+    \item[Value :] a string, the name of the InverseTrendTransform.
+    \end{description}
+    \bigskip
+
+  \item $setName$
+    \begin{description}
+    \item[Usage :] $setName(name)$
+    \item[Arguments :] $name$ : a string
+    \item[Value :] the InverseTrendTransform is named $name$.
+    \end{description}
+    \bigskip
+
+  \end{description}
+
+\end{description}
+
+% =====================================================
+
+\newpage \subsection{ARMAFactory}
+
+The class enables to estimate the coefficients of an ARMA process using a realization or a sample of realizations
+
+\subsubsection{ARMAFactory}
+
+This class is the interface of $ARMAFactoryImplementation$.\\
+
+\begin{description}
+
+\item[Usage :] \rule{0pt}{1em}
+  \begin{description}  
+  \item $ARMAFactory(myARMAFactoryImplementation)$
+  \end{description}
+  \bigskip
+
+\item[Arguments :] $myARMAFactoryImplementation$ : the implementation of an ARMA factory. For example, a Whitte factory.
+
+  \bigskip
+
+\item[Value :] a ARMAFactory
+  \bigskip
+
+\item[Some methods :]  \rule{0pt}{1em}
+
+  \begin{description}
+
+  \item $getName$
+    \begin{description}
+    \item[Usage :] $getName()$
+    \item[Arguments :] none
+    \item[Value :] a string, the name of the ARMAFactory
+    \end{description}
+    \bigskip
+
+  \item $setName$
+    \begin{description}
+    \item[Usage :] $setName(name)$
+    \item[Arguments :] name : a string
+    \item[Value :] the ARMAFactory, named $name$
+    \end{description}
+    \bigskip
+
+
+  \end{description}
+
+\end{description}
+
+
+\subsubsection{WhittleFactory}
+
+This class inherits from $ARMAFactoryImplementation$.\\
+
+\begin{description}
+
+\item[Usage :] \rule{0pt}{1em}
+  \begin{description}  
+  \item $WhittleFactory()$
+  \item $WhittleFactory(p, q)$
+  \item $WhittleFactory(p, q, mySpectralModelFactory)$
+  \end{description}
+  \bigskip
+
+\item[Arguments :] \rule{0pt}{1em}
+  \begin{description}
+  \item $p$ : integer. The order of the AR part;
+  \item $q$ : integer. The order of the MA part;
+  \item $mySpectralModelFactory$ : a SpectralModelFactory. The method of periodogram estimate
+  \end{description}
+  \bigskip
+
+\item[Value :] a WhittleFactory
+  \rule{0pt}{1em}
+  \begin{description}
+  \item in the second usage, we fix the order of the ARMA (AR size and MA size),
+  \item in the third usage, we also fix the $SpectralModelFactory$ for estimating the periodogram
+  \end{description}
+  \bigskip
+
+
+\item[Some methods :]  \rule{0pt}{1em}
+
+  \begin{description}
+
+    \item $build$
+    \begin{description}
+    \item[Usage :] $build(ts)$
+    \item[Arguments :] A time series
+    \item[Value :]   an ARMA, the model for which the time series is considered as a realization.
+    \end{description}
+    \bigskip
+
+    \item $build$
+    \begin{description}
+    \item[Usage :] $build(sample)$
+    \item[Arguments :] A ProcessSample
+    \item[Value :]   an ARMA, the model for which the collection of time series is considered as a realization.
+    \end{description}
+    \bigskip
+
+  \end{description}
+
+\end{description}
+
+
+% =====================================================
+
+
+\newpage  \subsection{RandomWalk}
+\begin{description}
+
+\item[Usage :] \rule{0pt}{1em}
+  \begin{description}
+  \item $RandomWalk(origin, distribution)$
+  \item $RandomWalk(origin, distribution, timeGrid)$
+  \end{description}
+  \bigskip
+
+\item[Arguments :]  \rule{0pt}{1em}
+  \begin{description}
+  \item $origin$ : a NumericalPoint, the starting point of the random walk.
+  \item $distribution$ : a Distribution, the distribution used for the steps of the random walk.
+  \item $timeGrid$ : a RegularGrid, the time grid over which the realizations are observed
+  \end{description}
+  \bigskip
+
+\item[Value :] a RandomWalk process
+  \rule{0pt}{1em}
+  \begin{description}
+  \item in the first usage, we fix the the origin and distribution of the process. They must have a common dimension, which is also the dimension of the process. The time grid is by default reduced to one time stamp $t=0$.
+  \item in the second usage, we fix also the time grid of the observations.
+  \end{description}
+  \bigskip
+
+\item[Some methods :]  \rule{0pt}{1em}
+
+  \begin{description}
+
+  \item $getOrigin$
+    \begin{description}
+    \item[Usage :] $getOrigine()$
+    \item[Arguments :] none
+    \item[Value :] a NumericalPoint, the the starting point of the random walk.
+    \end{description}
+    \bigskip
+
+  \item $setOrigin$
+    \begin{description}
+    \item[Usage :] $setOrigin(origin)$
+    \item[Arguments :] $origin$, a NumericalPoint
+    \item[Value :] none. Fix the starting point of the random walk.
+    \end{description}
+    \bigskip
+
+  \end{description}
+
+  \begin{description}
+
+  \item $getDistribution$
+    \begin{description}
+    \item[Usage :] $getDistribution()$
+    \item[Arguments :] none
+    \item[Value :] a Distribution, the distribution used to generate the steps of the random walk.
+    \end{description}
+    \bigskip
+
+  \item $setDistribution$
+    \begin{description}
+    \item[Usage :] $setDistribution(distribution)$
+    \item[Arguments :] $distribution$, a Distribution
+    \item[Value :] none. Fix the distribution for the steps of the random walk.
+    \end{description}
+    \bigskip
+
+  \end{description}
+
+\end{description}
+
+% =====================================================
+
+
+\newpage  \subsection{WhiteNoise}
+\begin{description}
+
+\item[Usage :] \rule{0pt}{1em}
+  \begin{description}
+  \item $WhiteNoise(distribution)$
+  \item $WhiteNoise(distribution, timeGrid)$
+  \end{description}
+  \bigskip
+
+\item[Arguments :]  \rule{0pt}{1em}
+  \begin{description}
+  \item $distribution$ : a Distribution, the distribution used for the realization of the white noise. Care! A white noise has a zero mean and finite standard deviation distribution!
+  \item $timeGrid$ : a RegularGrid, the time grid over which the realizations are observed
+  \end{description}
+  \bigskip
+
+\item[Value :] a WhiteNoise process
+  \rule{0pt}{1em}
+  \begin{description}
+  \item in the first usage, we fix the distribution and so the dimension of the process. The time grid is by default reduced to one time stamp $t=0$.
+  \item in the second usage, we fix also the time grid of the observations.
+  \end{description}
+  \bigskip
+
+\item[Some methods :]  \rule{0pt}{1em}
+
+  \begin{description}
+
+  \item $getDistribution$
+    \begin{description}
+    \item[Usage :] $getDistribution()$
+    \item[Arguments :] none
+    \item[Value :] a Distribution, the distribution used to generate random noise at time $t$
+    \end{description}
+    \bigskip
+
+  \item $setDistribution$
+    \begin{description}
+    \item[Usage :] $setDistribution(distribution)$
+    \item[Arguments :] $distribution$, a Distribution
+    \item[Value :] none. Fix the distribution for the realization of noise at time $t$
+    \end{description}
+    \bigskip
+
+  \end{description}
+
+\end{description}
+
+
+% =====================================================
+
+\newpage \subsection{CompositeProcess}
+
+This class inherits from $Process$. \\
+The objective is to build a stochastic process upon a function and a process such as $ARMA$ or $NormalProcess$ for example.
+
+\subsubsection{CompositeProcess}
+\begin{description}
+
+\item[Usage :] \rule{0pt}{1em}
+  \begin{description}
+  \item $CompositeProcess()$
+  \item $CompositeProcess(function, AntecedentProcess)$ 
+ 
+  \end{description}
+  \bigskip
+
+\item[Arguments :]  \rule{0pt}{1em}
+  \begin{description}
+  \item $function$ : a DynamicalFunction, the function of composition 
+  \item $AntecedentProcess$ : a Process. The input process considered.
+  \end{description}
+  \bigskip
+
+\item[Value :] a CompositeProcess process
+  \rule{0pt}{1em}
+  \begin{description}
+  \item in the second usage, we fix the process all elements of composition $\vect{Y}$ = function($\vect{X}$) with $\vect{X}$ a process.
+  \end{description}
+  \bigskip
+
+
+\item[Some methods :]  \rule{0pt}{1em}
+
+  \begin{description}
+
+  \item $getFunction$
+    \begin{description}
+    \item[Usage :] $getFunction()$
+    \item[Arguments :] none
+    \item[Value :] a DynamicalFunction, the function used for the evaluation.
+    \end{description}
+    \bigskip
+
+  \item $getAntecedent$
+    \begin{description}
+    \item[Usage :] $getAntecedent()$
+    \item[Arguments :] none
+    \item[Value :] a Process, the proces $\vect{X}$ such as the current proces is obtained by $\vect{Y}= f (\vect{X})$.
+    \end{description}
+
+
+  \end{description}
+
+\end{description}

@@ -1,0 +1,108 @@
+% Copyright (c)  2005-2009  EDF-EADS-PHIMECA.
+% Permission is granted to copy, distribute and/or modify this document
+% under the terms of the GNU Free Documentation License, Version 1.2
+% or any later version published by the Free Software Foundation;
+% with no Invariant Sections, no Front-Cover Texts, and no Back-Cover
+% Texts.  A copy of the license is included in the section entitled "GNU
+% Free Documentation License".
+
+There are three directories containing the templates used to interface \OT\ with an external code written in C, in \index{FORTRAN}FORTRAN 77 or available as a command that can be called from the shell.
+
+These directories share the same structure described here. The specifics of each directory are outlined in the relevant sections.
+
+The developer interested in any of these directories must start by copying it entirely in a personal directory. We will assume that the copy is made in the developer's home directory ({\bf \$HOME}) that the produced wrapper will be called {\bf myWrapper}.
+\lstset{language=Bash, basicstyle=\normalsize}
+\begin{lstlisting}[frame=TBRL]
+  > cp -r <template_dir> $HOME/myWrapper
+\end{lstlisting}
+
+Then, after ensuring that they have the {\bf autoconf}, {\bf automake} and {\bf libtool} tools, the developer enters the newly copied directory and initializes the development environment. This step is performed only once.
+
+\lstset{language=Bash, basicstyle=\normalsize}
+\begin{lstlisting}[frame=TBRL]
+  > cd myWrapper
+  > sh customize myWrapper
+  > sh bootstrap
+\end{lstlisting}
+
+\small
+\begin{quote}
+  \textit{Note: The {\bf customize} script modifies a number of files in which the name of the wrapper ({\bf myWrapper} in our case) must appear.}
+\end{quote}
+\normalsize
+
+At this stage, a new {\bf configure} file has been created in the directory. This file will allow to continue with the procedure. This executable requires, however, two pieces of information:
+\begin{itemize}
+\item the name of the \index{installation directory}installation directory for the produced wrapper. By default, this wrapper will be written in the directory {\bf \$HOME/openturns}, which is a standard directory for \OT\ to search for wrappers. However, if you choose to install the wrapper elsewhere, you will have to declare this path in the \index{wrapper search}{\bf OPENTURNS\_WRAPPER\_PATH} environment variable.
+\item the \OT\ installation directory, i.e the directory providing access to {\bf lib/openturns/libOT.so}. We will call this directory {\bf openturns\_dir}.
+\end{itemize}
+
+\lstset{language=Bash, basicstyle=\normalsize}
+\begin{lstlisting}[frame=TBRL]
+  > ./configure --with-openturns=<openturns_dir>
+\end{lstlisting}
+
+This command produces the {\bf Makefile} files needed to \index{compilation}compile the wrapper.
+\lstset{language=Bash, basicstyle=\normalsize}
+\begin{lstlisting}[frame=TBRL]
+  > make
+  > make install
+\end{lstlisting}
+
+All of the directories contain a file called \index{wrapper source code}{\bf wrapper.c} defining symbols for functions expected by the \OT\ library. In some cases, these functions are written as macros or as a traditional C code.
+
+Finally, a Python test file allows to control the minimal functioning of the produced wrapper.
+
+\lstset{language=Bash, basicstyle=\normalsize}
+\begin{lstlisting}[frame=TBRL]
+  > python test.py
+\end{lstlisting}
+
+\subsection{wrapper\_linked\_with\_C\_function directory}
+
+This directory contains two additional files that encode a hypothetical function written in C and serving as the external code:
+\begin{description}
+\item[myCFunction.h] the header file declaring the function;
+\item[myCFunction.c] the source file defining the function.
+\end{description}
+
+The function here is called {\bf myCFunction} and shows how to pass the input vector ({\bf inPoint}) as an argument and how to retrieve the result in an output vector ({\bf outpoint}). We remind here that no memory allocation is needed.
+
+The {\bf wrapper.c} file imports the definition of {\bf myCFunction} using the directive:
+\lstset{language=C++, basicstyle=\normalsize}
+\begin{lstlisting}[frame=TBRL]
+  #include "myCFunction.h"
+\end{lstlisting}
+It explicitely calls this function in the {\bf FUNC\_EXEC} macro.
+
+\subsection{wrapper\_linked\_with\_F77\_function directory}
+
+This directory contains only one additional file encoding a hypothetical function written in FORTRAN, which acts as the external code:
+\begin{description}
+\item[code.f] the source file defining the function.
+\end{description}
+
+The function here is called {\bf COMPUTE} and shows how to pass the input vector ({\bf inPoint}) as an argument and how to retrieve the result in an output vector ({\bf outpoint}). We remind here that no memory allocation is needed.
+
+Since there is no header file allowing to import the {\bf wrapper.c} file where the {\bf COMPUTE} function is declared, and since it is necessary to adapt the symbols between both languages C and FORTRAN, we must call the {\bf F77\_FUNC} macro defined by {\bf autoconf}. This macro produces a new symbol to be called {\bf COMPUTE\_F77}, which will be called directly in the {\bf FUNC\_EXEC} macro.
+
+\subsection{wrapper\_calling\_shell\_command directory}
+
+This directory contains two files used to simulate an external code called from the shell command line:
+\begin{description}
+\item[code\_C1.c] the self-standing source code processing the numerical input data;
+\item[code\_C1.data] the file containing the numerical input data expected by {\bf code\_C1}.
+\end{description}
+
+At compile time, the {\bf code\_C1.c} file will be used to produce the {\bf code\_C1} executable, which takes two files as arguments on its command line:
+\begin{description}
+\item[code\_C1.data] the name of the input file containing the numerical data;
+\item[code\_C1.res] the name of the output file containing the numerical results.
+\end{description}
+
+\lstset{language=Bash, basicstyle=\normalsize}
+\begin{lstlisting}[frame=TBRL]
+  > ./code_C1 code_C1.data code_C1.res
+\end{lstlisting}
+
+The macros listed in the {\bf wrapper.c} file, and the file and variable description in the {\bf myWrapper.xml.in} file, induce that the call to the {\bf code\_C1} external code is correctly performed, as well as the data transfer for input and output.

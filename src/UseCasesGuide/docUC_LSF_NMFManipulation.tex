@@ -1,0 +1,141 @@
+% Copyright (c)  2005-2010 EDF-EADS-PHIMECA.
+% Permission is granted to copy, distribute and/or modify this document
+% under the terms of the GNU Free Documentation License, Version 1.2
+% or any later version published by the Free Software Foundation;
+% with no Invariant Sections, no Front-Cover Texts, and no Back-Cover
+% Texts.  A copy of the license is included in the section entitled "GNU
+% Free Documentation License".
+\renewcommand{\filename}{docUC_LSF_NMFManipulation.tex}
+\renewcommand{\filetitle}{UC : Manipulation of a NumericalMathFunction}
+
+% \HeaderNNIILevel
+% \HeaderIILevel
+\HeaderIIILevel
+
+
+
+\index{Numerical Math Function Manipulation!Dimension}
+\index{Numerical Math Function Manipulation!Gradient}
+\index{Numerical Math Function Manipulation!Hessian}
+\index{Numerical Math Function Manipulation!Marginal}
+\index{Numerical Math Function Manipulation!Evaluation}
+\index{Numerical Math Function Manipulation!Composition}
+\index{Numerical Math Function Manipulation!History}
+
+
+The objective of this Use Case  is to describe the main functionalities that Open TURNS enables to manipulate a numerical function $f : \mathbb{R}^n  \longrightarrow \mathbb{R}^p$.\\
+
+Details on each object may be found in the User Manual  (\href{OpenTURNS_UserManual_TUI.pdf}{see User Manual - Base Objects / NumericalMathFunction}).\\
+
+Open TURNS enables :
+\begin{itemize}
+\item to ask the dimension of its input and output vectors, with the methods {\itshape getInputDimension,  getOutputDimension},
+\item to evaluate itself, its gradient and hessian, with the methods {\itshape gradient, hessian}. The evaluation of the function is a vector of dimension $p$, the gradient is a matrix with $p$ rows and $n$ columns, the hessian is a tensor of order 3 with  $p$ rows, $n$ columns and $n$ sheets,
+\item to set a finite difference method for the evaluation of the gradient or the hessian, with the methods {\itshape setGradientImplementation, setHessianImplementation},
+\item to evaluate the number of times the function or its gradient or its hessian have been evaluated {\bf since the beginning of the python session}, with the methods {\itshape getEvaluationCallsNumber, getGradientCallsNumber, getHessianCallsNumber},
+\item to ask the description of its input and output vectors, with the methods {\itshape getInputDescription,  getOutputDescription},
+\item to extract its components if $p>1$, which are functions $f_i : \mathbb{R}^n  \longrightarrow \mathbb{R}$, with the method {\itshape getMarginal},
+\item to ask for its parameters with the method {\itshape getParameters},
+\item to define its parameters, with the method {\itshape setParameters},
+\item to compose two functions,
+\item to ask for the valid operators in Open TURNS, the valid constants and functions, with the methods {\itshape GetValidOperators, GetValidConstants, GetValidFunctions}.
+\end{itemize}
+
+Furthermore, a Open TURNS implemented an history mechanism to all the NumericalMathFunction types. It is deactivated by default, and stores all the input and output values of a function when activated thanks to the method  {\itshape enableHistory}.
+
+\requirements{
+  \begin{description}
+  \item[$\bullet$] none
+  \end{description}
+}
+{
+  \begin{description}
+  \item[$\bullet$] a function $f : \mathbb{R}^n  \longrightarrow \mathbb{R}^p$: {\itshape myFunction}
+  \item[type:] NumericalMathFunction
+  \end{description}
+}
+
+\textspace\\
+Python script for this UseCase :
+
+\begin{lstlisting}
+  # Activate the history mechanism
+  myFunction.enableHistory()
+
+  # Get the input history
+  myInputHistory = myFunction.getInputHistory()
+  # Then get the sample which has been stored
+  storedSample = myInputHistory.getSample()
+
+  # Desactivate the history mechanism
+  myFunction.disableHistory()
+
+  # Ask for the dimension of the input and output vectors
+  print myFunction.getInputDimension()
+  print myFunction.getOutputDimension()
+
+  # Evaluate the function at a particular point
+  point = NumericalPoint(myFunction.getInputDimension())
+  functinovector = myFunction(point)
+
+  # Evaluate the gradient of the function at a particular point
+  gradientMatrix = myFunction.gradient(point)
+
+  # Evaluate the hessian of the function at a particular point
+  hessianMatrix = myFunction.hessian(point)
+
+  # Change the gradient evaluation method
+  # Type : non centered finite difference method
+  myGradient = NonCenteredFiniteDifferenceGradient(NumericalPoint(2, 1.0e-7), myAnalyticalFunction.getEvaluationImplementation())
+  print "myGradient = ", myGradient
+
+  # Substitute the gradient
+  myFunction.setGradientImplementation(myGradient)
+
+  # Change the hessian evaluation method
+  # type : centered finite difference method with constant step
+  myStep = ConstantStep(NumericalPoint(2, 1.0e-7))
+  myHessian = CenteredFiniteDifferenceHessian(FiniteDifferenceStep(myStep), myAnalyticalFunction.getEvaluationImplementation())
+  print "myHessian = ", myHessian
+
+  # Substitute the hessian
+  myFunction.setHessianImplementation(myHessian)
+
+  # Get the number of times the function has been evaluated
+  callsNumber = myFunction.getEvaluationCallsNumber()
+
+  # Get the number of times the gradient has been evaluated
+  callsNumber = myFunction.getGradientCallsNumber()
+
+  # Get the number of times the hessian has been evaluated
+  callsNumber = myFunction.getHessianCallsNumber()
+
+  # Get the description of its input and output vectors
+  print myFunction.getInputDescription()
+  print myFunction.getOutputDescription()
+
+  # Get the component i
+  # Care : the numerotation begins at 0
+  i=3
+  component = myFunction.getMarginal(i)
+
+  # Get the parameters of the function
+  paremeters =  myFunction.getParameters()
+
+  # Set the parameters of the function
+  myFunction.setParameters()
+
+  # Compose the two NumericalMathFunction : h=fog
+  g=NumericalMathFunction(f,g)
+
+  # Get the valid operators in Open TURNS
+  print NumericalMathFunction.GetValidOperators()
+
+  # Get the valid functions in Open TURNS
+  print NumericalMathFunction.GetValidFunctions()
+
+  # Get the valid constants in Open TURNS
+  print NumericalMathFunction.GetValidConstants()
+\end{lstlisting}
+
+

@@ -1,0 +1,556 @@
+% Copyright (c)  2005-2010 EDF-EADS-PHIMECA.
+% Permission is granted to copy, distribute and/or modify this document
+% under the terms of the GNU Free Documentation License, Version 1.2
+% or any later version published by the Free Software Foundation;
+% with no Invariant Sections, no Front-Cover Texts, and no Back-Cover
+% Texts.  A copy of the license is included in the section entitled "GNU
+% Free Documentation License".
+
+\documentclass[11pt]{article}
+
+\usepackage{latex2html}
+\usepackage[latin1]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{makeidx}
+\usepackage{index}
+\usepackage[dvips]{graphicx}
+\usepackage{color}
+\usepackage{psfrag}
+\usepackage{listings}
+\usepackage{longtable}
+\usepackage{mdwtab}
+\usepackage{hhline}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{fancyhdr}
+\usepackage{hyperref}
+
+\setlength{\textwidth}{18.5cm}
+\setlength{\textheight}{23cm}
+\setlength{\hoffset}{-1.04cm}
+\setlength{\voffset}{-1.54cm}
+\setlength{\oddsidemargin}{0cm}
+\setlength{\evensidemargin}{0cm}
+\setlength{\topmargin}{0cm}
+\setlength{\headheight}{1cm}
+\setlength{\headsep}{0.5cm}
+\setlength{\marginparsep}{0cm}
+\setlength{\marginparwidth}{0cm}
+\setlength{\footskip}{1cm}
+\setlength{\parindent}{0cm}
+
+\pagestyle{fancy}
+\fancyhf{} \rhead{\bfseries \thepage} \lhead{\bfseries \nouppercase Open TURNS -- Windows Port Guide}
+\rfoot{\bfseries \copyright 2005-2012 EDF - EADS - PhiMECA} \lfoot{}
+
+\begin{document}
+
+\begin{titlepage}
+  \vspace*{2cm}
+  \begin{center}
+    {\huge \bf Windows Port Guide}
+    \input{GenericInformation.tex}
+  \end{center}
+\end{titlepage}
+\newpage
+\tableofcontents
+
+
+% -------------------------------------------------------------------------------------------------
+\newpage
+
+\section{Introduction}
+
+This documentation aims at guiding the developer with Open TURNS cross compilation for Windows target.\\
+
+This documentation is separated into two main parts :
+\begin{itemize}
+\item[$\bullet$]  compile Open TURNS under Linux for Windows target,
+\item[$\bullet$]  validation and use of Open TURNS on Windows.
+\end{itemize}
+
+% -------------------------------------------------------------------------------------------------
+\newpage
+\section{Linux side}
+
+\subsection{Quick compilation guide}
+
+OpenTURNS cross compilation is now quite straightforward: 
+
+\begin{itemize}
+\item[$\bullet$] install MinGW 3.4.5 compiler (see paragraph \ref{mingw-installation})
+\item[$\bullet$] install Wine (e.g. \verb|aptitude install wine|)
+\item[$\bullet$] fetch on sourceforge the file openturns-developers-windeps-x.y.z.tgz corresponding to your OpenTURNS version, untar it:\\
+\verb|tar zxf openturns-developers-windeps-x.y.z.tgz|
+\item[$\bullet$] install the OpenTURNS Wine C drive (be careful, it will overwrite any existing \$HOME/.wine !):  \\
+\verb|mv openturns-developers-windeps/share/openturns/utils/wine/ $HOME/.wine|
+\item[$\bullet$] create a link that points to the openturns-developers-windeps folder\\
+\verb|cd openturns-src/distro/windows ; ln -s $HOME/openturns-developers-windeps openturns|
+\item[$\bullet$] launch compilation: \\
+\verb|cd openturns-src/distro/windows ; make JOBS=5|
+\end{itemize}
+
+\subsection{Manual compilation guide}
+
+The following sections are only useful to understand how cross compilation has been made.
+
+\subsubsection{Set cross compilation environment}
+
+\paragraph{MinGW \label{mingw-installation}}
+To install MinGW, it is recommended to follow the web page \url {http://www.mingw.org/wiki/LinuxCrossMinGW} .
+
+It is the official supported procedure for MinGW compilation, and will install GCC version 3.4.5.
+It is recommended to use the installation scripts from the CVS repository.
+
+\paragraph{BLAS / LAPACK} 
+
+The BLAS / LAPACK library given by Open TURNS does not work with the MinGW compiler. So it is required to use an external library.
+
+\begin{itemize}
+\item[$\bullet$] download from a RedHAT server the mingw-lapack package, (e.g. \url{ftp://ftp.pbone.net/mirror/ftp.sourceforge.net/pub/sourceforge/m/project/mi/mingw-cross/OldFiles/mingw-lapack-3.1.1-5.fc9.i386.rpm}).
+\item[$\bullet$]  transform the rpm to a tgz with the program alien.
+\item[$\bullet$]  copy the library file  libblas.dll.a and liblapack.dll.a to the lib directory of MinGW.
+\end{itemize}
+
+
+\paragraph{Pthreads\label{pthread-installation}}
+
+\begin{itemize}
+\item[$\bullet$]  download the binary of pthread for Windows here \url{http://sourceware.org/pthreads-win32}
+\item[$\bullet$]  copy the library libpthreadGC2.a in the lib directory of MinGW.
+\item[$\bullet$]  copy the headers in the include directory of MinGW, create an empty config.h file in the MinGW include directory.
+\end{itemize}
+
+
+\paragraph{dlfcn}
+
+\begin{itemize}
+\item[$\bullet$]  download the binary of dlfcn for Windows here :
+
+  \url{http://dlfcn-win32.googlecode.com/files/dlfcn-win32-shared-r11.tar.bz2}
+
+\item[$\bullet$]  copy the library libdl.a and libdl.dll.a in the lib directory of MinGW.
+\item[$\bullet$]  copy dlfcn.h in the include directory of MinGW.
+\end{itemize}
+
+\paragraph{libxml2}
+
+\begin{itemize}
+\item[$\bullet$]  download the precompiled zip files of iconv zlib and libxml2 from \url{http://sourceforge.net/projects/gnuwin32/files/} (at this time mingw32-iconv-1.12-7.zip, mingw32-zlib-1.2.3-11.zip and mingw32-libxml2-2.7.2-4.zip).
+\item[$\bullet$]  install the content of include/ and lib/ directories of iconv and zlip into the respective directory of MinGW
+\item[$\bullet$]  decompress libxml2 in a separate directory (e.g. : /opt/mingw32-sharedlib/libxml2).
+\item[$\bullet$]  modify libxml2.la file so that the iconv dependancy becomes correct, e.g. :
+\begin{verbatim}
+  replace the line :
+  dependency_libs=' -lz /usr/i686-pc-mingw32/sys-root/mingw/lib/libiconv.la -lws2_32'
+  by :
+  dependency_libs=' -lz /opt/mingw-3.4.5/lib/libiconv.la -lws2_32'
+
+  and the line :
+  libdir='/usr/i686-pc-mingw32/sys-root/mingw/lib'
+  by :
+  libdir='/opt/mingw32-sharedlib/libxml2/lib'
+\end{verbatim}
+\end{itemize}
+
+
+\paragraph{regex}
+
+\begin{itemize}
+\item[$\bullet$]  download mingw-libgnurx-2.5.1-bin.tar.gz and mingw-libgnurx-2.5.1-dev.tar.gz from the MinGW official website.
+
+\item[$\bullet$]  decompress this two files in a same directory (e.g. /opt/mingw32-sharedlib/regex).
+\end{itemize}
+
+
+% -------------------------------------------------------------------------------------------------
+
+\subsubsection{Linux test Environment}
+
+\paragraph{WINE}
+
+Install any WINE version (\url{http://www.winehq.org/}), for example, the one given by your Linux distribution.
+
+
+\paragraph{Windows shared libraries}
+
+\begin{itemize}
+\item[$\bullet$]  put the shared libraries of pthreads (pthreadGC2.dll), BLAS/LAPACK (lapack.dll and blas.dll), dlfcn (libdl.dll), libxml2 (libcharset-1.dll libiconv-2.dll libxml2-2.dll zlib1.dll), and regex (libgnurx-0.dll) in a directory where the PATH environment variable of WINE points to.
+\item[$\bullet$]  put the shared library given by MinGW (mingwm10.dll) in this directory too.
+\end{itemize}
+
+Note : WINE's PATH can be modified in the file \textasciitilde{}/.wine/system.reg.
+
+
+\paragraph{Advice}
+
+It is better to install Open TURNS dependencies in directory without spaces (e.g. not in \emph{C:\textbackslash Program Files}).
+The space between \emph{Program} and \emph{Files} can cause cumbersome problems (mostly with autotools).
+
+\paragraph{Ghostscript}
+\begin{itemize}
+\item[$\bullet$]  download and install ghostscript into WINE environment. The installer (e.g. gs864w32.exe) can be found here \url{http://sourceforge.net/projects/ghostscript/}. Launch the command like this : wine gs864w32.exe.
+\item[$\bullet$]  add the path to gswin32c.exe to the PATH environment variable of WINE.
+\end{itemize}
+
+\paragraph{R}
+\begin{itemize}
+\item[$\bullet$]  install R into WINE environment by using the standard Windows installer from the official site \url{http://cran.r-project.org}.
+\item[$\bullet$]  add the path to R.exe to the PATH environment variable of WINE.
+\end{itemize}
+
+\paragraph{R packages}
+
+\begin{itemize}
+\item[$\bullet$]  install the sensitivity and rotR zip files with Rgui.exe  (menu packages => install R packages fom zip files).
+\end{itemize}
+
+The packages sensitivity\_1.3-1.tar.gz and rotRPackage\_1.4.4.tar.gz have been transformed to Windows packages with the website \url{http://win-builder.r-project.org}.
+
+
+\paragraph{Python}
+
+\begin{itemize}
+\item[$\bullet$]  download the 2.6 version of Windows python installer from the official site \url{http://www.python.org}. Install python using this command : wine msiexec /i python-2.6.2.msi .
+\item[$\bullet$]  add the path to Python.exe to the PATH environment variable of WINE.
+\end{itemize}
+
+\paragraph{PyQT module}
+
+Install a PyQT version compatible with Python2.6 and QT4 (e.g. : PyQt-Py2.6-gpl-4.5.1-1.exe) from the following web site http://www.riverbankcomputing.co.uk/software/pyqt/download.
+
+\paragraph{RPy module}
+
+It is not necessary to install RPy into WINE because no ckecktest use it and furthermore RPy does not install properly into WINE. This section will only be for RPy on Windows.
+
+\begin{itemize}
+\item[$\bullet$]  download RPy from the website \url{http://rpy.sourceforge.net/download.html}. At this time, RPy is compiled on Windows with python version 2.6.
+\item[$\bullet$]  As described on the download page, install the RPy dependancies : Pywin32 (pywin32-213.win32-py2.6.exe) and NumPy (numpy-1.3.0-win32-superpack-python2.6.exe).
+\item[$\bullet$]  Install the following version : rpy2-2.0.3.win32-py2.6.exe.
+
+  The python version is fixed by the this RPy dependancy.
+\end{itemize}
+
+
+\subsubsection{Compilation}
+
+In order to cross-compile Open TURNS :
+
+First get the type of your computer in order to set the \verb|--build| configure settings :
+\begin{verbatim}
+  export BUILD_MACHINE=`gcc -dumpmachine`
+\end{verbatim}
+
+The configuration step (you must have already bootstrap) :
+\begin{verbatim}
+  # adapt these following lines to your configuration :
+  PYTHON_VERSION=26
+  PYTHON_PREFIX=$HOME/.wine/drive_c/Python$PYTHON_VERSION
+  R_PATH=$HOME/.wine/drive_c/R/R-2.9.0
+  REGEX_PREFIX=/opt/mingw32-sharedlib/regex
+  LIBXML2_PREFIX=/opt/mingw32-sharedlib/libxml2
+
+  # do not modify :
+  export PYTHON=$PYTHON_PREFIX/python.exe
+  export PYTHON_NOVERSIONCHECK="1"
+  export PYTHON_CPPFLAGS=-I$PYTHON_PREFIX/include
+  export PYTHON_LDFLAGS="-L$PYTHON_PREFIX/libs -lpython$PYTHON_VERSION"
+  export PYTHON_EXTRA_LIBS=" "
+  export PYTHON_SITE_PKG=$PYTHON_PREFIX/Lib/site-packages
+
+  # launch as is :
+  ../configure --with-swig --with-R=$R_PATH --enable-R-renaming=R.exe --with-regex=$REGEX_PREFIX \
+  --with-libxml2=$LIBXML2_PREFIX --enable-debug=none CXXFLAGS=-O2 CFLAGS=-O2 FFLAGS=-O2 \
+  --build=$BUILD_MACHINE --target=i386-mingw32 --host=i386-mingw32 --prefix=$PWD/install
+\end{verbatim}
+Debug symbols are deactivated so that binaries are 3 times smaller.
+
+In the same shell, start the compilation :
+\begin{verbatim}
+  # openturns compilation and installation
+  make; make install
+\end{verbatim}
+
+The validation : launch the following command :
+\begin{verbatim}
+  # set the PATH to python.exe
+  PATH=$PATH:$PYTHON_PREFIX
+
+  make check && make installcheck
+\end{verbatim}
+
+
+Verification (this part is optional, it is not currently working but could work) : in order to check that the sources are distributable, set the variable like decribed in the above paragraph and launch the following command :
+\begin{verbatim}
+  make distcheck DISTCHECK_CONFIGURE_FLAGS="--with-R=$R_PATH --enable-R-renaming=R.exe \
+  --with-regex=$REGEX_PREFIX --with-libxml2=$LIBXML2_PREFIX \
+  --enable-debug=none CXXFLAGS=-O2 CFLAGS=-O2 FFLAGS=-O2 \
+  --build=$BUILD_MACHINE --target=i386-mingw32 --host=i386-mingw32"
+\end{verbatim}
+
+\subsubsection{How to create the installer}
+
+Two installers are created.
+\begin{itemize}
+\item[$\bullet$]   openturns-x.y.z.exe installs Open TURNS DLL and headers, and its dependancies. It is mainly for users that interact with Open TURNS through Python.
+\item[$\bullet$]   openturns-developers-x.y.z.exe helps compiling Open TURNS program and wrapper on Windows. Also, it permits to launch Open TURNS checktests.
+\end{itemize}
+
+NSIS is used to create Windows auto-installers. The command that creates the installers can be launched from Linux or Windows.
+
+Before using NSIS, in directory distro/windows/, modify the line of create\_installer.sh containing OT\_PREFIX and, if needed, the line containing WINOT\_PATH in the file openturns\_script.nsi.
+\begin{itemize}
+\item[$\bullet$]   OPENTURNS\_PREFIX must point to the installation directory of Open TURNS.
+\item[$\bullet$]   WINOT\_PATH must point to the directory containing every Windows Open TURNS dependancies. An archive of these files will be available on Open TURNS'sourceforge website (openturns\_windeps.tgz).
+\end{itemize}
+
+Finally, to create the openturns-x.y.z.exe file, launch the command :
+\begin{verbatim}
+  ./create_installer.sh
+\end{verbatim}
+
+\section{Windows side}
+
+\subsection{Install Open TURNS manually}
+
+To install Open TURNS without installer (the following points are done automatically by the installer openturns-x.y.z.exe) :
+
+\begin{itemize}
+\item[$\bullet$]   Copy the \emph{install} directory (created by the command make install) from Linux to Windows into the directory \emph{C:\textbackslash openturns}.
+
+\item[$\bullet$]   Like with WINE, every DLL must be reachable (mingwm, pthread, BLAS/LAPACK, dlfcn, libxml2, regex and OpenTurns), and the programs must be installed : R with its packages, ghostscript, Python with the required modules.
+
+  On Windows, DLLs are searched in directories listed in the PATH environment variable. To set the PATH variable temporarily, hit on a DOS console :
+\begin{verbatim}
+  set PATH=%PATH%;C:\openturns\bin;C:\openturns\lib\bin
+  echo %PATH%
+\end{verbatim}
+
+  To set permanently the PATH variable :
+  configuration panel -> system -> tab "advanced" -> button "environment variable" -> list "system variable" -> modify PATH variable.
+\end{itemize}
+
+
+\subsection{Install Open TURNS with a non admin account}
+
+Use Open TURNS installer as usual.
+
+Open TURNS developer installer can be used too if you installed Open TURNS in default directory. But MinGW and MSYS installation will need an administrator account.
+
+
+\subsection{Open TURNS validation}
+
+To test Open TURNS on Windows,\\
+
+- if you have the OpenTURNS developer installer (openturns-developers-x.y.z.exe):
+\begin{itemize}
+\item[$\bullet$]   Open TURNS should have been installed in default directory C:\textbackslash OpenTURNS
+\item[$\bullet$]   install Open TURNS developer with every checkboxes enabled.
+\item[$\bullet$]   click on shortcuts : Start Menu -> OpenTurns -> Start-checktests.
+\end{itemize}
+
+
+- if you do not have the Open TURNS installer :
+
+\begin{itemize}
+\item[$\bullet$]   install MinGW and MSYS
+\item[$\bullet$]   install like with WINE : R with its packages, ghostscript, Python with the required modules.
+
+\item[$\bullet$]   copy the \emph{install} directory (created by the command make install) from Linux to Windows into the directory \emph{C:\textbackslash openturns}.
+\item[$\bullet$]   suppress the empty file openturns\textbackslash share\textbackslash openturns\textbackslash examples\textbackslash libOT-0.dll
+  (dead unix link).
+
+\item[$\bullet$]   finally, from an msys shell, go to the examples directory
+
+\begin{verbatim}
+  cd /c/OpenTURNS/share/openturns/examples/
+\end{verbatim}
+
+  and launch the checktests :
+\begin{verbatim}
+  export PRINTF_EXPONENT_DIGITS=2
+
+  ./check_testsuite AUTOTEST_PATH="$PWD" OPENTURNS_CONFIG_PATH="$PWD/../../../etc/openturns"
+
+  export abs_srcdir="$PWD"
+
+  ./installcheck_testsuite AUTOTEST_PATH="$PWD" \
+  OPENTURNS_NUMERICALSAMPLE_PATH="$PWD" \
+  OPENTURNS_WRAPPER_PATH="$PWD/../wrappers" \
+  OPENTURNS_CONFIG_PATH="$PWD/../../../etc/openturns"
+
+  PYTHON_VERSION=26
+  export examplesdir="$PWD"
+
+  ./python_installcheck_testsuite AUTOTEST_PATH="$PWD"  \
+  OPENTURNS_NUMERICALSAMPLE_PATH="$PWD" \
+  OPENTURNS_WRAPPER_PATH="$PWD/../wrappers" \
+  OPENTURNS_CONFIG_PATH="$PWD/../../../etc/openturns" \
+  PYTHONPATH="$PWD/../../../lib/python$PYTHON_VERSION/site-packages"
+\end{verbatim}
+\end{itemize}
+
+
+\subsection{Open TURNS compilation examples}
+
+
+\subsubsection{Simple program\label{simple-program}}
+
+Install MinGW from the official installer (provided by Open TURNS developers installer). During the installation, choose the compiler g++.
+
+In order to compile, g++ needs Open TURNS headers and libraries.
+If Open TURNS is installed like this :
+\begin{verbatim}
+  c:
+  `--openturns
+  |-- include
+  |   `-- openturns
+  |       `-- ...
+  |-- lib
+  |   |-- bin
+  |   |   |-- libOT.dll.a
+  |   |   `-- ...
+  `-- src
+  `-- mon_prog.cxx
+\end{verbatim}
+
+From a DOS console, compile with this command :
+\begin{verbatim}
+  cd src
+  g++.exe mon_prog.cxx  -I..\include\openturns -L..\lib\bin -lOT -o mon_prog.exe
+\end{verbatim}
+
+An example is given in the directory openturns/share/openturns/examples/simple\_example.
+
+
+\subsubsection{Wrapper}
+
+To compile an OpenTURNS wrapper on Windows, Open TURNS developers installer must be installed.
+An example of a wrapper for Windows can be found in the directory openturns/share/openturns/WrapperTemplates/mingw\_wrapper\_linked\_with\_C\_function (this example is installed by the developers installer).
+
+In this directory, launch the compilation from an MSYS shell (or start the script ./build.sh) :
+\begin{verbatim}
+  PATH=/c/MinGW/bin:$PATH
+  PATH=/c/msys/1.0/bin:$PATH
+  ./bootstrap
+  mkdir build; cd build
+  ../configure --with-openturns=/c/openturns --prefix="$PWD/install"
+  make && make install
+\end{verbatim}
+
+The test using this wrapper can be started :
+\begin{verbatim}
+  ./start-test.sh
+\end{verbatim}
+The test can be started too by using the test.py file.\\
+
+The following points are automatically done by the Open TURNS developers installer :
+
+\begin{itemize}
+\item[$\bullet$]   To compile a wrapper using Autotools, MinGW, MSYS and msysDTK must be installed. These installers can be found on MinGW site.
+
+\item[$\bullet$]   Then, the Pthread library must be installed in MinGW directory (like in paragraph \ref{pthread-installation})
+
+\item[$\bullet$]   Autotools wrappers scripts use the openturn-config command. These one is configured to be installed in c:\textbackslash openturns\textbackslash bin directory. If Open TURNS is not installed in this directory, the prefix variable of openturns-config must be modified.
+\item[$\bullet$]   If during the compilation of the wrapper, libtool cannot produce a dynamic library because it can not found shared library, check that the library is existing and that the corresponding .la file is correct.
+\end{itemize}
+
+
+\subsubsection{Dev-C++}
+Dev-C++ is an integrated development environment like Visual Studio.
+
+Download the last Dev-C++ version.
+The compilations options are the same with those of paragraph \ref{simple-program}.
+
+Configure it so that is uses MinGW g++ 3.4.5. At this time, the linker fails with the Dev-C++ compiler (g++ 3.4.2).
+
+
+\subsubsection{Visual C++}
+
+The ABI of C++ binaries produced by Visual C++ and g++ are not compatible (C ABI are compatible). ABI means Application Binary Interface.
+Further informations can be found here : \url{http://chadaustin.me/cppinterface.html}.
+
+\begin{itemize}
+\item[$\bullet$] So if you need to link your program compiled with Visual C++ with OpenTURNS DLL, it is not possible. 
+But if you need to use only a small subset of the OpenTURNS C++ interface, one can use a workaround and make an had-hoc MinGW wrapper that wrap Open TURNS C++ symbols to C symbols (C binaries are compatible between gcc and Visual C). The application compiled with Visual Studio will be able to interact with Open TURNS through the C symbols of the wrapper. The following diagram explains this:
+\begin{verbatim}
+  prog vc++  
+      |
+    ABI C
+      |
+  hadhoc wrapper g++
+      |
+    ABI g++
+      |
+  OpenTURNS g++
+\end{verbatim}
+
+\item[$\bullet$] OpenTURNS wrapper (I mean wrapper that can be found there: openturns-src/wrappers/WrapperTemplates) are pure C. 
+So, OpenTURNS wrapper can be compiled with Visual Studio and linked to OpenTURNS.
+\begin{verbatim}
+  OpenTURNS g++
+      |
+    ABI C
+      |
+  wrapper vc++  
+\end{verbatim}
+\end{itemize}
+
+\subsubsection{Benchmark}
+
+No official benchmark of Open TURNS on Windows has been done, but windows version is slower than Linux one.
+
+
+\section{Unresolved problems}
+
+
+\subsection{Compilation of python modules}
+
+In order to compile the python wrappers (Python -> Open TURNS), the static library of python (libpython.a) must be included. Libtool does not allow to create DLL with static dependancies. Python wrappers are also created directly with the compiler without using libtool.
+
+The symbols of the static library libpython.a are also in each python DLL. At Open TURNS execution, until now, no problems have been reported.
+
+Furthermore, if libtool succeeds to create a DLL, it does it by appending a "-0" to the filename. This is a problem, because python searches for a filename without -0 (e.g. \_stat.pyd and not \_stat-0.pyd).
+
+
+\subsection{Compilation of Open TURNS wrappers}
+
+Open TURNS wrappers must be compiled on Windows with the -lOT flag.
+
+On Linux, this could cause problems (at execution, the wrappers symbols could be loaded twice).
+
+On Windows, the compilation of dynamics libraries is different : when a DLL is compiled, every symbols must be present (through a DLL skeleton).
+
+I do not know how to avoid this flag.
+
+This remains a point to take care of. The problem seen on Linux should be tested on Windows.
+
+\section{Resolved problems}
+
+\begin{itemize}
+\item[$\bullet$]   if \emph{NumericalMathFunction (exec external)} check test fails :
+
+  The temporary-dir element of openturns.conf could be misconfigured.
+
+  If Open TURNS examples has been installed in a directory containing spaces, copy the files poutre\_external\_infile* to a directory without spaces and set the environment variable abs\_srcdir to this directory.
+
+\item[$\bullet$]   if DLLs or programs are not found :
+
+  check your MSYS or Windows PATH environment variable.
+\item[$\bullet$]   if Open TURNS does not start from python interpreter and if the PYTHONPATH is correctly set :
+
+  check that the version of the python interpreter is the same as the version Open TURNS has been compiled for.
+\item[$\bullet$]   if a program is installed in C:\textbackslash Program Files and if it is not well detected,
+
+  reinstall it in directory without spaces in the name. The space between \emph{Program} and \emph{Files} can cause cumbersome problems (mostly with autotools).
+
+\item[$\bullet$]   to modify the PATH variable of .wine/system.reg, no WINE processus must be started. When a WINE processus stops, it overwrites this files.
+
+\item[$\bullet$]   libtool wrappers do not work on Ubuntu Intrepid. They work correctly on Mandriva 2009 32bits and Ubuntu Jaunty. If libtool wrappers do not work, modify ot-src/lib/config/test.am as described in this file.
+
+\item[$\bullet$]   if the static libraries libgc2.a and libfrtbegin.a are included during the compilation, libtool produces only a static Open TURNS library. These libraries are also desactivated during cross-compilation.
+
+\end{itemize}
+
+
+\end{document}

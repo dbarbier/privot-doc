@@ -1,0 +1,87 @@
+\indexentry{Modules!static library}{7}
+\indexentry{Library!static}{7}
+\indexentry{Modules!dynamic library}{7}
+\indexentry{Library!dynamic}{7}
+\indexentry{Filenames!header file}{9}
+\indexentry{Filenames!source code}{9}
+\indexentry{Filenames!class}{10}
+\indexentry{Multiple inclusions}{11}
+\indexentry{Inclusion!multiple}{11}
+\indexentry{Inclusion!Open TURNS\ files}{12}
+\indexentry{Inclusion!external files}{12}
+\indexentry{Inclusion!system functions}{12}
+\indexentry{Standard!C++}{15}
+\indexentry{Namespace}{15}
+\indexentry{Type!simple}{16}
+\indexentry{Simple type}{16}
+\indexentry{Type!built-in}{16}
+\indexentry{Built-in type}{16}
+\indexentry{Type!name}{17}
+\indexentry{Variable!name}{17}
+\indexentry{Member data!of class}{17}
+\indexentry{Class!member data}{17}
+\indexentry{Attribute!name}{17}
+\indexentry{Static!attribute name}{17}
+\indexentry{Method!name}{18}
+\indexentry{Static!method name}{18}
+\indexentry{Variable!name}{18}
+\indexentry{Static!variable name}{18}
+\indexentry{Constant!name}{18}
+\indexentry{Type!name}{18}
+\indexentry{Variable!name}{18}
+\indexentry{Function!name}{19}
+\indexentry{Method!name}{19}
+\indexentry{Abbreviation}{19}
+\indexentry{Public}{19}
+\indexentry{Protected}{19}
+\indexentry{Private}{19}
+\indexentry{Class declaration!basic structure}{20}
+\indexentry{Constructor}{20}
+\indexentry{Copy constructor}{20}
+\indexentry{Destructor}{20}
+\indexentry{Copy assignment}{20}
+\indexentry{Comparison}{20}
+\indexentry{Attribute!private}{21}
+\indexentry{Protected}{21}
+\indexentry{Private}{21}
+\indexentry{protected}{21}
+\indexentry{Attribute!protected}{21}
+\indexentry{Attribute!initialization}{21}
+\indexentry{Virtual}{21}
+\indexentry{Access method}{22}
+\indexentry{Type!simple}{22}
+\indexentry{Simple type}{22}
+\indexentry{Type!composite}{22}
+\indexentry{Composite type}{22}
+\indexentry{Inline}{23}
+\indexentry{Multiple inheritance}{23}
+\indexentry{Inheritance!multiple}{23}
+\indexentry{Destructor!virtual}{24}
+\indexentry{Virtual!destructor}{24}
+\indexentry{Parameter passing by reference}{24}
+\indexentry{Const}{25}
+\indexentry{Inline}{25}
+\indexentry{Template}{25}
+\indexentry{Variable!declaration}{25}
+\indexentry{Memory!allocation}{26}
+\indexentry{Memory!freeing}{26}
+\indexentry{Variable!automatic}{26}
+\indexentry{new}{27}
+\indexentry{delete}{27}
+\indexentry{Memory!management}{28}
+\indexentry{Smart pointer}{28}
+\indexentry{Indentation}{28}
+\indexentry{Nested control structures}{29}
+\indexentry{Control structures, nested}{29}
+\indexentry{goto}{29}
+\indexentry{Temporary objects}{30}
+\indexentry{switch!default}{30}
+\indexentry{exit}{31}
+\indexentry{Return code}{32}
+\indexentry{Exception}{32}
+\indexentry{Exception!throw}{33}
+\indexentry{Destructor}{33}
+\indexentry{Resource acquisition is initialization}{33}
+\indexentry{Python!import}{35}
+\indexentry{Python!from}{35}
+\indexentry{Python!documentation string}{35}

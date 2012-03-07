@@ -1,0 +1,375 @@
+% Copyright (c)  2005  EDF-EADS-PHIMECA.
+% Permission is granted to copy, distribute and/or modify this document
+% under the terms of the GNU Free Documentation License, Version 1.2
+% or any later version published by the Free Software Foundation;
+% with no Invariant Sections, no Front-Cover Texts, and no Back-Cover
+% Texts.  A copy of the license is included in the section entitled "GNU
+% Free Documentation License".
+
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+\newpage \section*{Introduction}
+\addcontentsline{toc}{section}{Introduction}
+
+
+
+This guide aims at facilitating the use of Open TURNS through its textual User interface (TUI), by proposing numerous examples of TUI studies.\\
+
+The presentation of the Use Cases Guide follows the methodology of uncertainty treatment presented in the scientific documentation of Open TURNS : examples are divided into four steps corresponding to the four steps of an uncertainty treatment study.\\
+
+
+The example list presented here is not exhaustive but recovers most of the standard User needs. The TUI enables the User to perform much more functionalities of the \emph{openturns} python library than those  presented here : it is necessary for the User to refer to the complete python documentation of the \emph{openturns} python library to have  the whole list of what is possible to perform.\\
+
+It is important to note that the python test files given in open source with the code source of Open TURNS  are very useful : they provide to the User an example of the utilisation of each object of Open TURNS. The User is invited to refer to them : they will surely help him to write his study through the TUI with the right syntax.\\
+
+
+
+\input{docUC_Intro_PythonLib.tex}
+\input{docUC_Intro_VerbosityLevel.tex}
+\input{docUC_Intro_GeneralCommands.tex}
+\input{docUC_Intro_PythonStandards.tex}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+\newpage \section{Probabilistic input vector modelisation}
+
+
+The objective of the section is to model the probabilistic input vector, described with different ways, according to available data .\\
+It corresponds to the step "Step B : Quantification of the uncertainty sources" of the global methodology
+\ifpdf
+(\href{OpenTURNS_ReferenceGuide.pdf}{see Reference Guide - Global Methodology for an uncertainty study - Part B : quantification of the uncertainty sources}).
+\else
+(\href{../ReferenceGuide/index.xhtml}{see Reference Guide - Global Methodology for an uncertainty study - Part B : quantification of the uncertainty sources}).
+\fi
+
+\input{docUC_InputRandomVector.tex}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+\newpage \subsection{Without samples of data}
+
+
+\input{docUC_InputNoData_UsualDist.tex}
+\newpage \input{docUC_InputNoData_TruncatedDist.tex}
+\newpage \input{docUC_InputNoData_Copula.tex}
+\newpage \input{docUC_InputNoData_ComposedDistribution.tex}
+\newpage \input{docUC_InputNoData_Mixture.tex}
+\newpage \input{docUC_InputNoData_DistManipulation.tex}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+\newpage \subsection{With samples of data : manipulation of data}
+
+
+
+It is important to note that all the Use Cases described in this section are usefull to fit a distribution from a sample in order to model the random input vector.  However, it is possible to apply them to fit a distribution to the output variable of interest when described by a sample.
+
+
+
+\input{docUC_InputWithData_CSV.tex}
+\newpage \input{docUC_InputWithData_EmpiricalDrawing.tex}
+\newpage \input{docUC_InputWithData_TestSameDist.tex}
+\newpage \input{docUC_InputWithData_IndependenceTest.tex}
+\newpage \input{docUC_InputWithData_PearsonSpearmanTests.tex}
+\newpage \input{docUC_InputWithData_RegressionTest.tex}
+\newpage \input{docUC_InputWithData_FittingTests.tex}
+\newpage \input{docUC_InputWithData_NormalFittingTests.tex}
+\newpage \input{docUC_InputWithData_ChoiceFittedDistributions.tex}
+\newpage \input{docUC_InputWithData_KernelSmoothing.tex}
+\newpage \input{docUC_InputWithData_CopulaEstimation.tex}
+\newpage \input{docUC_InputWithData_CopulaKendallPlotTest.tex}
+\newpage \input{docUC_InputWithData_LinearModel.tex}
+\newpage \input{docUC_InputWithData_StatisticalManipulation.tex}
+\newpage \input{docUC_InputWithData_CloudDrawing.tex}
+\newpage \input{docUC_InputWithData_MaxLikelihood.tex}
+
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+\newpage \subsection{Bayesian modeling}
+
+The objective of this section is to model a random vector distributed according to a distribution which parameters are random.
+
+\input{docUC_InputBayesian.tex}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+\newpage \section{Creation of the limit state function and the output variable of interest}
+
+
+The objective of the section is to specify the limit state function and the output variable of interest, defined from the limit state function.\\
+It corresponds to the step 'Step A : Specify the output variable of interest' of the global methodology
+\ifpdf
+(\href{OpenTURNS_ReferenceGuide.pdf}{see Reference Guide - Global Methodology for an uncertainty study - Part A : specification of the case-study}).
+\else
+(\href{../ReferenceGuide/index.xhtml}{see Reference Guide - Global Methodology for an uncertainty study - Part A : specification of the case-study}).
+\fi
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+\subsection{Creation of the limit state function}
+
+\input{docUC_LSF_Wrapper.tex}
+\newpage \input{docUC_LSF_Analytical.tex}
+\newpage \input{docUC_LSF_PythonScript.tex}
+\newpage \input{docUC_LSF_SomeParticularFunctions.tex}
+\newpage \input{docUC_LSF_DeterministicVar1.tex}
+\newpage \input{docUC_LSF_DeterministicVar2.tex}
+\newpage \input{docUC_LSF_NMFManipulation.tex}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+\newpage \subsection{Creation of the output variable of interest from the limit state function and the input random  vector}
+
+
+The objective of the section is to determine the output variable of interest directly from a limit state function and a random input vector declared previously.
+
+
+\input{docUC_OVI_FromLSF.tex}
+\newpage \input{docUC_OVI_RVExtraction.tex}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+\newpage \subsection{Creation of the output variable of interest defined as an affine combination of input random variables}
+
+
+\input{docUC_OVI_RandomMixture.tex}
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+\newpage \subsection{Creation of the output variable of interest from the result of a polynomial chaos expansion}
+
+\input{docUC_OVI_PolyChaosExp.tex}
+\newpage \input{docUC_OVI_SpecializedPolyChaosExp.tex}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+\newpage \section{Uncertainty propagation and Uncertainty sources ranking}
+
+The objective of this section is to manipulate all the functionalities to propagate uncertainties from the random input vector through the limit state function until the output variable of interest
+\ifpdf
+(\href{OpenTURNS_ReferenceGuide.pdf}{see Reference Guide - Global Methodology for an uncertainty stdy - Part C : propagating uncertainty sources}).
+\else
+(\href{../ReferenceGuide/index.xhtml}{see Reference Guide - Global Methodology for an uncertainty stdy - Part C : propagating uncertainty sources}).
+\fi
+
+Some techniques require the generation of random distributed sequences and others some low discrepancy sequences.
+
+\input{docUC_RandomGenerator.tex}
+\newpage \input{docUC_LowDiscrepancySequences.tex}
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+\newpage \subsection{Min/Max approach}
+
+
+In this section, we focus on the deterministic approach which consists of researching the variation range of the output variable of interest.
+
+\input{docUC_MinMax_DetExperimentPlane.tex}
+\newpage \input{docUC_MinMax_RandomExperimentPlane.tex}
+\newpage \input{docUC_MinMax_SpecifiedExperimentPlane.tex}
+\newpage \input{docUC_MinMax_MixedDetRandExperimentPlane.tex}
+\newpage \input{docUC_MinMax_ExpPlaneDrawing.tex}
+\newpage \input{docUC_MinMax_Evaluation.tex}
+\newpage \input{docUC_MinMax_Evaluation2.tex}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+\newpage \subsection{Random approach : central uncertainty}
+In this section, we focus on the random approach which aims at evaluating the central tendance of the output variable of interest.\\
+
+In order to evaluate the central tendance of the output variable of interest described by a numerical sample, it is possible to use all the functionalities described in the  Use Case \ref{statistical}.\\
+
+The Use Case  \ref{correlationAnalysis} describes the correlation analysis we can perform between the input random  vector, described by a numerical sample, and the output variable of interest described by a numerical sample too.
+
+\input{docUC_CentralUncertainty_SobolIndices.tex}
+\newpage \input{docUC_CentralUncertainty_CobWebGraph.tex}
+\newpage \input{docUC_CentralUncertainty_TaylorVarDecomposition.tex}
+\newpage \input{docUC_CentralUncertainty_MomentsEvaluation.tex}
+\newpage \input{docUC_CentralUncertainty_CorrelationAnalysis.tex}
+\newpage \input{docUC_CentralUncertainty_QuantileEstimation.tex}
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+\newpage \subsection{Random approach : threshold exceedance}
+
+In this section, we focus on the random approach which aims at evaluating the probability of an event, defined as a threshold exceedance.
+
+\input{docUC_ThresholdExceedance_Event.tex}
+\newpage \input{docUC_ThresholdExceedance_StandardEventManipulation.tex}
+\newpage \input{docUC_ThresholdExceedance_FORMAlgorithm.tex}
+\newpage \input{docUC_ThresholdExceedance_FORMExploitation.tex}
+\newpage \input{docUC_ThresholdExceedance_StrongMaxTest.tex}
+\newpage \input{docUC_ThresholdExceedance_SimulationAlgorithm.tex}
+\newpage \input{docUC_ThresholdExceedance_DirectionalSampling.tex}
+\newpage \input{docUC_ThresholdExceedance_SimulationAlgoParametrisation.tex}
+\newpage \input{docUC_ThresholdExceedance_SimulationAlgoExploitation.tex}
+\newpage \input{docUC_ThresholdExceedance_FORMandImportanceSampling.tex}
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+\newpage \section{Construction of a response surface}
+
+
+
+The objective of this section  is to build a response surface from a function. This response surface may be built from :
+\begin{itemize}
+\item the linear or quadratic Taylor approximations of the function at a particular point (see UC.\ref{taylorApprox}),
+\item or a linear approximation by least squares method from a sample of the input vector and the function (see UC.\ref{leastSquareApprox}),
+\item or a linear approximation by least squares method from a sample of the input vector and one of the output variable (see UC.\ref{leastSquareApprox2}).
+\end{itemize}
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+\subsection{Taylor approximations}
+
+\input{docUC_RespSurface_TaylorApprox.tex}
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+\newpage \subsection{Least Squares approximation}
+
+This section details another method to construct a response surface : with the least squares method, evaluated on a sample of the input vector and the associated sample of the output variable of interest. The latter is evaluated from the given limit state function (see UC.\ref{leastSquareApprox}) or directly given (see UC.\ref{leastSquareApprox2}).
+
+\input{docUC_RespSurface_LeastSquaresApprox.tex}
+\newpage \input{docUC_RespSurface_LeastSquaresApprox2.tex}
+
+
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+\newpage \subsection{Polynomial chaos expansion}\label{polynomialchaosexpansion}
+
+\index{Response Surface! Polynomial chaos expansion}
+
+
+The polynomial chaos expansion enables to approximate the output random variable of interest $\vect{Y} = g(\vect{X}) \in \mathbb{R}^p$ where $\vect{X}$ is the input random vector of dimension $n$ by the  response surface :
+$$
+\tilde{\vect{Y}} = \sum_{k \in K} \vect{\alpha}_k \Psi_k \circ T(\vect{X})
+$$
+where $ \vect{\alpha}_k \in \mathbb{R}^p$, $T$ is an isoprobabilistic transformation which maps the multivariate distribution of $\vect{X}$ into the multivariate distribution $\mu = \prod_i \mu_i$, and $(\Psi_k)_{k \in \mathbb{N}}$ a multivariate polynomial basis of $\mathcal{L}^2_{\mu}(\mathbb{R}^n,\mathbb{R})$ which is orthonornal according to the distribution $\mu$. $K$ is a finite subset of $\mathbb{N}$. \\
+The distribution $\mu$ is supposed to have an independent copula and $Y$ be of finite second moment.
+
+
+\input{docUC_RespSurface_PolyChaosExpansion.tex}
+\newpage \input{docUC_RespSurface_PolyChaosExploitation.tex}
+\newpage \input{docUC_RespSurface_PolyChaosDrawings.tex}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+\newpage \section{Stochastic process}
+
+
+The objective of this section is to show how to create and manipulate  some stochastic processes. \\
+
+In this document, we note  $\underline{X}(\omega,t)$ a stochastic process, where $\omega \in \Omega$ is an event, $t \in \mathbb{R}$ is the time and $\underline{X}(\omega,t) \in \mathbb{R}^d$ are the observed values of the process at each time stamp $t$.\\
+
+
+We first start by illustrating the use of  : 
+\begin{itemize}
+  \item the time grid of a process through the object \emph{RegularGrid};
+  \item a stochastic process through the object \emph{Process};
+  \item a time series which is a realization of the stochastic process, through the object \emph{TimeSeries};
+  \item a sample of time series of the same stochastic process, through the object \emph{ProcessSample};
+\end{itemize}
+
+Then, we describe the modelization of some particular stochastic processes :
+\begin{itemize}
+  \item the white noise,
+  \item the random walk,
+  \item the ARMA process, 
+  \item the normal process.
+\end{itemize}
+
+It is possible to define some events based on time series, in  order to evaluate its probability :
+\begin{itemize}
+  \item definition of such an event; 
+  \item evaluation by sampling techniques (Monte Carlo) of the event probability;
+\end{itemize}
+
+
+\newpage \input{docUC_StocProc_TimeGrid.tex}
+\newpage \input{docUC_StocProc_Process.tex}
+\newpage \input{docUC_StocProc_TimeSeries.tex}
+\newpage \input{docUC_StocProc_ProcessSample.tex}
+\newpage \input{docUC_StocProc_WhiteNoise.tex}
+\newpage \input{docUC_StocProc_RandomWalk.tex}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+\newpage \subsection{ARMA stochastic process}
+
+
+\input{docUC_StocProc_ARMAIntro.tex}
+\newpage \input{docUC_StocProc_ARMA_Creation.tex}
+\newpage \input{docUC_StocProc_ARMA_Manipulation.tex}
+\newpage \input{docUC_StocProc_ARMA_Estimation_Whittle.tex}
+\newpage \input{docUC_StocProc_TrendComputation.tex}
+\newpage \input{docUC_StocProc_BoxCox.tex}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+\newpage \subsection{Normal process}
+
+\input{docUC_StocProc_NormalIntro.tex}
+\newpage \input{docUC_StocProc_TemporalNormalProcess_Creation.tex}
+\newpage \input{docUC_StocProc_SpectralNormalProcess_Creation.tex}
+\newpage \input{docUC_StocProc_SecondOrderNormalProcess_Creation.tex}
+\newpage \input{docUC_StocProc_NormalProcess_Manipulation.tex}
+\newpage \input{docUC_StocProc_SpectralModel_Creation.tex}
+\newpage \input{docUC_StocProc_SpectralModel_Estimation.tex}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+\newpage \subsection{Output stochastic process of interest}
+
+\input{docUC_StocProc_DynamicalFunction.tex}
+\newpage \input{docUC_StocProc_CompositeProcess.tex}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+\newpage \subsection{Event based on process}
+
+
+\input{docUC_StocProc_EventProcess.tex}
+\newpage \input{docUC_StocProc_MonteCarlo.tex}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+\clearpage \newpage \section{How to save and load a study ?}
+
+
+The objective of this UC is to describe how to save some results obtained within a study and how to load a study performed previously, with some results.\\
+
+The mechanism of Open TURNS is detailed through the two following use cases. We give an example on a NumericalPoint and a NumericalMathFunction but it can be used for most objects.\\
+
+The principle is the following one : all along the study, we create a list of objects we want to save, thanks to the command .add(). Then, at the end of the study, we save the list with the command .save(). Only at that time, all the study is saved.
+
+
+\input{docUC_LoadSave_Save.tex}
+\newpage \input{docUC_LoadSave_Load.tex}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,52 @@
+% Copyright (c)  2005-2010 EDF-EADS-PHIMECA.
+% Permission is granted to copy, distribute and/or modify this document
+% under the terms of the GNU Free Documentation License, Version 1.2
+% or any later version published by the Free Software Foundation;
+% with no Invariant Sections, no Front-Cover Texts, and no Back-Cover
+% Texts.  A copy of the license is included in the section entitled "GNU
+% Free Documentation License".
+\renewcommand{\filename}{docUC_OVI_FromLSF.tex}
+\renewcommand{\filetitle}{UC : Creation of the ouput random vector}
+
+% \HeaderNNIILevel
+% \HeaderIILevel
+\HeaderIIILevel
+
+\label{CompositeRandomVector}
+
+
+\index{Random Vector!Output random vector}
+
+The objective of this Use Case is to create the ouput random variable of interest defined as the image through the limit state function of the input random vector.\\
+
+Details on the definition of random mixture variables may be found in the Reference Guide (\href{OpenTURNS_ReferenceGuide.pdf}{see files Reference Guide - Step B -- Random Mixture : affine combination of independent univariate distributions}).\\
+
+Details on each object may be found in the User Manual  (\href{OpenTURNS_UserManual_TUI.pdf}{see User Manual - Probabilistic modeling / Random Vector}).\\
+
+\requirements{
+  \begin{description}
+  \item[$\bullet$] the limit state function : {\itshape myFunction}
+  \item[type:]  NumericalMathFunction
+  \item[$\bullet$] the random input vector : {\itshape inputVector}
+  \item[type:] RandomVector which implementation is a UsualRandomVector
+  \end{description}
+}
+{
+  \begin{description}
+  \item[$\bullet$] the output variable of interest {\itshape output = myFunction(input)}
+  \item[type:] RandomVector which implementation is a CompositeRandomVector
+  \end{description}
+}
+
+\textspace\\
+Python script for this UseCase :
+
+\begin{lstlisting}
+  # Create the output variable of interest 'output = poutre(input)'
+  output = RandomVector(myFunction, input)
+
+  # Name the output variable of interest
+  # for example, it is of dimension 1
+  output.setDescription( ("Output Variable Of Interest 1",) )
+\end{lstlisting}
+

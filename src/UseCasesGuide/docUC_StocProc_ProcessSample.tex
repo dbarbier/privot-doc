@@ -1,0 +1,166 @@
+% Copyright (c)  2005-2010 EDF-EADS-PHIMECA.
+% Permission is granted to copy, distribute and/or modify this document
+% under the terms of the GNU Free Documentation License, Version 1.2
+% or any later version published by the Free Software Foundation;
+% with no Invariant Sections, no Front-Cover Texts, and no Back-Cover
+% Texts.  A copy of the license is included in the section entitled "GNU
+% Free Documentation License".
+\renewcommand{\filename}{docUC_ProcessSample.tex}
+\renewcommand{\filetitle}{UC : Manipulation of a process sample}
+
+% \HeaderNNIILevel
+\HeaderIILevel
+%\HeaderIIILevel
+
+\label{UCprocessSample}
+
+
+\index{Stochastic Process!Process Sample}
+
+
+We recall that  $\underline{X}(\omega,t)$ is a stochastic process, where $\omega \in \Omega$ is an event, $t \in \mathbb{R}$ is the time and $\underline{X}(\omega,t) \in \mathbb{R}^d$ is the observed values of the process at each time $t$.\\
+
+The objective here is to create and manipulate a process sample which is a sample of realizations of the same stochastic process. In particular, all the process included share the same time grid.\\
+We note a process sample : $\left\{(t_i, \underline{X}_i^k)_{0 \leq i \leq n-1} \right\}_{k=1 \hdots N}$ where :
+\begin{itemize}
+\item $N$ is the number of time series of the process sample;
+\item $n$ is the number of points of the time grid, which is common to all the time series ;
+\item $d$ is the dimension of the stochastic process : for all $i \in \{0,\dots,n\}$ and $k\in\{0,\dots,N-1\}$, $\underline{X}_i^k \in \mathbb{R}^d$.
+\end{itemize}
+
+Given a process sample, it is possible to evaluate :
+\begin{itemize}
+\item its stochastic mean  $\vect{m}(t) = E[\underline{X}(\omega,t)] \in \mathbb{R}^d$ depending on $t$.  $\vect{m}(t)$ is evaluated on the time grid $(t_0, \hdots, t_{n-1})$ as follows :
+  \begin{equation}\label{stocMean}
+    \forall  i\in[0,n], \vect{m}(t_i) = E[\underline{X}(\omega,t_i)]  \simeq \displaystyle  \frac{1}{N} \sum_{k=0}^{N-1} \underline{X}_i^k
+  \end{equation}
+  The stochastic mean is computed with the method \emph{computeMean()} which returns the time series  $(t_i,\vect{m}(t_i))_{i=0 \hdots n}$ of dimension $d$ and size $n$.
+
+\item its temporal mean $(\vect{g}(\omega_k))_{0 \leq k \leq N-1}$, which is the temporal mean of each time series of the process sample, depending on the alea $\omega_k$. It is evaluated as follows, where the time is discretized on the time grid :
+  \begin{equation}\label{tempMean}
+    \displaystyle \forall  k\in[0,N-1], \vect{g}(\omega_k) =  \frac{1}{t_{n-1} - t_0} \int_{t_0}^{t_{n-1}} \underline{X}(\omega_k,t) \, dt \simeq  \frac{1}{n} \sum_{i=0}^{n-1} \underline{X}_i^k
+  \end{equation}
+  The temporal mean is computed with the method \emph{computeTemporalMean()} which returns a numerical sample of dimension $d$ and size $N$.
+
+\item its quantiles per component $\vect{Q}(t, q)$ of level $q$ such that $\forall i\in\{1,\dots,d\},\:Q_i(t, q) = \inf\{x\in\Rset\,|\,\mathbb{P}(X_i(\omega,t)\leq x)>q\}$ depending on $t$. $\vect{Q}(t, q)$ is evaluated on the time grid $(t_0, \hdots, t_{n-1})$ using the empirical quantile of level $q$ of the sample associated to each time stamp.
+
+  The quantiles per component are computed with the method \emph{computeQuantilePerComponent(q)} which returns the time series  $(t_i,\vect{Q}(t_i, q))_{i=0 \hdots n}$ of dimension $d$ and size $n$.
+
+\end{itemize}
+
+In case of ergodic process, we have the equality :
+\begin{equation}\label{ergodic}
+  \forall t >0, \forall \omega_k\in \Omega, \ \vect{m}(t) =  \vect{g}(\omega_k)
+\end{equation}
+which implies that the stochastic mean is invariant with time : $\forall t >0, \vect{m}(t)=\vect{m}$ and the temporal mean is independent of the alea $\omega_k$ : $ \forall \omega_k\in \Omega,  \vect{g}(\omega_k)= \vect{g}$.\\
+
+
+Details on each object may be found in the User Manual  (\href{OpenTURNS_UserManual_TUI.pdf}{see User Manual - Stochastic Process}).\\
+
+\requirements{
+  \begin{description}
+  \item[$\bullet$] a collection of time series : {\itshape collection}
+  \item[type:]  TimeSeriesCollection
+  \end{description}
+
+  \begin{description}
+  \item[$\bullet$] the number of process in the process sample : {\itshape N}
+  \item[type:]  UnsignedLong
+  \end{description}
+
+  \begin{description}
+  \item[$\bullet$] the dimension of the processes  : {\itshape d}
+  \item[type:]  UnsignedLong
+  \end{description}
+
+  \begin{description}
+  \item[$\bullet$] a time grid : {\itshape myTimeGrid}
+  \item[type:]  RegularGrid
+  \end{description}
+
+  \begin{description}
+  \item[$\bullet$] a time serie : {\itshape myTimeSeries}
+  \item[type:]  TimeSeries
+  \end{description}
+
+  \begin{description}
+  \item[$\bullet$] a quantile level : {\itshape q}
+  \item[type:]  NumericalScalar
+  \end{description}
+}
+{
+  \begin{description}
+  \item[$\bullet$] a sample of processes : {\itshape myProcessSample}
+  \item[type:]  ProcessSample
+  \end{description}
+
+  \begin{description}
+  \item[$\bullet$] the stochastic mean process : {\itshape myStochasticMeanProcess}
+  \item[type:] TimeSeries
+  \end{description}
+
+  \begin{description}
+  \item[$\bullet$] the temporal mean process : {\itshape myTemporalMean}
+  \item[type:] NumericalSample
+  \end{description}
+
+  \begin{description}
+  \item[$\bullet$] the quantiles per component : {\itshape myQuantiles}
+  \item[type:] TimeSeries
+  \end{description}
+}
+
+\textspace\\
+Python script for this UseCase :
+
+\begin{lstlisting}
+  # Creation using a TimeSeries and size arguments
+  # The return object is a ProcessSample
+  # where the time serie is duplicated size-times
+  myProcessSample = ProcessSample(size, myTimeSeries)
+
+  # Creation using a  collection of TimeSeries
+  # This collection must have the same RegularGrid
+  myProcessSample = ProcessSample(collection)
+
+  # It is possible to create a process sample with default values
+  # Here, the process sample contains N-times the same time serie
+  # each time serie being of dimension d
+  # fulfilled with 0 values
+  # and associated to the time grid myTimeGrid
+  myProcessSample = ProcessSample(myTimeGrid, d, N)
+
+  # Get the common time grid of all the processes
+  # included in the  process sample
+  timeGrid = myProcessSample.getTimeGrid()
+
+  # Get the number N of processes of the process sample
+  myProcessSampleSize = myProcessSample.getSize()
+
+  # Get the dimension d of the processes of the process sample
+  myProcessSampleDimension = myProcessSample.getDimension()
+
+  # Add a TimeSeries to the process sample
+  myProcessSample.add(timeSerie)
+
+  # Get the time serie of index i
+  # Care! Numerotation begins at i=0
+  myTimeSerieIndexI = myProcessSample[i]
+
+  # Set a particular time serie at index j
+  # Care! Numerotation begins at j=0
+  myProcessSample[j] = myTimeSeries
+
+  # Compute the stochastic mean process of several time series
+  # The result is a time serie
+  myStochasticMeanProcess = myProcessSample.computeMean()
+
+  # Compute the temporal mean of several time series
+  # The result is a numerical sample
+  myTemporalMean = myProcessSample.computeTemporalMean()
+
+  # Compute the quantiles per component associated to the level q
+  # The result is a time serie
+  myQuantiles = myProcessSample.computeQuantilePerComponent(q)
+
+\end{lstlisting}

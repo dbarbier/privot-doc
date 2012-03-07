@@ -1,0 +1,128 @@
+% Copyright (c)  2005-2010 EDF-EADS-PHIMECA.
+% Permission is granted to copy, distribute and/or modify this document
+% under the terms of the GNU Free Documentation License, Version 1.2
+% or any later version published by the Free Software Foundation;
+% with no Invariant Sections, no Front-Cover Texts, and no Back-Cover
+% Texts.  A copy of the license is included in the section entitled "GNU
+% Free Documentation License".
+\renewcommand{\filename}{docUC_InputWithData_IndependenceTest.tex}
+\renewcommand{\filetitle}{UC : Are two scalar samples independent : ChiSquared test, Pearson test, Spearman test}
+
+% \HeaderNNIILevel
+% \HeaderIILevel
+\HeaderIIILevel
+
+
+
+\index{Independence Test!ChiSquared test}
+\index{Independence Test!Pearson test}
+\index{Independence Test!Spearman test}
+
+The objective of this Use Case is to decide whether two samples are independent or not.\\
+
+
+
+To help the decision, Open TURNS proposes the following tests :
+\begin{itemize}
+\item the ChiSquared test : it tests if both scalar samples (discret ones only) are independent.\\
+  If $n_{ij}$ is the number of values of the sample $i=(1,2)$ in the modality $1 \leq j \leq m$, $\displaystyle n_{i.} = \sum_j n_{ij}$ $\displaystyle n_{.j} = \sum_i n_{ij}$, and the ChiSquared test evaluates the decision variable :
+  $$
+  D^2 = \displaystyle \sum_i \sum_j \frac{( n_{ij} - \frac{n_{i.} n_{.j}}{n} )^2}{\frac{n_{i.} n_{.j}}{n}}
+  $$
+  which tends towards the $\chi^2(m-1)$ distribution. The hypothesis of independence is rejected if $D^2$ is too high (depending on the p-value threshold).
+
+\item the Pearson test : it tests if there exists a linear relation between two scalar samples which form a gaussian vector (which is equivalent to have a linear correlation coefficient not equal to zero). \\
+  If both samples are $\vect{x} = (x_i)_{1 \leq i \leq n}$ and $\vect{y} = (y_i)_{1 \leq i \leq n}$, and $\bar{x} = \displaystyle \frac{1}{n}\sum_i x_i$ and $\bar{y} = \displaystyle \frac{1}{n}\sum_i y_i$, the Pearson test evaluates the decision variable :
+  $$
+  D = \displaystyle \frac{\sum (x_i - \bar{x})(y_i - \bar{y})}{\sqrt{\sum (x_i - \bar{x})^2\sum (y_i - \bar{y})^2}}
+  $$
+  The variable $D$ tends towards a $\chi^2(n-2)$, under the hypothesis of normality of both samples. The hypothesis of a linear coefficient equal to 0 is rejected (which is equivalent to the independence of the samples) if D is too high (depending on the p-value threshold).
+
+\item the Spearman test : it tests if there exists a monotonous relation between two scalar samples.\\
+  If both samples are $\vect{x} = (x_i)_{1 \leq i \leq n}$ and $\vect{y}= (y_i)_{1 \leq i \leq n}$,, the Spearman test evaluates the decision variable :
+  $$
+  D = \displaystyle 1-\frac{6\sum_i (r_i - s_i)^2}{n(n^2-1)}
+  $$
+  where $r_i = rank(x_i)$ and  $s_i = rank(y_i)$. $D$ is such that $\sqrt{n-1}D$ tends towards the gaussian (0,1) distribution.
+\end{itemize}
+
+
+
+
+Details on the independence tests  may be found in the Reference Guide (\href{OpenTURNS_ReferenceGuide.pdf}{see files Reference Guide - Step B --Chi-squared test for independence, Step B -- Pearson correlation test, Step B -- Spearman correlation test}).\\
+
+Details on each object may be found in the User Manual  (\href{OpenTURNS_UserManual_TUI.pdf}{see User Manual - Statistics on sample /  Hypothesis Test}).\\
+
+
+
+\requirements{
+  \begin{description}
+  \item[$\bullet$] two continuous scalar numerical samples of dimension 1 : {\itshape continuousSample1, continuousSample2}
+  \item[type:]  NumericalSample
+  \item[$\bullet$] two discrete scalar numerical sample {\itshape discreteSample1, discreteSample2}
+  \item[type:] NumericalSample
+  \end{description}
+}
+{
+  \begin{description}
+  \item[$\bullet$] tests results : {\itshape resultChiSquared, resultPearson, resultSpearman}
+  \item[type:] TestResult
+  \end{description}
+}
+
+\textspace\\
+Python script for this UseCase :
+
+\begin{lstlisting}
+  # ChiSquared Independance test : test if two scalar samples (of sizes not necessarily equal) are independant ?
+  # Care : discrete distributions only
+  # H0 = independent samples
+  # p-value threshold : probability of the H0 reject zone : 1-0.90
+  # p-value : probability (test variable decision > test variable decision evaluated on the samples)
+  # Test = True <=> p-value > p-value threshold
+  resultChiSquared = HypothesisTest.ChiSquared(discreteSample1, discreteSample2, 0.90)
+
+  # Print result of the ChiSquared Test
+  print "Test Succes ? ", (resultChiSquared.getBinaryQualityMeasure()==1)
+
+  # Get the p-value of the  Test
+  print "p-value of the  Test = ", resultChiSquared.getPValue()
+
+  # Get the p-value threshold of the ChiSquared Test
+  print "p-value threshold = ", resultChiSquared.getThreshold()
+
+  # Pearson Test : test if two scalar samples which form a gaussian vector are independent (based on the evaluation of the linear correlation coefficient)
+  # H0 : independent samples (linear correlation coefficient = 0)
+  # Test = True <=> independent samples (linear correlation coefficient = 0)
+  # p-value threshold : probability of the H0 reject zone : 1-0.90
+  # p-value : probability (test variable decision > test variable decision evaluated on the samples)
+  # Test = True <=> p-value > p-value threshold
+  resultPearson = HypothesisTest.Pearson(continuousSample1, continuousSample2, 0.90)
+
+  # Print result of the Pearson Test
+  print "Test Succes ? ", (resultPearson.getBinaryQualityMeasure()==1)
+
+  # Get the p-value of the Pearson Test
+  print "p-value of the Pearson Test = ", resultPearson.getPValue()
+
+  # Get the p-value threshold of the  Test
+  print "p-value threshold = ", resultPearson.getThreshold()
+
+  # Spearman Test : test if two scalar samples have a monotonous relation
+  # H0 : no monotonous relation between both samples
+  # Test = True <=> no monotonous relation
+  # p-value threshold : probability of the H0 reject zone : 1-0.90
+  # p-value : probability (test variable decision > test variable decision evaluated on the samples)
+  # Test = True <=> p-value > p-value threshold
+  resultSpearman = HypothesisTest.Spearman(continuousSample1, continuousSample2, 0.90)
+
+  # Print result of the Spearman Test
+  print "Test Succes ? ", (resultSpearman.getBinaryQualityMeasure()==1)
+
+  # Get the p-value of the Spearman Test
+  print "p-value of the Spearman Test = ", resultSpearman.getPValue()
+
+  # Get the p-value threshold of the  Test
+  print "p-value threshold = ", resultSpearman.getThreshold()
+\end{lstlisting}
+

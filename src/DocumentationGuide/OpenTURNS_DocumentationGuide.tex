@@ -1,0 +1,236 @@
+% Copyright (c)  2005-2010 EDF-EADS-PHIMECA.
+% Permission is granted to copy, distribute and/or modify this document
+% under the terms of the GNU Free Documentation License, Version 1.2
+% or any later version published by the Free Software Foundation;
+% with no Invariant Sections, no Front-Cover Texts, and no Back-Cover
+% Texts.  A copy of the license is included in the section entitled "GNU
+% Free Documentation License".
+
+\documentclass[11pt]{article}
+
+\usepackage{latex2html}
+\usepackage[latin1]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{makeidx}
+\usepackage{index}
+\usepackage[dvips]{graphicx}
+\usepackage{color}
+\usepackage{psfrag}
+\usepackage{listings}
+\usepackage{longtable}
+\usepackage{mdwtab}
+\usepackage{hhline}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{fancyhdr}
+
+\setlength{\textwidth}{18.5cm}
+\setlength{\textheight}{23cm}
+\setlength{\hoffset}{-1.04cm}
+\setlength{\voffset}{-1.54cm}
+\setlength{\oddsidemargin}{0cm}
+\setlength{\evensidemargin}{0cm}
+\setlength{\topmargin}{0cm}
+\setlength{\headheight}{1cm}
+\setlength{\headsep}{0.5cm}
+\setlength{\marginparsep}{0cm}
+\setlength{\marginparwidth}{0cm}
+\setlength{\footskip}{1cm}
+\setlength{\parindent}{0cm}
+
+\pagestyle{fancy}
+\fancyhf{} \rhead{\bfseries \thepage} \lhead{\bfseries \nouppercase Open TURNS -- Documentation guide}
+\rfoot{\bfseries \copyright 2005-2012 EDF - EADS - PhiMeca} \lfoot{}
+
+\begin{document}
+
+\begin{titlepage}
+  \vspace*{2cm}
+  \begin{center}
+    {\huge \bf Documentation Guide}
+    \input{GenericInformation.tex}
+  \end{center}
+\end{titlepage}
+\newpage
+\tableofcontents
+
+
+% -------------------------------------------------------------------------------------------------
+\newpage
+
+\section{Introduction}
+
+This documentation aims at guiding the User within all the documentation of Open TURNS.\\
+
+The Open TURNS documentation is separated into three main fields :
+\begin{itemize}
+\item[$\bullet$]  the Theory of an Uncertainty Study,
+\item[$\bullet$]  the Textual User Interface,
+\item[$\bullet$]  the Software Source,
+\item[$\bullet$]  the Windows port of Open TURNS.
+\end{itemize}
+
+\section{Theory of an Uncertainty Study}
+
+All the documentation of that section aims at presenting all the User needs to know to perform an uncertainty study.\\
+
+This documentation regroups two Guides, which titles are :
+\begin{itemize}
+\item[$\bullet$] {\itshape Open TURNS - Reference Guide},
+\item[$\bullet$] {\itshape Open TURNS - Examples Guide}.
+\end{itemize}
+
+\subsection{Reference Guide}
+
+This Guide presents the Global Methodology to perform a study of probabilistic uncertainty treatment. The different steps of the Global Methodology are described. The User is invited to follow them in the order preconised in the Global Methodology.\\
+
+It also gives a detailed information on all the methods used in the Global Methodology and present in Open TURNS.\\
+
+Each method presents a form with the following items :
+\begin{itemize}
+\item[$\bullet$] {\bf Mathematical Description} : this field describes the mathematics of the algorithm and precises the vocabulary under which the method is used in different domains.
+\item[$\bullet$] {\bf Link with the Open TURNS Methodology} : this field recalls the position of the algorithm in the Global Methodology. It precises to which step of the Global Methodology it participates.
+\item[$\bullet$] {\bf References and theoretical basics} : this field gives some usefull references to the User who wants to know more about the method. It recalls, too, some limits in the use of the method.
+\item[$\bullet$] {\bf Examples} : this field applies the method on some examples. Most of the forms of this documentation present the analytical example of a cantilever beam, of Young's modulus E, length L, section modulus I, which undergoes a concentrated bending force at one end. We study then the vertical displacement of the extreme end.
+\end{itemize}
+
+To have an example of the use of a particular algorithm or of a particular method, the User is invited to refer either to the documentation {\itshape Reference Guide - Open TURNS}  in its section {Example} or to the documentation {\itshape Examples Guide - Open TURNS} which applies the Global Methodology on a particular example.\\
+
+Some hyperlinks are present to facilitate the navigation between the documentation {\itshape Uncertainty Reference Guide - Open TURNS} and the others ones.
+
+
+\subsection{Examples Guide}
+
+This Guide applies the whole Global Methodology on some analytical examples. For now, there is only one example: the case of a cantilever beam which undergoes a concentrated bending force at one end.\\
+
+The User may find in this documentation a complete probabilistic uncertainty treatment study.\\
+
+The User is invited to refer to that documentation in particular to apprehend properly the signification of the results of the methods preconised in the Globel Methodology.\\
+
+Some links are present to facilitate the navigation between the documentation {\itshape Examples Guide - Open TURNS} and the {\itshape Reference Guide - Open TURNS} one.
+
+
+\section{The Textual User Interface (TUI)}
+
+All the documentation of that section aims at presenting all the elements which enable the User to easily perform an uncertainty study through the textual User Interface of Open TURNS. \\
+
+This documentation regroups two Guides, which titles are :
+\begin{itemize}
+\item[$\bullet$] {\itshape Open TURNS - User Manual for the Textual User Interface},
+\item[$\bullet$] {\itshape Open TURNS - Use Cases Guide for the Textual User Interface}.
+\end{itemize}
+
+
+\subsection{ User Manual for the Textual User Interface}
+
+This Guide presents most of the objects present in the TUI of Open TURNS. In particular, for each of them, it details  the following items :
+\begin{itemize}
+\item[$\bullet$] Usage : how to create the object,
+\item[$\bullet$] Arguments : the signification of each argument of the creation,
+\item[$\bullet$] Methods : list of the methods proposed by the object, precising their use, their arguments and the signification of their parameters.
+\end{itemize}
+\vspace{0.5cm}
+This Guide recall also some basic knowledge to manipulate an oriented object language and some basic information about python.\\
+
+The User is invited to refer to that documentation in particular to have information on the signification of the arguments of each object. It completes the python documentation that the User may consult in line.
+
+\subsection{ Use Cases Guide for the Textual User Interface}
+
+This Guide describes most of the use cases of Open TURNS.\\
+
+The User should find in this documentation the implementation through the TUI of most of the studies which are susceptible to be performed within a global uncertainty study.\\
+
+The presentation follows the steps preconised in the Global Methodology.\\
+
+The User is invited to consult this documentation before implementating a study through the TUI : he will probably find there an example of what he wants to perform. The documentation is made to enable the User to make some cut/copy from the documentation into his study.
+
+\section{Software Source}
+
+All the documentation of that section aims at presenting the architecture of the source code of Open TURNS in order to facilitate new developments, and some elements to write easily an Open TURNS wrapper.\\
+
+This documentation regroups several Guides, which titles are :
+\begin{itemize}
+\item[$\bullet$] {\itshape Open TURNS - First Elements of the Architecture Guide},
+  % \item[$\bullet$] {\itshape Open TURNS - Doxygen Documentation},
+  % \item[$\bullet$] {\itshape Open TURNS - Plan Qualite Logiciel},
+\item[$\bullet$] {\itshape Open TURNS - Wrappers Guide}.
+\item[$\bullet$] {\itshape Open TURNS - Contribution Guide}.
+\item[$\bullet$] {\itshape Open TURNS - Coding Rules Guide}.
+\end{itemize}
+
+\subsection{First Elements of the Architecture Guide}
+
+This Guide aims at presenting some elements to easily understand the architecture of Open TURNS. This documentation is not complete and will be completed in the next version of Open TURNS (in a few months).
+
+% \subsection{Open TURNS - Doxygen Documentation}
+% 
+% This documentation is the exhaustive source documentation of Open TURNS, authomatically producted by Doxygen software. It gives all the hierarchisation of classes of Open TURNS, detailing all the methods of each class.
+
+% \subsection{Open TURNS - Plan Qualite Logiciel}
+% 
+% This Guide has been written in French only and precises all the rules a devlopper must follow to develop within the Open TURNS platform.\\
+% 
+% In order to facilitate the integration of his new contribution in Open TURNS, the open source developer is invited to read this documentation and follow the rules prescribed in it.\\
+% 
+% This documentation will be traducted in English as soon as possible.
+
+\subsection{Open TURNS - Wrappers Guide}
+
+This Guide aims at presenting all the elements to write a wrapper between an external code (which may be either a software or an analytical formula) and Open TURNS.
+
+
+\subsection{Contribution Guide}
+
+This Guide aims at presenting some elements to ease the work of contributors. For now, it explains the steps to follow for the introduction of a new class in the Open TURNS library, its documentation and its introduction into the TUI.
+
+\subsection{Coding rules Guide}
+
+This Guide aims at presenting the rules that have to be adopted to implement new functionalities in the OpenTURNS platform. Even if it is mainly focused on the C++ part of the platform, it also provides coding rules for the contributions to the textual user inteface. It must be emphasize that NO DEROGATION to these rules are permitted without the agreement of the other contributors and an evolution of this document.
+
+
+
+\section{Windows Port of Open TURNS}
+
+The documentation of that section aims at  guiding the developer with Open TURNS cross compilation for Windows target.\\
+
+This documentation is separated into two main parts :
+\begin{itemize}
+\item[$\bullet$]  compile Open TURNS under Linux for Windows target,
+\item[$\bullet$]  validation and use of Open TURNS on Windows.
+\end{itemize}
+
+
+
+
+
+
+
+
+
+
+\section{Organization of the Open TURNS Documentation}
+
+
+The documentation of Open TURNS is regrouped in the following files :
+\begin{itemize}
+\item[$\bullet$] Reference Guide : \\
+  source file $OpenTURNS\_ReferenceGuide.tex$,
+\item[$\bullet$] Use Cases Guide for the Textual User Interface : \\
+  source file $OpenTURNS\_UseCasesGuide.tex$.
+\item[$\bullet$] User Manual for the Textual User Interface : \\
+  source file $OpenTURNS\_UserManual.tex$,
+\item[$\bullet$] Examples Guide : \\
+  source file $OpenTURNS\_ExamplesGuide.tex$.
+\item[$\bullet$] First Elements of the Architecture Guide : \\
+  source file $OpenTURNS\_ElementsArchitectureGuide.tex$,
+\item[$\bullet$] Wrappers Guide : \\
+  source file $OpenTURNS\_WrappersGuide.tex$.
+\item[$\bullet$] Contribution Guide : \\
+  source file $OpenTURNS\_ContributionGuide.tex$.
+\item[$\bullet$] Coding rules Guide : \\
+  source file $OpenTURNS\_CodingRulesGuide.tex$.
+\end{itemize}
+\vspace*{0.5cm}
+All the Open TURNS documentation is provided in the following formats : .tex, .pdf and  .html.
+
+\end{document}

@@ -1,0 +1,86 @@
+% Copyright (c)  2005-2010 EDF-EADS-PHIMECA.
+% Permission is granted to copy, distribute and/or modify this document
+% under the terms of the GNU Free Documentation License, Version 1.2
+% or any later version published by the Free Software Foundation;
+% with no Invariant Sections, no Front-Cover Texts, and no Back-Cover
+% Texts.  A copy of the license is included in the section entitled "GNU
+% Free Documentation License".
+\renewcommand{\etapemethodo}{C}
+\renewcommand{\nomfichier}{docref_C11_ExperimentPlanes}
+\renewcommand{\titrefiche}{Experiment Planes}
+
+\Header
+
+\MathematicalDescription{
+  \underline{\textbf{Goal}} \vspace{2mm}
+
+  The method is used in the following context: $\vect{x}= \left( x^1,\ldots,x^{n_X} \right)$ is a vector of  input parameters. We want to determine a partiocular set of values of $\vect{x}$ according to a particular experiment plane.
+  \vspace*{2mm}
+
+  \underline{\textbf{Principle}} \vspace{2mm}
+
+  Different types of experiment planes can be determined :
+  \begin{itemize}
+  \item some \emph{stratified} patterns : axial, composite, factorial or box patterns,
+  \item some \emph{weighted} patterns that we can split into different categories : the random patterns, the low discrepancy sequences and the Gauss product.
+  \end{itemize}
+
+  \vspace*{2mm}
+  {\bf Stratified experiment planes}\\
+
+  All stratified  experiment planes are defined from the data of a center point and some discretization levels. Open TURNS proposes the same number of levels for each direction : let us denote by $n_{level}$ that discretization number.\\
+
+  The axial pattern contains points only along the axes. It is not convenient to model interactions between variables. The  pattern is obtained by discretizing each direction according to specified levels, symmetrically with respect to the center of the experiment plane. The number of points generated is $1 + 2n* n_{level}$.\\
+
+  The  factorial pattern contains points only on diagonals. It is not convenient to model influences of single input variables. The pattern is obtained by discretizing each principal diagonal according to the specified levels, symmetrically with respect to the center of the experiment plane. The number of points generated is $1 +  2^n*n_{level}$.\\
+
+  The composite pattern is the union of both previous ones. The number of points generated is $1 + 2n*n_{level} +  2^n*n_{level}$.\\
+
+  The box pattern is a simple regular discretization of a pavement around the center of the experiment plane,  with the number of intermediate points specified for each direction (denoted $n_{level}(direction \, \, i)$).  The number of points generated is $\displaystyle \prod_{i=1}^{n} (2+n_{level}(direction \, \, i))$.\\
+
+  The following figures illustrates the different deterministic patterns obtained.
+
+  \newpage
+  \begin{center}
+    \begin{tabular}{cc}
+      \includegraphics[width=8cm]{TranslatedScaledAxialGrid.pdf} &   \includegraphics[width=8cm]{TranslatedScaledFactorialGrid.pdf}
+    \end{tabular}
+  \end{center}
+
+
+  \begin{center}
+    \begin{tabular}{cc}
+      \includegraphics[width=8cm]{TranslatedScaledCompositeGrid.pdf} &   \includegraphics[width=8cm]{TranslatedScaledBoxGrid.pdf}
+    \end{tabular}
+  \end{center}
+
+  \vspace*{2mm}
+  {\bf Weighted experiment planes}\\
+
+  The first category is the {\itshape random patterns}, where the set of input data is generated from the joint distribution of the input random vector, according to the Monte Carlo sampling technique or the LHS one (refer to \otref{docref_C321_MonteCarloStd}{Monte Carlo Simuylation} and \otref{docref_C322_LHS}{Latin Hypercube Sampling}).\\
+  Care : the LHS sampling method requires the independence of the input random variables.\\
+
+
+  The second category is the {\itshape low discrepancy sequences} (refer to \otref{docref_C_LowDiscrepancySequence}{Low Discrepancy Sequence}). Open TURNS proposes the Faure, Halton, Haselgrove, Reverse Halton and Sobol sequences.\\
+
+
+  The third category is the {\itshape Gauss product} which is the set of points which  components are the respective Gauss set (ie the roots of the orthogonal polynomials with respect to the univariate distribution).
+
+
+
+}
+{
+  In the case of deterministic experiment plane patterns, one can also refer to the terms "deterministic" study of uncertainty or the study of uncertainty "by intervals", when fixing a lower and upper value for each of the input components $x^i$, and by seeking the minimum and maximum values in a complete (factorial) design with the combinations of $\vect{x}$ also generated.
+}
+
+\Methodology{
+  This method is used in step C "Propagation of uncertainty" to evaluate a deterministic minimum-maximum type of criterion for the output value defined in step A "Specifying the Criteria and the Case Study".\\
+  It can also be used within the Quasi-Monte carlo technique to approximate the probability of excedding a given threshold.
+
+}
+{
+  --
+
+}
+
+

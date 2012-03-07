@@ -1,0 +1,115 @@
+% Copyright (c)  2005-2010 EDF-EADS-PHIMECA.
+% Permission is granted to copy, distribute and/or modify this document
+% under the terms of the GNU Free Documentation License, Version 1.2
+% or any later version published by the Free Software Foundation;
+% with no Invariant Sections, no Front-Cover Texts, and no Back-Cover
+% Texts.  A copy of the license is included in the section entitled "GNU
+% Free Documentation License".
+\renewcommand{\filename}{docUCLSF_PythonScript.tex}
+\renewcommand{\filetitle}{UC : From a fonction defined in the script python}
+
+% \HeaderNNIILevel
+% \HeaderIILevel
+\HeaderIIILevel
+
+\label{OpenTURNSPythonFunction}
+
+\index{Limit State Function!Function declarde in the script python}
+
+
+The objective of this Use Case is to create the limit state function, from a function defined in the script python. Open TURNS automatically gives to the analytical formula an implementation for the gradient and the hessian : by default,
+\begin{itemize}
+\item the gradient evaluation method is the  centered finite difference method, with the differential increment $h=1e-5$ for each direction,
+\item the hessian evaluation method is the  centered finite difference method, with the differential increment $h=1e-4$ for each direction.
+\end{itemize}
+It is possible to change the evaluation method for the gradient or the hessian. The following Use Case shows how to proceed.\\
+
+
+Details on each object may be found in the User Manual  (\href{OpenTURNS_UserManual_TUI.pdf}{see User Manual - Base Objects / NumericalMathFunction}).\\
+
+
+In order to be able to use the function with the {\itshape openturns} library, it is necessary to define a class which derives from {\itshape OpenTURNSPythonFunction} as indicated belows. The example here is the functions {\itshape modelePYTHON} and {\itshape modelePYTHON2}:
+\begin{equation}
+  \begin{array}{l|lcl}
+    modelePYTHON : & \mathbb{R}^4 & \rightarrow & \mathbb{R} \\
+    & (E,F,L,I)    & \mapsto     & \displaystyle \frac{FL^3}{3EI}
+  \end{array}
+\end{equation}
+
+\begin{equation}
+  \begin{array}{l|lcl}
+    modelePYTHON2 : & \mathbb{R}^4 & \rightarrow & \mathbb{R}^2 \\
+    & (a,b,c)    & \mapsto     & \displaystyle (a^2, abc)
+  \end{array}
+\end{equation}
+
+
+\requirements{
+  \begin{description}
+  \item[$\bullet$] none
+  \end{description}
+}
+{
+  \begin{description}
+  \item[$\bullet$] the python function assoiated to the model: {\itshape modelePYTHON}
+  \item[type:] a OpenTURNSPythonFunction
+  \item[$\bullet$] the limit state function : {\itshape modeleOpenTURNS}
+  \item[type:] a NumericalMathFunction
+  \end{description}
+}
+
+\textspace\\
+Python script for this UseCase :
+
+\begin{lstlisting}
+  # CASE 1 : function : R^4 --> R
+
+  # Create here the python lines to define the implementation of the function
+
+  # In order to be able to use that function with the openturns library,
+  # it is necessary to define a class which derives from OpenTURNSPythonFunction
+
+  class modelePYTHON(OpenTURNSPythonFunction) :
+  # that following method defines the input size (4) and the output size (1)
+  def __init__(self) :
+  OpenTURNSPythonFunction.__init__(self,4,1)
+
+  # that following method gives the implementation of modelePYTHON
+  def _exec(self,x) :
+  E=x[0]
+  F=x[1]
+  L=x[2]
+  I=x[3]
+  return [-(F*L*L*L)/(3.*E*I)]
+
+  # Use that function defined in the script python
+  # with the openturns library
+  # Create a NumericalMathFunction from modelePYTHON
+  modeleOpenTURNS = NumericalMathFunction(modelePYTHON())
+
+
+  # CASE 2 : function : R^3 --> R^2
+
+  # Create here the python lines to define the implementation of the function
+
+  # In order to be able to use that function with the openturns library,
+  # it is necessary to define a class which derives from OpenTURNSPythonFunction
+
+  class modelePYTHON2(OpenTURNSPythonFunction) :
+  # that following method defines the input size (3) and the output size (2)
+  def __init__(self) :
+  OpenTURNSPythonFunction.__init__(self,3,2)
+
+  # that following method gives the implementation of modelePYTHON
+  def _exec(self,x) :
+  a=x[0]
+  b=x[1]
+  c=x[2]
+  return [-a*a,a*b*c]
+
+  # Use that function defined in the script python
+  # with the openturns library
+  # Create a NumericalMathFunction from modelePYTHON2
+  modeleOpenTURNS2 = NumericalMathFunction(modelePYTHON2())
+\end{lstlisting}
+
